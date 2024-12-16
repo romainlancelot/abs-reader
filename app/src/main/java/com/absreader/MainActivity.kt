@@ -14,11 +14,13 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         val sharedPreferences: SharedPreferences = getSharedPreferences("absreader", MODE_PRIVATE)
         val bearer: String = sharedPreferences.getString("bearer", "").toString()
-        println(bearer)
-        if (bearer.isEmpty()) {
-            startActivity(Intent(this, LoginActivity::class.java))
+        val server: String = sharedPreferences.getString("server", "").toString()
+        if (bearer.isEmpty() || server.isEmpty()) {
+            val intent: Intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
         } else {
-            startActivity(Intent(this, HomeActivity::class.java))
+            val intent: Intent = Intent(this, HomeActivity::class.java)
+            startActivity(intent)
         }
     }
 }

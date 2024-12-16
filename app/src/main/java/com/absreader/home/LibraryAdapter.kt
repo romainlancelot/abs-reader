@@ -3,17 +3,16 @@ package com.absreader.home
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.absreader.R
 import com.absreader.networks.dto.libraries.Library
 
 
-class LibraryAdapter(private val libraries: List<Library>) :
-    RecyclerView.Adapter<LibraryViewHolder>() {
-
+class LibraryAdapter(private val libraries: List<Library>) : Adapter<LibraryViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LibraryViewHolder {
-        val view: View =
-            LayoutInflater.from(parent.context).inflate(R.layout.library_item, parent, false)
+        val view: View = LayoutInflater
+            .from(parent.context)
+            .inflate(R.layout.library_item, parent, false)
         return LibraryViewHolder(view)
     }
 
