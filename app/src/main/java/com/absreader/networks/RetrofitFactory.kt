@@ -6,7 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class RetrofitFactory {
     companion object {
-        fun get_instance(baseUrl: String): Retrofit {
+        fun getInstance(baseUrl: String): Retrofit {
             val client: OkHttpClient = OkHttpClient.Builder().build()
             return Retrofit.Builder()
                 .baseUrl(baseUrl)
