@@ -1,4 +1,4 @@
-package com.absreader.networks.dto
+package com.absreader.networks.dto.login
 
 data class ServerSettings(
     val backupSchedule: String,
