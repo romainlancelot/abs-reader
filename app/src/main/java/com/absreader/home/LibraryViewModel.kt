@@ -1,5 +1,6 @@
 package com.absreader.home
 
+import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.absreader.networks.RetrofitFactory
@@ -14,13 +15,15 @@ import retrofit2.Retrofit
 class LibraryViewModel : ViewModel() {
     val libraries: MutableLiveData<MutableList<Library>> = MutableLiveData<MutableList<Library>>()
 
-    fun getLibraries(server: String, bearer: String) {
-        val client: Retrofit = RetrofitFactory.getInstance(server)
-        val call: Call<LibrariesDTO> = client.create(HomeService::class.java).getLibrairies(bearer)
+    fun getLibraries(context: Context) {
+        val client: Retrofit = RetrofitFactory.getInstance(context)
+        val call: Call<LibrariesDTO> = client.create(HomeService::class.java).getLibrairies()
         call.enqueue(object : Callback<LibrariesDTO> {
             override fun onResponse(call: Call<LibrariesDTO>, response: Response<LibrariesDTO>) {
+                println(response.code())
                 if (response.isSuccessful) {
                     val librariesDTO: LibrariesDTO? = response.body()
+                    println(librariesDTO)
                     libraries.value = librariesDTO?.libraries?.toMutableList()
                 }
             }
