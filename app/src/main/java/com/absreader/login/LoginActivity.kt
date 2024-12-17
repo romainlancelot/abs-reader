@@ -19,23 +19,21 @@ import retrofit2.Response
 import retrofit2.Retrofit
 
 class LoginActivity : AppCompatActivity() {
-    lateinit var serverUrl: String
+    lateinit var username: String
+    lateinit var password: String
+    lateinit var login: Button
+    lateinit var server: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_login)
-        val server: EditText = findViewById<EditText>(R.id.server)
-        val username: EditText = findViewById<EditText>(R.id.username)
-        val password: EditText = findViewById<EditText>(R.id.password)
-        val login: Button = findViewById<Button>(R.id.loginButton)
+        login = findViewById<Button>(R.id.loginButton)
         login.setOnClickListener {
-            serverUrl = server.text.toString()
+            gatherInputs()
             try {
-                val client: Retrofit = RetrofitFactory.getInstance(serverUrl)
-                val loginParameters: LoginParameters = LoginParameters(
-                    username.text.toString(), password.text.toString()
-                )
+                val client: Retrofit = RetrofitFactory.getInstance(server)
+                val loginParameters: LoginParameters = LoginParameters(username, password)
                 val call: Call<LoginDTO> = client.create(AuthenticationService::class.java).login(
                     loginParameters
                 )
@@ -50,6 +48,12 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    private fun gatherInputs() {
+        username = findViewById<EditText>(R.id.username).text.toString()
+        password = findViewById<EditText>(R.id.password).text.toString()
+        server = findViewById<EditText>(R.id.server).text.toString()
+    }
+
     fun login(call: Call<LoginDTO>) {
         call.enqueue(object : Callback<LoginDTO> {
             override fun onResponse(call: Call<LoginDTO>, response: Response<LoginDTO>) {
@@ -57,7 +61,7 @@ class LoginActivity : AppCompatActivity() {
                     val loginDTO: LoginDTO? = response.body()
                     with(getSharedPreferences("absreader", MODE_PRIVATE).edit()) {
                         putString("bearer", "Bearer ${loginDTO?.user?.token}")
-                        putString("server", "$serverUrl/api/")
+                        putString("server", "$server/api/")
                         apply()
                     }
                     val intent: Intent = Intent(this@LoginActivity, HomeActivity::class.java)
