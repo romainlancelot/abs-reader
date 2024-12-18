@@ -2,7 +2,6 @@ package com.absreader.view_models
 
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.absreader.networks.RetrofitFactory
 import com.absreader.networks.dto.libraries.LibrariesDTO
 import com.absreader.networks.dto.libraries.Library
@@ -12,8 +11,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 
-class LibraryViewModel : ViewModel() {
-    val libraries: MutableLiveData<MutableList<Library>> = MutableLiveData<MutableList<Library>>()
+class LibraryViewModel {
+    val libraries: MutableLiveData<MutableList<Library>> = MutableLiveData()
 
     fun getLibraries(context: Context) {
         val client: Retrofit = RetrofitFactory.getInstance(context)

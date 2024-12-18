@@ -14,7 +14,7 @@ import retrofit2.Retrofit
 class LibraryBooksViewModel {
     val books: MutableLiveData<List<Result>> = MutableLiveData()
 
-    fun getBooks(context: Context, libraryId: String, server: String) {
+    fun getBooks(context: Context, libraryId: String) {
         val client: Retrofit = RetrofitFactory.getInstance(context)
         val call: Call<LibraryItemsDTO> = client.create(LibraryService::class.java)
             .getLibraryItems(libraryId)
@@ -29,7 +29,8 @@ class LibraryBooksViewModel {
                         if (libraryItem.media.coverPath == null) {
                             continue
                         }
-                        libraryItem.media.coverPath = server + "/api/items/${libraryItem.id}/cover"
+                        libraryItem.media.coverPath =
+                            client.baseUrl().toString() + "/api/items/${libraryItem.id}/cover"
                     }
                     books.value = libraryItemsDTO?.results
                 }

@@ -16,7 +16,7 @@ class LibraryViewHolder(itemView: View) : ViewHolder(itemView) {
         libraryButton.setOnClickListener {
             val intent = Intent(itemView.context, LibraryBooksActivity::class.java)
             intent.putExtra("libraryId", library.id)
-            intent.putExtra("libraryName", library.name)
+            intent.putExtra("libraryName", "\uD83D\uDCE6 ${library.name}")
             itemView.context.startActivity(intent)
         }
     }

@@ -25,11 +25,7 @@ class LibraryBooksActivity : AppCompatActivity() {
         this.viewModel.books.observe(this) { libraryItems: List<Result> ->
             recyclerView.adapter = LibraryBooksAdapter(libraryItems)
         }
-        this.viewModel.getBooks(
-            this@LibraryBooksActivity,
-            libraryId,
-            getSharedPreferences("absreader", MODE_PRIVATE).getString("server", "").toString()
-        )
+        this.viewModel.getBooks(this@LibraryBooksActivity, libraryId)
 
     }
 }
