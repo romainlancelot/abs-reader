@@ -3,7 +3,7 @@ package com.absreader.repositories
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
-import com.absreader.HomeActivity
+import com.absreader.LibraryActivity
 import com.absreader.networks.RetrofitFactory
 import com.absreader.networks.dto.login.LoginDTO
 import com.absreader.networks.models.LoginParameters
@@ -28,7 +28,7 @@ class LoginRepository {
                         putString("server", server)
                         apply()
                     }
-                    val intent: Intent = Intent(context, HomeActivity::class.java)
+                    val intent: Intent = Intent(context, LibraryActivity::class.java)
                     context.startActivity(intent)
                     return
                 }

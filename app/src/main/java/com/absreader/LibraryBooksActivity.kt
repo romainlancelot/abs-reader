@@ -17,23 +17,19 @@ class LibraryBooksActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_library)
-        val server: String = getSharedPreferences("absreader", MODE_PRIVATE)
-            .getString("server", "").toString()
-        val libraryId: String = intent.getStringExtra("libraryId").toString()
         val libraryTextView: TextView = findViewById<TextView>(R.id.libraryName)
+        val libraryId: String = intent.getStringExtra("libraryId").toString()
         libraryTextView.text = intent.getStringExtra("libraryName").toString()
         val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = GridLayoutManager(this, 2)
         this.viewModel.books.observe(this) { libraryItems: List<Result> ->
-            for (libraryItem: Result in libraryItems) {
-                if (libraryItem.media.coverPath == null) {
-                    continue
-                }
-                libraryItem.media.coverPath = server + "/api/items/${libraryItem.id}/cover"
-            }
             recyclerView.adapter = LibraryBooksAdapter(libraryItems)
         }
-        this.viewModel.getBooks(this@LibraryBooksActivity, libraryId)
+        this.viewModel.getBooks(
+            this@LibraryBooksActivity,
+            libraryId,
+            getSharedPreferences("absreader", MODE_PRIVATE).getString("server", "").toString()
+        )
 
     }
 }

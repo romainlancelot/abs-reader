@@ -9,7 +9,7 @@ import com.absreader.adapters.LibraryAdapter
 import com.absreader.networks.dto.libraries.Library
 import com.absreader.view_models.LibraryViewModel
 
-class HomeActivity : AppCompatActivity() {
+class LibraryActivity : AppCompatActivity() {
     private val viewModel: LibraryViewModel = LibraryViewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,6 +21,6 @@ class HomeActivity : AppCompatActivity() {
         this.viewModel.libraries.observe(this) { libraries: List<Library> ->
             recyclerView.adapter = LibraryAdapter(libraries)
         }
-        this.viewModel.getLibraries(this@HomeActivity)
+        this.viewModel.getLibraries(this@LibraryActivity)
     }
 }

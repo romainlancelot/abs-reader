@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
             val intent: Intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
         } else {
-            val intent: Intent = Intent(this, HomeActivity::class.java)
+            val intent: Intent = Intent(this, LibraryActivity::class.java)
             startActivity(intent)
         }
     }
