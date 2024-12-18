@@ -1,4 +1,4 @@
-package com.absreader.library_books
+package com.absreader.view_holders
 
 import android.view.View
 import android.widget.ImageView
@@ -14,8 +14,11 @@ class LibraryBooksViewHolder(itemView: View) : ViewHolder(itemView) {
     private val author: TextView = itemView.findViewById(R.id.author)
 
     fun bind(libraryBook: Result) {
-        println(libraryBook.media.coverPath)
-        Picasso.get().load(libraryBook.media.coverPath).into(cover)
+        if (libraryBook.media.coverPath != null) {
+            Picasso.get().load(libraryBook.media.coverPath).into(cover)
+        } else {
+            cover.setImageResource(R.drawable.generic_cover)
+        }
         title.text = libraryBook.media.metadata.title
         author.text = libraryBook.media.metadata.authorName
     }

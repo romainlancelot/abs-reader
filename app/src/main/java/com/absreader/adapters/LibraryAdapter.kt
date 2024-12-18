@@ -1,4 +1,4 @@
-package com.absreader.home
+package com.absreader.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.absreader.R
 import com.absreader.networks.dto.libraries.Library
+import com.absreader.view_holders.LibraryViewHolder
 
 
 class LibraryAdapter(private val libraries: List<Library>) : Adapter<LibraryViewHolder>() {

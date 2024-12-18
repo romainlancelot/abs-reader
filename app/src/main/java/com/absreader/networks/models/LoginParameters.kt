@@ -1,4 +1,4 @@
-package com.absreader.login.models
+package com.absreader.networks.models
 
 data class LoginParameters(
     val username: String,

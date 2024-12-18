@@ -1,12 +1,13 @@
-package com.absreader.home
+package com.absreader
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.absreader.R
+import com.absreader.adapters.LibraryAdapter
 import com.absreader.networks.dto.libraries.Library
+import com.absreader.view_models.LibraryViewModel
 
 class HomeActivity : AppCompatActivity() {
     private val viewModel: LibraryViewModel = LibraryViewModel()

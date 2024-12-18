@@ -1,4 +1,4 @@
-package com.absreader.home
+package com.absreader.view_models
 
 import android.content.Context
 import androidx.lifecycle.MutableLiveData

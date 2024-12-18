@@ -1,12 +1,12 @@
-package com.absreader.login
+package com.absreader.repositories
 
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
-import com.absreader.home.HomeActivity
-import com.absreader.login.models.LoginParameters
+import com.absreader.HomeActivity
 import com.absreader.networks.RetrofitFactory
 import com.absreader.networks.dto.login.LoginDTO
+import com.absreader.networks.models.LoginParameters
 import com.absreader.networks.services.AuthenticationService
 import com.absreader.utils.MaterialAlertDialog
 import retrofit2.Call

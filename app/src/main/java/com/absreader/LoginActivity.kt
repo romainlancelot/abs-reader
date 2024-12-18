@@ -1,12 +1,12 @@
-package com.absreader.login
+package com.absreader
 
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import com.absreader.R
-import com.absreader.login.models.LoginParameters
+import com.absreader.networks.models.LoginParameters
+import com.absreader.repositories.LoginRepository
 import com.absreader.utils.MaterialAlertDialog
 
 class LoginActivity : AppCompatActivity() {

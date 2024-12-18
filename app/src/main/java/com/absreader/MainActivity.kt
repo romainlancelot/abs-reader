@@ -5,15 +5,12 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import com.absreader.home.HomeActivity
-import com.absreader.login.LoginActivity
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         val sharedPreferences: SharedPreferences = getSharedPreferences("absreader", MODE_PRIVATE)
-        sharedPreferences.edit().clear().apply()
         val bearer: String = sharedPreferences.getString("bearer", "").toString()
         val server: String = sharedPreferences.getString("server", "").toString()
         if (bearer.isEmpty() || server.isEmpty()) {

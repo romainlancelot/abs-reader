@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:paddingHorizontal="30dp"
     android:paddingVertical="30dp"
-    tools:context=".library_books.LibraryBooksActivity">
+    tools:context=".LibraryBooksActivity">
 
     <TextView
         android:id="@+id/libraryName"

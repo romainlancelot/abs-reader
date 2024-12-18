@@ -1,4 +1,4 @@
-package com.absreader.library_books
+package com.absreader.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.absreader.R
 import com.absreader.networks.dto.library_items.Result
+import com.absreader.view_holders.LibraryBooksViewHolder
 
 class LibraryBooksAdapter(private val books: List<Result>) : Adapter<LibraryBooksViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LibraryBooksViewHolder {

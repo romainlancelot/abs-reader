@@ -1,7 +1,7 @@
 package com.absreader.networks.dto.library_items
 
 data class Media(
-    var coverPath: String,
+    var coverPath: String?,
     val duration: Double,
     val ebookFileFormat: Any,
     val metadata: Metadata,

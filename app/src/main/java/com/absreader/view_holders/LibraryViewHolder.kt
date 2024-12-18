@@ -1,10 +1,10 @@
-package com.absreader.home
+package com.absreader.view_holders
 
 import android.content.Intent
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.absreader.LibraryBooksActivity
 import com.absreader.R
-import com.absreader.library_books.LibraryBooksActivity
 import com.absreader.networks.dto.libraries.Library
 import com.google.android.material.button.MaterialButton
 
