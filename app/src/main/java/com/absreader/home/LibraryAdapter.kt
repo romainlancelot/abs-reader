@@ -10,8 +10,7 @@ import com.absreader.networks.dto.libraries.Library
 
 class LibraryAdapter(private val libraries: List<Library>) : Adapter<LibraryViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LibraryViewHolder {
-        val view: View = LayoutInflater
-            .from(parent.context)
+        val view: View = LayoutInflater.from(parent.context)
             .inflate(R.layout.library_item, parent, false)
         return LibraryViewHolder(view)
     }

@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.absreader.networks.RetrofitFactory
 import com.absreader.networks.dto.libraries.LibrariesDTO
 import com.absreader.networks.dto.libraries.Library
-import com.absreader.networks.services.HomeService
+import com.absreader.networks.services.LibraryService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -17,13 +17,11 @@ class LibraryViewModel : ViewModel() {
 
     fun getLibraries(context: Context) {
         val client: Retrofit = RetrofitFactory.getInstance(context)
-        val call: Call<LibrariesDTO> = client.create(HomeService::class.java).getLibrairies()
+        val call: Call<LibrariesDTO> = client.create(LibraryService::class.java).getLibraries()
         call.enqueue(object : Callback<LibrariesDTO> {
             override fun onResponse(call: Call<LibrariesDTO>, response: Response<LibrariesDTO>) {
-                println(response.code())
                 if (response.isSuccessful) {
                     val librariesDTO: LibrariesDTO? = response.body()
-                    println(librariesDTO)
                     libraries.value = librariesDTO?.libraries?.toMutableList()
                 }
             }

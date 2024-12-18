@@ -25,7 +25,7 @@ class LoginRepository {
                     val loginDTO: LoginDTO? = response.body()
                     with(context.getSharedPreferences("absreader", MODE_PRIVATE).edit()) {
                         putString("bearer", "Bearer ${loginDTO?.user?.token}")
-                        putString("server", "$server/api/")
+                        putString("server", server)
                         apply()
                     }
                     val intent: Intent = Intent(context, HomeActivity::class.java)

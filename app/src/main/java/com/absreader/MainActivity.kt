@@ -13,6 +13,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         val sharedPreferences: SharedPreferences = getSharedPreferences("absreader", MODE_PRIVATE)
+        sharedPreferences.edit().clear().apply()
         val bearer: String = sharedPreferences.getString("bearer", "").toString()
         val server: String = sharedPreferences.getString("server", "").toString()
         if (bearer.isEmpty() || server.isEmpty()) {
