@@ -8,7 +8,7 @@ data class Library(
     val id: String,
     val lastUpdate: Long,
     val mediaType: String,
-    val name: String,
+    var name: String,
     val provider: String,
     val settings: Settings
 )

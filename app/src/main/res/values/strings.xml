@@ -3,13 +3,16 @@
     <string name="app_name_hint">The only reader you need 🤩</string>
     <string name="server_url">Server URL</string>
     <string name="username">Username</string>
+    <string name="home">🏡 Home</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
     <string name="libraries">📦 Libraries️️</string>
     <string name="book_cover">Book cover</string>
-    <string name="continue_reading">▶️ Continue reading</string>
+    <string name="continue_reading">💽 Continue reading</string>
     <string name="no_books">😥 No books for this library, add some so you can read them !</string>
     <string name="no_continue">😥 No books in progress, start reading some !</string>
     <string name="no_libraries">😥 No libraries, add some so you can read books !</string>
+    <string name="returnButton">Back</string>
+    <string name="logout">Logout</string>
 
 </resources>

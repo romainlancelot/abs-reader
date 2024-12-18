@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="30dp"
+    android:padding="20dp"
     tools:context=".MainActivity">
 
     <TextView
@@ -15,7 +15,6 @@
         android:layout_marginTop="64dp"
         android:gravity="center"
         android:text="@string/audiobookshelf_reader"
-        android:textColor="@color/black"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"

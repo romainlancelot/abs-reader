@@ -21,6 +21,11 @@ class LibraryViewModel {
             override fun onResponse(call: Call<LibrariesDTO>, response: Response<LibrariesDTO>) {
                 if (response.isSuccessful) {
                     val librariesDTO: LibrariesDTO? = response.body()
+                    for (library: Library in librariesDTO?.libraries ?: mutableListOf()) {
+                        library.name = library.name.replaceFirstChar {
+                            if (it.isLowerCase()) it.titlecase() else it.toString()
+                        }
+                    }
                     libraries.value = librariesDTO?.libraries?.toMutableList()
                 }
             }

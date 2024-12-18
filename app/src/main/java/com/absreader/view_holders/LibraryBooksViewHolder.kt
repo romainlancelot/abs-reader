@@ -11,7 +11,6 @@ import com.squareup.picasso.Picasso
 class LibraryBooksViewHolder(itemView: View) : ViewHolder(itemView) {
     private val cover: ImageView = itemView.findViewById(R.id.cover)
     private val title: TextView = itemView.findViewById(R.id.title)
-    private val author: TextView = itemView.findViewById(R.id.author)
 
     fun bind(libraryBook: Result) {
         if (libraryBook.media.coverPath != null) {
@@ -20,6 +19,5 @@ class LibraryBooksViewHolder(itemView: View) : ViewHolder(itemView) {
             cover.setImageResource(R.drawable.generic_cover)
         }
         title.text = libraryBook.media.metadata.title
-        author.text = libraryBook.media.metadata.authorName
     }
 }

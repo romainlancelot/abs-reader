@@ -5,34 +5,21 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="30dp"
-    tools:context=".LibraryActivity">
+    android:padding="20dp"
+    tools:context=".HomeActivity">
 
-    <TextView
-        android:id="@+id/appName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:gravity="center"
-        android:paddingBottom="20dp"
-        android:text="@string/audiobookshelf_reader"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints" />
+    <include
+        android:id="@+id/header"
+        layout="@layout/header" />
 
     <TextView
         android:id="@+id/libraryText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:text="@string/libraries"
-        android:textColor="@color/black"
         android:textSize="20sp"
-        app:layout_constraintTop_toBottomOf="@+id/appName"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/header"
         tools:ignore="MissingConstraints" />
 
     <TextView
@@ -60,10 +47,10 @@
         android:id="@+id/continueText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="40dp"
         android:text="@string/continue_reading"
-        android:textColor="@color/black"
         android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@+id/libraryRecyclerView"
         tools:ignore="MissingConstraints" />
 
@@ -74,7 +61,7 @@
         android:layout_marginTop="10dp"
         android:gravity="center"
         android:paddingBottom="20dp"
-        android:text="@string/no_libraries"
+        android:text="@string/no_continue"
         android:visibility="invisible"
         app:layout_constraintTop_toBottomOf="@+id/continueText"
         tools:layout_editor_absoluteX="30dp" />

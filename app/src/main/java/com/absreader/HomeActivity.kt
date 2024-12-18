@@ -10,10 +10,11 @@ import com.absreader.adapters.LibraryAdapter
 import com.absreader.adapters.ProgressAdapter
 import com.absreader.networks.dto.libraries.Library
 import com.absreader.networks.dto.progress.LibraryItem
+import com.absreader.utils.HeaderManager
 import com.absreader.view_models.LibraryViewModel
 import com.absreader.view_models.ProgressViewModel
 
-class LibraryActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity() {
     private val libraryViewModel: LibraryViewModel = LibraryViewModel()
     private val progressViewModel: ProgressViewModel = ProgressViewModel()
 
@@ -21,6 +22,8 @@ class LibraryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_home)
+        val headerManager: HeaderManager = HeaderManager(findViewById(R.id.header), false)
+        headerManager.setup(getString(R.string.home))
         val noLibraryText: TextView = findViewById(R.id.noLibraries)
         val noProgressText: TextView = findViewById(R.id.noProgress)
         val libraryRecyclerView: RecyclerView = findViewById(R.id.libraryRecyclerView)
@@ -31,7 +34,7 @@ class LibraryActivity : AppCompatActivity() {
                 noLibraryText.visibility = TextView.VISIBLE
             }
         }
-        this.libraryViewModel.getLibraries(this@LibraryActivity)
+        this.libraryViewModel.getLibraries(this@HomeActivity)
         val progressRecyclerView: RecyclerView = findViewById(R.id.progressRecyclerView)
         progressRecyclerView.layoutManager = GridLayoutManager(this, 2)
         this.progressViewModel.progress.observe(this) { progress: List<LibraryItem> ->
@@ -40,6 +43,6 @@ class LibraryActivity : AppCompatActivity() {
                 noProgressText.visibility = TextView.VISIBLE
             }
         }
-        this.progressViewModel.getProgress(this@LibraryActivity)
+        this.progressViewModel.getProgress(this@HomeActivity)
     }
 }
