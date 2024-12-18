@@ -18,12 +18,16 @@ class LibraryBooksActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_library)
         val libraryTextView: TextView = findViewById<TextView>(R.id.libraryName)
+        val noBooksTextView: TextView = findViewById<TextView>(R.id.noBooks)
         val libraryId: String = intent.getStringExtra("libraryId").toString()
         libraryTextView.text = intent.getStringExtra("libraryName").toString()
         val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = GridLayoutManager(this, 2)
         this.viewModel.books.observe(this) { libraryItems: List<Result> ->
             recyclerView.adapter = LibraryBooksAdapter(libraryItems)
+            if (libraryItems.isEmpty()) {
+                noBooksTextView.visibility = TextView.VISIBLE
+            }
         }
         this.viewModel.getBooks(this@LibraryBooksActivity, libraryId)
 

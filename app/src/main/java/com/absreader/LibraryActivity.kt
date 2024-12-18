@@ -1,6 +1,7 @@
 package com.absreader
 
 import android.os.Bundle
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
@@ -20,16 +21,24 @@ class LibraryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_home)
+        val noLibraryText: TextView = findViewById(R.id.noLibraries)
+        val noProgressText: TextView = findViewById(R.id.noProgress)
         val libraryRecyclerView: RecyclerView = findViewById(R.id.libraryRecyclerView)
         libraryRecyclerView.layoutManager = GridLayoutManager(this, 1)
         this.libraryViewModel.libraries.observe(this) { libraries: List<Library> ->
             libraryRecyclerView.adapter = LibraryAdapter(libraries)
+            if (libraries.isEmpty()) {
+                noLibraryText.visibility = TextView.VISIBLE
+            }
         }
         this.libraryViewModel.getLibraries(this@LibraryActivity)
         val progressRecyclerView: RecyclerView = findViewById(R.id.progressRecyclerView)
         progressRecyclerView.layoutManager = GridLayoutManager(this, 2)
         this.progressViewModel.progress.observe(this) { progress: List<LibraryItem> ->
             progressRecyclerView.adapter = ProgressAdapter(progress)
+            if (progress.isEmpty()) {
+                noProgressText.visibility = TextView.VISIBLE
+            }
         }
         this.progressViewModel.getProgress(this@LibraryActivity)
     }

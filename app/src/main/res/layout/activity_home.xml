@@ -8,7 +8,6 @@
     android:padding="30dp"
     tools:context=".LibraryActivity">
 
-
     <TextView
         android:id="@+id/appName"
         android:layout_width="match_parent"
@@ -36,6 +35,18 @@
         app:layout_constraintTop_toBottomOf="@+id/appName"
         tools:ignore="MissingConstraints" />
 
+    <TextView
+        android:id="@+id/noLibraries"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:paddingBottom="20dp"
+        android:text="@string/no_libraries"
+        android:visibility="invisible"
+        app:layout_constraintTop_toBottomOf="@+id/libraryText"
+        tools:layout_editor_absoluteX="30dp" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/libraryRecyclerView"
         android:layout_width="match_parent"
@@ -55,6 +66,18 @@
         android:textSize="20sp"
         app:layout_constraintTop_toBottomOf="@+id/libraryRecyclerView"
         tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/noProgress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:paddingBottom="20dp"
+        android:text="@string/no_libraries"
+        android:visibility="invisible"
+        app:layout_constraintTop_toBottomOf="@+id/continueText"
+        tools:layout_editor_absoluteX="30dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/progressRecyclerView"
