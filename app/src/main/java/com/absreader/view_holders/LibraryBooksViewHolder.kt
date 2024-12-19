@@ -22,7 +22,11 @@ class LibraryBooksViewHolder(itemView: View) : ViewHolder(itemView) {
         } else {
             cover.setImageResource(R.drawable.generic_cover)
         }
-        title.text = libraryBook.media.metadata.title
+        if (libraryBook.media.metadata.title.length > 30) {
+            title.text = libraryBook.media.metadata.title.substring(0, 30) + "..."
+        } else {
+            title.text = libraryBook.media.metadata.title
+        }
         bookButton.setOnClickListener {
             val intent: Intent = Intent(itemView.context, BookActivity::class.java)
             intent.putExtra("coverPath", libraryBook.media.coverPath)
