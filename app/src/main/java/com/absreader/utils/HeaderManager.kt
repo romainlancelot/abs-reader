@@ -6,7 +6,7 @@ import android.widget.TextView
 import com.absreader.R
 
 class HeaderManager(private val view: View, private val returnVisible: Boolean = true) {
-    private val title: TextView = view.findViewById(R.id.title)
+    private val title: TextView = view.findViewById(R.id.headerTitle)
     private val returnButton: View = view.findViewById(R.id.returnButton)
     private val logoutButton: View = view.findViewById(R.id.logoutButton)
 

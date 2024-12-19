@@ -1,7 +1,7 @@
 package com.absreader.networks.dto.progress
 
 data class Metadata(
-    val author: String,
+    val authorName: String,
     val description: String,
     val explicit: Boolean,
     val feedUrl: String,

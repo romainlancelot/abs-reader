@@ -14,5 +14,8 @@
     <string name="no_libraries">😥 No libraries, add some so you can read books !</string>
     <string name="returnButton">Back</string>
     <string name="logout">Logout</string>
-
+    <string name="read_now">Read now</string>
+    <string name="details">📑 Book details</string>
+    <string name="written_by">✍️ Written by</string>
+    <string name="delete">Delete book</string>
 </resources>

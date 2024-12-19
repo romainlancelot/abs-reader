@@ -18,8 +18,9 @@ class LibraryBooksActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_library)
-        val headerManager: HeaderManager = HeaderManager(findViewById(R.id.header))
-        headerManager.setup(intent.getStringExtra("libraryName").toString())
+        HeaderManager(findViewById(R.id.header)).setup(
+            intent.getStringExtra("libraryName").toString()
+        )
         val noBooksTextView: TextView = findViewById<TextView>(R.id.noBooks)
         val libraryId: String = intent.getStringExtra("libraryId").toString()
         val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
