@@ -1,0 +1,14 @@
+services:
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: ${DEVELOPMENT_DATABASE_USER}
+      POSTGRES_PASSWORD: ${DEVELOPMENT_DATABASE_PASSWORD}
+      POSTGRES_DB: ${DEVELOPMENT_DATABASE_NAME}
+    ports:
+      - ${DEVELOPMENT_DATABASE_HOST_PORT}:${DEVELOPMENT_DATABASE_CONTAINER_PORT}
+    volumes:
+      - development_database_volume:/var/lib/postgresql/data
+volumes:
+  development_database_volume:

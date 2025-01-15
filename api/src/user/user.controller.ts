@@ -1,0 +1,67 @@
+import { Body, Controller, Delete, Get, Patch, Request, Res, UseGuards } from '@nestjs/common';
+import { JwtGuard } from 'src/auth/guard/jwt.guard';
+import { UpdateUserDto } from './user.dto';
+import { UserService } from './user.service';
+import { User } from '@prisma/client';
+import { Response } from 'express';
+import { ErrorHandlerService } from 'src/common/utils/error-handler/error-handler.service';
+
+@Controller('users')
+export class UserController {
+
+    public constructor(
+        private readonly userService: UserService,
+        private readonly errorHandlerService: ErrorHandlerService
+    ) { }
+
+    @UseGuards(JwtGuard)
+    @Get('me')
+    public async readMe(
+        @Request() req,
+        @Res() res: Response
+    ): Promise<Response> {
+        try {
+            const user: Omit<User, 'password'> = await this.userService.getUser(
+                req.user.id
+            );
+            return res.status(200).json(user);
+        } catch (error: unknown) {
+            throw await this.errorHandlerService.handleError(error);
+        }
+    }
+
+    @UseGuards(JwtGuard)
+    @Patch('me')
+    public async updateMe(
+        @Request() req,
+        @Body() dto: UpdateUserDto,
+        @Res() res
+    ): Promise<Response> {
+        try {
+            const user: Omit<User, 'password'> = await this.userService.updateUser(
+                req.user.id,
+                dto
+            );
+            return res.status(200).json(user);
+        } catch (error: unknown) {
+            throw await this.errorHandlerService.handleError(error);
+        }
+    }
+
+    @UseGuards(JwtGuard)
+    @Delete('me')
+    public async deleteMe(
+        @Request() req,
+        @Res() res
+    ): Promise<Response> {
+        try {
+            const user: Omit<User, 'password'> = await this.userService.deleteUser(
+                req.user.id
+            );
+            return res.status(200).json(user);
+        } catch (error: unknown) {
+            throw await this.errorHandlerService.handleError(error);
+        }
+    }
+
+}

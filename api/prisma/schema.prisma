@@ -1,0 +1,59 @@
+datasource db {
+    provider = "postgresql"
+    url      = env("DEVELOPMENT_DATABASE_URL")
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+model User {
+    id              String            @id @default(uuid())
+    email           String            @unique
+    password        String
+    name            String
+    tag             String            @unique
+    createdAt       DateTime          @default(now())
+    books           Book[]
+    likes           Like[]
+    readingProgress ReadingProgress[]
+}
+
+model Book {
+    id              String            @id @default(uuid())
+    title           String
+    authorId        String
+    author          User              @relation(fields: [authorId], references: [id])
+    pages           Page[]
+    likes           Like[]
+    readingProgress ReadingProgress[]
+}
+
+model Page {
+    id              String            @id @default(uuid())
+    bookId          String
+    book            Book              @relation(fields: [bookId], references: [id])
+    order           Int
+    s3Key           String            @unique
+    extensionFile   String
+    ReadingProgress ReadingProgress[]
+}
+
+model Like {
+    id        String   @id @default(uuid())
+    userId    String
+    user      User     @relation(fields: [userId], references: [id])
+    bookId    String
+    book      Book     @relation(fields: [bookId], references: [id])
+    createdAt DateTime @default(now())
+}
+
+model ReadingProgress {
+    id            String @id @default(uuid())
+    userId        String
+    user          User   @relation(fields: [userId], references: [id])
+    bookId        String
+    book          Book   @relation(fields: [bookId], references: [id])
+    currentPageId String
+    currentPage   Page   @relation(fields: [currentPageId], references: [id])
+}
