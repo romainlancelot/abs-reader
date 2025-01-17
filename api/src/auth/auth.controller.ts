@@ -3,19 +3,18 @@ import { AuthService } from "./auth.service";
 import { Response } from "express";
 import { ErrorHandlerService } from "src/common/utils/error-handler/error-handler.service";
 import { ApiTags } from "@nestjs/swagger";
-import { User } from "@prisma/client";
 import { SignUpAuthDto } from "./dto/sign-up-auth.dto";
 import { LogInAuthDto } from "./dto/log-in-auth.dto";
 
 @Controller("auth")
-@ApiTags("Auth")
+@ApiTags("auth")
 export class AuthController {
     public constructor(
         private readonly authService: AuthService,
         private readonly errorHandlerService: ErrorHandlerService
     ) { }
 
-    @Post("signup")
+    @Post("sign-up")
     public async signUp(
         @Body() dto: SignUpAuthDto,
         @Res() response: Response
@@ -30,7 +29,7 @@ export class AuthController {
         }
     }
 
-    @Post("login")
+    @Post("log-in")
     public async logIn(
         @Body() dto: LogInAuthDto,
         @Res() response: Response
