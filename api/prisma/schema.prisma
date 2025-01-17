@@ -24,6 +24,8 @@ model Book {
     title           String
     authorId        String
     author          User              @relation(fields: [authorId], references: [id])
+    createdAt       DateTime          @default(now())
+    coverS3Key      String?
     pages           Page[]
     likes           Like[]
     readingProgress ReadingProgress[]

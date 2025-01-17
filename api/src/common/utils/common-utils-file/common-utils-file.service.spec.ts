@@ -1,7 +1,7 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { CommonUtilsFileService } from './common-utils-file.service';
+import { Test, TestingModule } from "@nestjs/testing";
+import { CommonUtilsFileService } from "./common-utils-file.service";
 
-describe('CommonUtilsFileService', () => {
+describe("CommonUtilsFileService", () => {
   let service: CommonUtilsFileService;
 
   beforeEach(async () => {
@@ -12,7 +12,7 @@ describe('CommonUtilsFileService', () => {
     service = module.get<CommonUtilsFileService>(CommonUtilsFileService);
   });
 
-  it('should be defined', () => {
+  it("should be defined", () => {
     expect(service).toBeDefined();
   });
 });

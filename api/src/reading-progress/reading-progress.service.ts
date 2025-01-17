@@ -1,15 +1,15 @@
-import { Injectable } from '@nestjs/common';
-import { CreateReadingProgressDto } from './dto/create-reading-progress.dto';
-import { UpdateReadingProgressDto } from './dto/update-reading-progress.dto';
+import { Injectable } from "@nestjs/common";
+import { CreateReadingProgressDto } from "./dto/create-reading-progress.dto";
+import { UpdateReadingProgressDto } from "./dto/update-reading-progress.dto";
 
 @Injectable()
 export class ReadingProgressService {
   create(createReadingProgressDto: CreateReadingProgressDto) {
-    return 'This action adds a new readingProgress';
+    return "This action adds a new readingProgress";
   }
 
   findAll() {
-    return 'This action returns all readingProgress';
+    return "This action returns all readingProgress";
   }
 
   findOne(id: number) {

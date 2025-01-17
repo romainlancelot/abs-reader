@@ -1,14 +1,14 @@
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
-import { v4 } from 'uuid';
-import { Readable } from 'stream';
-import { ErrorHandlerService } from 'src/common/utils/error-handler/error-handler.service';
+import { Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { v4 } from "uuid";
+import { Readable } from "stream";
+import { ErrorHandlerService } from "src/common/utils/error-handler/error-handler.service";
 
 @Injectable()
 export class AwsS3Service {
-    private readonly AWS_S3_REGION: string = this.configService.getOrThrow('AWS_S3_REGION');
-    private readonly AWS_S3_BUCKET_NAME: string = this.configService.getOrThrow('AWS_S3_BUCKET_NAME');
+    private readonly AWS_S3_REGION: string = this.configService.getOrThrow("AWS_S3_REGION");
+    private readonly AWS_S3_BUCKET_NAME: string = this.configService.getOrThrow("AWS_S3_BUCKET_NAME");
     private readonly s3Client: S3Client = new S3Client({ region: this.AWS_S3_REGION });
 
     public constructor(
@@ -21,7 +21,7 @@ export class AwsS3Service {
         if (match) {
             return match[0].substring(1);
         }
-        throw new Error('Unsupported file type');
+        throw new Error("Unsupported file type");
     }
 
     public async uploadFile(
@@ -42,7 +42,7 @@ export class AwsS3Service {
         }
     }
 
-    async downloadFile(s3KeyFile: string): Promise<Readable> {
+    public async downloadFile(s3KeyFile: string): Promise<Readable> {
         const command: GetObjectCommand = new GetObjectCommand({
             Bucket: this.AWS_S3_BUCKET_NAME,
             Key: s3KeyFile
@@ -52,7 +52,7 @@ export class AwsS3Service {
             if (response.Body) {
                 return response.Body as Readable;
             } else {
-                throw new Error('Failed to get file stream');
+                throw new Error("Failed to get file stream");
             }
         } catch (error: unknown) {
             throw await this.errorHandlerService.handleError(error);

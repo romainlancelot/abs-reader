@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { UpdateUserDto } from './user.dto';
-import { User } from '@prisma/client';
-import { hash } from 'bcrypt';
-import { ErrorHandlerService } from 'src/common/utils/error-handler/error-handler.service';
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "src/prisma/prisma.service";
+import { UpdateUserDto } from "./user.dto";
+import { User } from "@prisma/client";
+import { hash } from "bcrypt";
+import { ErrorHandlerService } from "src/common/utils/error-handler/error-handler.service";
 
 @Injectable()
 export class UserService {

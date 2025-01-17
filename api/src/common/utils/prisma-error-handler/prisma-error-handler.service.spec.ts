@@ -1,7 +1,7 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaErrorHandlerService } from './prisma-error-handler.service';
+import { Test, TestingModule } from "@nestjs/testing";
+import { PrismaErrorHandlerService } from "./prisma-error-handler.service";
 
-describe('PrismaErrorHandlerService', () => {
+describe("PrismaErrorHandlerService", () => {
   let service: PrismaErrorHandlerService;
 
   beforeEach(async () => {
@@ -12,7 +12,7 @@ describe('PrismaErrorHandlerService', () => {
     service = module.get<PrismaErrorHandlerService>(PrismaErrorHandlerService);
   });
 
-  it('should be defined', () => {
+  it("should be defined", () => {
     expect(service).toBeDefined();
   });
 });

@@ -1,10 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { PrismaErrorHandlerService } from '../prisma-error-handler/prisma-error-handler.service';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { PrismaErrorHandlerService } from "../prisma-error-handler/prisma-error-handler.service";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 @Injectable()
 export class ErrorHandlerService {
-
     constructor(
         private readonly prismaErrorHandlerService: PrismaErrorHandlerService
     ) { }
@@ -20,10 +19,9 @@ export class ErrorHandlerService {
             throw new HttpException(errorHandled.message, errorHandled.statusCode);
         } else {
             throw new HttpException(
-                'An unexpected error occurred',
+                "An unexpected error occurred",
                 HttpStatus.INTERNAL_SERVER_ERROR
             );
         }
     }
-
 }

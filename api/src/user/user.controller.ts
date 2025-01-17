@@ -1,12 +1,12 @@
-import { Body, Controller, Delete, Get, Patch, Request, Res, UseGuards } from '@nestjs/common';
-import { JwtGuard } from 'src/auth/guard/jwt.guard';
-import { UpdateUserDto } from './user.dto';
-import { UserService } from './user.service';
-import { User } from '@prisma/client';
-import { Response } from 'express';
-import { ErrorHandlerService } from 'src/common/utils/error-handler/error-handler.service';
+import { Body, Controller, Delete, Get, Patch, Request, Res, UseGuards } from "@nestjs/common";
+import { JwtGuard } from "src/auth/guard/jwt.guard";
+import { UpdateUserDto } from "./user.dto";
+import { UserService } from "./user.service";
+import { User } from "@prisma/client";
+import { Response } from "express";
+import { ErrorHandlerService } from "src/common/utils/error-handler/error-handler.service";
 
-@Controller('users')
+@Controller("users")
 export class UserController {
 
     public constructor(
@@ -15,50 +15,50 @@ export class UserController {
     ) { }
 
     @UseGuards(JwtGuard)
-    @Get('me')
+    @Get("me")
     public async readMe(
-        @Request() req,
-        @Res() res: Response
+        @Request() request,
+        @Res() response: Response
     ): Promise<Response> {
         try {
-            const user: Omit<User, 'password'> = await this.userService.getUser(
-                req.user.id
+            const user: Omit<User, "password"> = await this.userService.getUser(
+                request.user.id
             );
-            return res.status(200).json(user);
+            return response.status(200).json(user);
         } catch (error: unknown) {
             throw await this.errorHandlerService.handleError(error);
         }
     }
 
     @UseGuards(JwtGuard)
-    @Patch('me')
+    @Patch("me")
     public async updateMe(
-        @Request() req,
+        @Request() request,
         @Body() dto: UpdateUserDto,
-        @Res() res
+        @Res() response
     ): Promise<Response> {
         try {
-            const user: Omit<User, 'password'> = await this.userService.updateUser(
-                req.user.id,
+            const user: Omit<User, "password"> = await this.userService.updateUser(
+                request.user.id,
                 dto
             );
-            return res.status(200).json(user);
+            return response.status(200).json(user);
         } catch (error: unknown) {
             throw await this.errorHandlerService.handleError(error);
         }
     }
 
     @UseGuards(JwtGuard)
-    @Delete('me')
+    @Delete("me")
     public async deleteMe(
-        @Request() req,
-        @Res() res
+        @Request() request,
+        @Res() response
     ): Promise<Response> {
         try {
-            const user: Omit<User, 'password'> = await this.userService.deleteUser(
-                req.user.id
+            const user: Omit<User, "password"> = await this.userService.deleteUser(
+                request.user.id
             );
-            return res.status(200).json(user);
+            return response.status(200).json(user);
         } catch (error: unknown) {
             throw await this.errorHandlerService.handleError(error);
         }
