@@ -10,6 +10,7 @@ import { AwsS3Module } from "./aws-s3/aws-s3.module";
 import { LikeModule } from "./like/like.module";
 import { ReadingProgressModule } from "./reading-progress/reading-progress.module";
 import { PageModule } from "./page/page.module";
+import { MulterModule } from "@nestjs/platform-express";
 
 @Module({
     imports: [
@@ -25,7 +26,11 @@ import { PageModule } from "./page/page.module";
         PageModule,
         ReadingProgressModule,
         LikeModule,
-        AwsS3Module
+        AwsS3Module,
+        MulterModule.register({
+            limits: { fileSize: 1000000 },
+            dest: "./uploads"
+        })
     ],
     controllers: [],
     providers: []

@@ -30,9 +30,10 @@ export class AwsS3Service {
         try {
             const s3Key: string = v4();
             const fileExtension: string = this.extractExtension(file.originalname.toLowerCase());
+            const fileName: string = `${s3Key}.${fileExtension}`;
             const command: PutObjectCommand = new PutObjectCommand({
                 Bucket: this.AWS_S3_BUCKET_NAME,
-                Key: s3Key,
+                Key: fileName,
                 Body: file.buffer
             });
             await this.s3Client.send(command);
@@ -60,12 +61,12 @@ export class AwsS3Service {
     }
 
     public async deleteFile(
-        s3KeyFile: string
+        fileName: string
     ): Promise<void> {
         try {
             const command: DeleteObjectCommand = new DeleteObjectCommand({
                 Bucket: this.AWS_S3_BUCKET_NAME,
-                Key: s3KeyFile
+                Key: fileName
             });
             await this.s3Client.send(command);
         } catch (error: unknown) {

@@ -7,7 +7,6 @@ import { JwtGuard } from "src/auth/guard/jwt.guard";
 import { Book, Page } from "@prisma/client";
 import { ErrorHandlerService } from "src/common/utils/error-handler/error-handler.service";
 import { UpdateBookDto } from "./dto/update-book.dto";
-import { response } from "express";
 
 @Controller("books")
 export class BookController {
@@ -33,12 +32,12 @@ export class BookController {
         @Body() dto: CreateBookDto,
         @Res() response
     ): Promise<Response> {
-        console.log("here3");
         try {
-            const { s3Key } = await this.awsS3Service.uploadFile(bookCover);
+            const { s3Key, fileExtension } = await this.awsS3Service.uploadFile(bookCover);
+
             const book: Book = await this.bookService.create(
                 dto,
-                s3Key,
+                `${s3Key}.${fileExtension}`,
                 request.user.id
             );
             if (!book) throw new Error("Resource creation failed");
@@ -50,9 +49,9 @@ export class BookController {
         }
     }
 
-    @Get("id")
+    @Get(":bookId")
     public async findUnique(
-        @Param("id") bookId: string,
+        @Param("bookId") bookId: string,
         @Res() response
     ): Promise<Response> {
         const book: Book = await this.bookService.findUnique(bookId);
@@ -66,11 +65,27 @@ export class BookController {
             .json(book);
     }
 
+    @Get()
+    public async findMany(
+        @Res() response
+    ): Promise<Response> {
+        const books: Book[] = await this.bookService.findAll();
+        if (!books || books.length === 0)
+            return response
+                .status(HttpStatus.NOT_FOUND)
+                .json();
+
+        return response
+            .status(HttpStatus.OK)
+            .json(books);
+    }
+
     @UseGuards(JwtGuard)
-    @Patch(":id/information")
+    @Patch(":bookId/information")
     public async updateInformation(
-        @Param("id") bookId: string,
-        @Body() dto: UpdateBookDto
+        @Param("bookId") bookId: string,
+        @Body() dto: UpdateBookDto,
+        @Res() response
     ) {
         const book: Book = await this.bookService.updateInformation(bookId, dto);
         if (!book)
@@ -84,15 +99,15 @@ export class BookController {
     }
 
     @UseGuards(JwtGuard)
-    @Patch(":id/content")
+    @Patch(":bookId/content")
     @UseInterceptors(FilesInterceptor("files"))
     public async updateContent(
-        @Param("id") bookId: string,
+        @Param("bookId") bookId: string,
         @UploadedFiles(
             new ParseFilePipe({
                 validators: [
                     new MaxFileSizeValidator({ maxSize: 1000000 }),
-                    new FileTypeValidator({ fileType: /\.(pdf|jpeg|png|jpg)$/ })
+                    new FileTypeValidator({ fileType: /^(application\/pdf|image\/jpeg|image\/jpg|image\/png)$/ })
                 ]
             })
         ) files: Express.Multer.File[],
@@ -107,17 +122,16 @@ export class BookController {
             if (book.authorId !== request.user.id)
                 return response.status(HttpStatus.FORBIDDEN).json();
 
-            const uploadedPages: Omit<Page, "id">[] = await Promise.all(
-                files.map(async function (file: Express.Multer.File, index: number) {
-                    const { s3Key, extensionFile } = await this.awsS3Service.uploadFile(file);
-                    return {
-                        bookId,
-                        order: index + 1,
-                        s3Key,
-                        extensionFile
-                    };
-                })
-            );
+            const uploadedPages: Omit<Page, "id">[] = [];
+            for (const file of files) {
+                const { s3Key, fileExtension } = await this.awsS3Service.uploadFile(file);
+                uploadedPages.push({
+                    bookId,
+                    order: uploadedPages.length + 1,
+                    s3Key,
+                    extensionFile: fileExtension
+                });
+            }
 
             const updatedBook = await this.bookService.updateContent(bookId, uploadedPages);
 

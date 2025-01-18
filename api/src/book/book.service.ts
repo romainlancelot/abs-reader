@@ -41,20 +41,6 @@ export class BookService {
         }
     }
 
-    public async findAll(
-        userId: string
-    ): Promise<Book[]> {
-        try {
-            return await this.prisma.book.findMany({
-                where: {
-                    authorId: userId
-                }
-            });
-        } catch (error: unknown) {
-            throw this.errorHandlerService.handleError(error);
-        }
-    }
-
     public async findUnique(
         bookId: string
     ): Promise<Book> {
@@ -62,8 +48,29 @@ export class BookService {
             return await this.prisma.book.findUnique({
                 where: {
                     id: bookId
+                },
+                include: {
+                    pages: {
+                        orderBy: {
+                            order: "asc"
+                        },
+                        select: {
+                            id: true,
+                            s3Key: true,
+                            extensionFile: true,
+                            order: true
+                        }
+                    }
                 }
             });
+        } catch (error: unknown) {
+            throw this.errorHandlerService.handleError(error);
+        }
+    }
+
+    public async findAll(): Promise<Book[]> {
+        try {
+            return await this.prisma.book.findMany();
         } catch (error: unknown) {
             throw this.errorHandlerService.handleError(error);
         }
@@ -74,11 +81,14 @@ export class BookService {
         dto: UpdateBookDto
     ): Promise<Book> {
         try {
+            const data = {
+                title: dto.title
+            };
             return await this.prisma.book.update({
                 where: {
                     id: bookId
                 },
-                data: dto
+                data
             });
         } catch (error: unknown) {
             throw this.errorHandlerService.handleError(error);
@@ -115,8 +125,16 @@ export class BookService {
             });
 
             for (const page of pages) {
-                this.awsS3Service.deleteFile(page.s3Key);
+                this.awsS3Service.deleteFile(`${page.s3Key}.${page.extensionFile}`);
             }
+
+            const book: Book = await this.prisma.book.findUnique({
+                where: {
+                    id: bookId
+                }
+            });
+
+            this.awsS3Service.deleteFile(book.coverS3Key);
 
             await this.prisma.book.delete({
                 where: {
