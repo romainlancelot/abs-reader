@@ -34,11 +34,11 @@ model Book {
 model Page {
     id              String            @id @default(uuid())
     bookId          String
-    book            Book              @relation(fields: [bookId], references: [id])
+    book            Book              @relation(fields: [bookId], references: [id], onDelete: Cascade)
     order           Int
     s3Key           String            @unique
     extensionFile   String
-    ReadingProgress ReadingProgress[]
+    ReadingProgress ReadingProgress[]   
 }
 
 model Like {

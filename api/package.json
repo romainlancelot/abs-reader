@@ -11,7 +11,7 @@
         "start": "nest start",
         "dev": "nest start --watch",
         "reset:docker:macos": "docker rm -f $(docker ps -aq); docker rmi -f $(docker images -aq); docker volume rm $(docker volume ls -q); docker builder prune -af",
-        "start:dev:macos": "docker compose up -d db && npx prisma migrate dev && nest start --watch",
+        "start:dev:macos": "docker compose up -d db && npx prisma migrate dev && nest start --debug --watch",
         "start:dev:windows": "powershell docker compose up -d db; npx prisma migrate dev; nest start --watch\"",
         "start:debug": "nest start --debug --watch",
         "start:prod": "node dist/main",

@@ -8,8 +8,8 @@ import { User } from "@prisma/client";
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, "jwt") {
     public constructor(
-        public configService: ConfigService,
-        private prisma: PrismaService
+        public readonly configService: ConfigService,
+        private readonly prisma: PrismaService
     ) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),

@@ -3,12 +3,15 @@ import { CreateBookDto } from "./dto/create-book.dto";
 import { ErrorHandlerService } from "src/common/utils/error-handler/error-handler.service";
 import { PrismaService } from "src/prisma/prisma.service";
 import { Book, Page, User } from "@prisma/client";
+import { AwsS3Service } from "src/aws-s3/aws-s3.service";
+import { UpdateBookDto } from "./dto/update-book.dto";
 
 @Injectable()
 export class BookService {
     public constructor(
         private readonly prisma: PrismaService,
-        private readonly errorHandlerService: ErrorHandlerService
+        private readonly errorHandlerService: ErrorHandlerService,
+        private readonly awsS3Service: AwsS3Service
     ) { }
 
     public async create(
@@ -66,6 +69,22 @@ export class BookService {
         }
     }
 
+    public async updateInformation(
+        bookId: string,
+        dto: UpdateBookDto
+    ): Promise<Book> {
+        try {
+            return await this.prisma.book.update({
+                where: {
+                    id: bookId
+                },
+                data: dto
+            });
+        } catch (error: unknown) {
+            throw this.errorHandlerService.handleError(error);
+        }
+    }
+
     public async updateContent(
         bookId: string,
         uploadedPages: Omit<Page, "id">[]
@@ -89,6 +108,16 @@ export class BookService {
         bookId: string
     ): Promise<void> {
         try {
+            const pages: Page[] = await this.prisma.page.findMany({
+                where: {
+                    bookId
+                }
+            });
+
+            for (const page of pages) {
+                this.awsS3Service.deleteFile(page.s3Key);
+            }
+
             await this.prisma.book.delete({
                 where: {
                     id: bookId

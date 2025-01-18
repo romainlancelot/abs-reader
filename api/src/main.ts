@@ -4,18 +4,18 @@ import { INestApplication, ValidationPipe } from "@nestjs/common";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 
 const initSwagger = (app: INestApplication) => {
-  const config = new DocumentBuilder().setTitle("Cinema API").build();
+    const config = new DocumentBuilder().setTitle("Cinema API").build();
 
-  const document = SwaggerModule.createDocument(app, config);
+    const document = SwaggerModule.createDocument(app, config);
 
-  SwaggerModule.setup("api", app, document);
+    SwaggerModule.setup("api", app, document);
 };
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  app.enableCors();
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
-  initSwagger(app);
-  await app.listen(3000);
+    const app = await NestFactory.create(AppModule);
+    app.enableCors();
+    app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+    initSwagger(app);
+    await app.listen(3000);
 }
 bootstrap();
