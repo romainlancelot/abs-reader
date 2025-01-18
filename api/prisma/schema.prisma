@@ -23,9 +23,10 @@ model Book {
     id              String            @id @default(uuid())
     title           String
     authorId        String
-    author          User              @relation(fields: [authorId], references: [id], onDelete: Cascade)
+    fileId          String
     createdAt       DateTime          @default(now())
-    coverS3Key      String?
+    author          User              @relation(fields: [authorId], references: [id], onDelete: Cascade)
+    cover           File              @relation(fields: [fileId], references: [id], onDelete: Cascade)
     pages           Page[]
     likes           Like[]
     readingProgress ReadingProgress[]
@@ -34,28 +35,36 @@ model Book {
 model Page {
     id              String            @id @default(uuid())
     bookId          String
-    book            Book              @relation(fields: [bookId], references: [id], onDelete: Cascade)
     order           Int
-    s3Key           String            @unique
-    extensionFile   String
+    fileId          String            @unique
+    book            Book              @relation(fields: [bookId], references: [id], onDelete: Cascade)
+    file            File              @relation(fields: [fileId], references: [id], onDelete: Cascade)
     ReadingProgress ReadingProgress[]
+}
+
+model File {
+    id   String @id @default(uuid())
+    name String
+    url  String
+    Page Page[]
+    Book Book[]
 }
 
 model Like {
     id        String   @id @default(uuid())
     userId    String
-    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
     bookId    String
-    book      Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
     createdAt DateTime @default(now())
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    book      Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
 }
 
 model ReadingProgress {
     id            String @id @default(uuid())
     userId        String
-    user          User   @relation(fields: [userId], references: [id], onDelete: Cascade)
     bookId        String
-    book          Book   @relation(fields: [bookId], references: [id], onDelete: Cascade)
     currentPageId String
+    user          User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    book          Book   @relation(fields: [bookId], references: [id], onDelete: Cascade)
     currentPage   Page   @relation(fields: [currentPageId], references: [id], onDelete: Cascade)
 }

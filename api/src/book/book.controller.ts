@@ -54,15 +54,12 @@ export class BookController {
         @Param("bookId") bookId: string,
         @Res() response
     ): Promise<Response> {
-        const book: Book = await this.bookService.findUnique(bookId);
-        if (!book)
-            return response
-                .status(HttpStatus.NOT_FOUND)
-                .json();
+        const { book, cover } = await this.bookService.findUnique(bookId);
 
-        return response
-            .status(HttpStatus.OK)
-            .json(book);
+        if (!book)
+            return response.status(HttpStatus.NOT_FOUND).json();
+
+        return response.status(HttpStatus.OK).json({ book, cover });
     }
 
     @Get()
@@ -115,8 +112,8 @@ export class BookController {
         @Res() response
     ): Promise<Response> {
         try {
-            const book: Book = await this.bookService.findUnique(bookId);
-            if (!book)
+            const { book, cover } = await this.bookService.findUnique(bookId);
+            if (!book || !cover)
                 return response.status(HttpStatus.NOT_FOUND).json();
 
             if (book.authorId !== request.user.id)
@@ -144,9 +141,9 @@ export class BookController {
     }
 
     @UseGuards(JwtGuard)
-    @Delete(":id")
+    @Delete(":bookId")
     public async delete(
-        @Param("id") bookId: string,
+        @Param("bookId") bookId: string,
         @Request() request,
         @Res() response
     ): Promise<Response> {

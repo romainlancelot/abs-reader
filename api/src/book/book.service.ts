@@ -43,9 +43,9 @@ export class BookService {
 
     public async findUnique(
         bookId: string
-    ): Promise<Book> {
+    ): Promise<{ book: Book, cover: any }> {
         try {
-            return await this.prisma.book.findUnique({
+            const book: Book = await this.prisma.book.findUnique({
                 where: {
                     id: bookId
                 },
@@ -63,6 +63,10 @@ export class BookService {
                     }
                 }
             });
+            if (!book) throw new NotFoundException("Book not found.");
+
+            const cover: any = await this.awsS3Service.getObjectUrl(book.coverS3Key);
+            return { book, cover };
         } catch (error: unknown) {
             throw this.errorHandlerService.handleError(error);
         }

@@ -1,8 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { v4 } from "uuid";
-import { Readable } from "stream";
 import { ErrorHandlerService } from "src/common/utils/error-handler/error-handler.service";
 
 @Injectable()
@@ -43,18 +42,9 @@ export class AwsS3Service {
         }
     }
 
-    public async downloadFile(s3KeyFile: string): Promise<Readable> {
-        const command: GetObjectCommand = new GetObjectCommand({
-            Bucket: this.AWS_S3_BUCKET_NAME,
-            Key: s3KeyFile
-        });
+    public async getObjectUrl(fileName: string): Promise<string> {
         try {
-            const response = await this.s3Client.send(command);
-            if (response.Body) {
-                return response.Body as Readable;
-            } else {
-                throw new Error("Failed to get file stream");
-            }
+            return `https://${this.AWS_S3_BUCKET_NAME}.s3.${this.AWS_S3_REGION}.amazonaws.com/${fileName}`;
         } catch (error: unknown) {
             throw await this.errorHandlerService.handleError(error);
         }
