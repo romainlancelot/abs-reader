@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsUUID } from "class-validator";
+import { IsNotEmpty, IsNumber, IsString, IsUUID } from "class-validator";
 
 export class CreatePageDto {
     @IsNotEmpty()
@@ -8,4 +8,8 @@ export class CreatePageDto {
     @IsNotEmpty()
     @IsNumber()
     order: number;
+
+    @IsNotEmpty()
+    @IsString()
+    fileId: string;
 }

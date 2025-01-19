@@ -11,6 +11,7 @@ import { LikeModule } from "./like/like.module";
 import { ReadingProgressModule } from "./reading-progress/reading-progress.module";
 import { PageModule } from "./page/page.module";
 import { MulterModule } from "@nestjs/platform-express";
+import { FileModule } from "./file/file.module";
 
 @Module({
     imports: [
@@ -30,7 +31,8 @@ import { MulterModule } from "@nestjs/platform-express";
         MulterModule.register({
             limits: { fileSize: 1000000 },
             dest: "./uploads"
-        })
+        }),
+        FileModule
     ],
     controllers: [],
     providers: []

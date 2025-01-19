@@ -1,12 +1,13 @@
-import { Controller, Post, Body, Patch, Param, UseGuards, UseInterceptors, UploadedFile, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, Request, Res, HttpStatus, UploadedFiles, Delete, Get } from "@nestjs/common";
+import { Controller, Post, Body, Patch, Param, UseGuards, UseInterceptors, UploadedFile, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, Res, HttpStatus, UploadedFiles, Delete, Get, Req, Request } from "@nestjs/common";
 import { BookService } from "./book.service";
 import { CreateBookDto } from "./dto/create-book.dto";
 import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
 import { AwsS3Service } from "src/aws-s3/aws-s3.service";
 import { JwtGuard } from "src/auth/guard/jwt.guard";
-import { Book, Page } from "@prisma/client";
+import { Book } from "@prisma/client";
 import { ErrorHandlerService } from "src/common/utils/error-handler/error-handler.service";
 import { UpdateBookDto } from "./dto/update-book.dto";
+import { Response } from "express";
 
 @Controller("books")
 export class BookController {
@@ -24,26 +25,22 @@ export class BookController {
             new ParseFilePipe({
                 validators: [
                     new MaxFileSizeValidator({ maxSize: 1000000 }),
-                    new FileTypeValidator({ fileType: /.(pdf|jpeg|png|jpg)$/ })
+                    new FileTypeValidator({ fileType: /.(jpeg|jpg|pdf|png)$/ })
                 ]
             })
-        ) bookCover: Express.Multer.File,
-        @Request() request,
+        ) bookCoverFile: Express.Multer.File,
+        @Req() request,
         @Body() dto: CreateBookDto,
-        @Res() response
+        @Res() response: Response
     ): Promise<Response> {
         try {
-            const { s3Key, fileExtension } = await this.awsS3Service.uploadFile(bookCover);
-
             const book: Book = await this.bookService.create(
+                request.user.id,
                 dto,
-                `${s3Key}.${fileExtension}`,
-                request.user.id
+                bookCoverFile
             );
-            if (!book) throw new Error("Resource creation failed");
-            return response
-                .status(HttpStatus.CREATED)
-                .json(book);
+            if (!book) throw new Error("Book creation failed");
+            return response.status(HttpStatus.CREATED).json(book);
         } catch (error: unknown) {
             throw await this.errorHandlerService.handleError(error);
         }
@@ -54,12 +51,12 @@ export class BookController {
         @Param("bookId") bookId: string,
         @Res() response
     ): Promise<Response> {
-        const { book, cover } = await this.bookService.findUnique(bookId);
+        const book: Book = await this.bookService.findUnique(bookId);
 
         if (!book)
             return response.status(HttpStatus.NOT_FOUND).json();
 
-        return response.status(HttpStatus.OK).json({ book, cover });
+        return response.status(HttpStatus.OK).json(book);
     }
 
     @Get()
@@ -81,18 +78,23 @@ export class BookController {
     @Patch(":bookId/information")
     public async updateInformation(
         @Param("bookId") bookId: string,
-        @Body() dto: UpdateBookDto,
-        @Res() response
+        @Res() response,
+        @Body() dto?: UpdateBookDto,
+        @UploadedFile(
+            new ParseFilePipe({
+                validators: [
+                    new MaxFileSizeValidator({ maxSize: 1000000 }),
+                    new FileTypeValidator({ fileType: /.(jpeg|jpg|pdf|png)$/ })
+                ]
+            })
+        ) coverFile?: Express.Multer.File
     ) {
-        const book: Book = await this.bookService.updateInformation(bookId, dto);
-        if (!book)
-            return response
-                .status(HttpStatus.NOT_FOUND)
-                .json();
+        const book: Book = await this.bookService.updateInformation(bookId, dto, coverFile);
+        if (!book) {
+            return response.status(HttpStatus.NOT_FOUND).json();
+        }
 
-        return response
-            .status(HttpStatus.OK)
-            .json(book);
+        return response.status(HttpStatus.OK).json(book);
     }
 
     @UseGuards(JwtGuard)
@@ -112,29 +114,12 @@ export class BookController {
         @Res() response
     ): Promise<Response> {
         try {
-            const { book, cover } = await this.bookService.findUnique(bookId);
-            if (!book || !cover)
-                return response.status(HttpStatus.NOT_FOUND).json();
-
-            if (book.authorId !== request.user.id)
-                return response.status(HttpStatus.FORBIDDEN).json();
-
-            const uploadedPages: Omit<Page, "id">[] = [];
-            for (const file of files) {
-                const { s3Key, fileExtension } = await this.awsS3Service.uploadFile(file);
-                uploadedPages.push({
-                    bookId,
-                    order: uploadedPages.length + 1,
-                    s3Key,
-                    extensionFile: fileExtension
-                });
-            }
-
-            const updatedBook = await this.bookService.updateContent(bookId, uploadedPages);
-
-            return response
-                .status(HttpStatus.OK)
-                .json(updatedBook);
+            const updatedBook: Book = await this.bookService.updateContent(
+                request.user.id,
+                bookId,
+                files
+            );
+            return response.status(HttpStatus.OK).json(updatedBook);
         } catch (error: unknown) {
             throw await this.errorHandlerService.handleError(error);
         }
@@ -148,10 +133,8 @@ export class BookController {
         @Res() response
     ): Promise<Response> {
         try {
-            await this.bookService.delete(bookId);
-            return response
-                .status(HttpStatus.OK)
-                .json();
+            await this.bookService.delete(request.user.id, bookId);
+            return response.status(HttpStatus.OK).json();
         } catch (error: unknown) {
             throw await this.errorHandlerService.handleError(error);
         }

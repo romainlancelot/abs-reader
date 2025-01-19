@@ -23,10 +23,10 @@ model Book {
     id              String            @id @default(uuid())
     title           String
     authorId        String
-    fileId          String
+    coverId         String
     createdAt       DateTime          @default(now())
     author          User              @relation(fields: [authorId], references: [id], onDelete: Cascade)
-    cover           File              @relation(fields: [fileId], references: [id], onDelete: Cascade)
+    cover           File              @relation(fields: [coverId], references: [name], onDelete: Cascade)
     pages           Page[]
     likes           Like[]
     readingProgress ReadingProgress[]
@@ -36,16 +36,15 @@ model Page {
     id              String            @id @default(uuid())
     bookId          String
     order           Int
-    fileId          String            @unique
+    fileId          String
     book            Book              @relation(fields: [bookId], references: [id], onDelete: Cascade)
-    file            File              @relation(fields: [fileId], references: [id], onDelete: Cascade)
+    file            File              @relation(fields: [fileId], references: [name], onDelete: Cascade)
     ReadingProgress ReadingProgress[]
 }
 
 model File {
-    id   String @id @default(uuid())
-    name String
-    url  String
+    name String @id
+    url  String @unique
     Page Page[]
     Book Book[]
 }
