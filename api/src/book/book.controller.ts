@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Patch, Param, UseGuards, UseInterceptors, UploadedFile, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, Res, HttpStatus, UploadedFiles, Delete, Get, Req, Request } from "@nestjs/common";
+import { Controller, Post, Body, Patch, Param, UseGuards, UseInterceptors, UploadedFile, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, Res, HttpStatus, UploadedFiles, Delete, Get, Req } from "@nestjs/common";
 import { BookService } from "./book.service";
 import { CreateBookDto } from "./dto/create-book.dto";
 import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
@@ -8,6 +8,7 @@ import { Book } from "@prisma/client";
 import { ErrorHandlerService } from "src/common/utils/error-handler/error-handler.service";
 import { UpdateBookDto } from "./dto/update-book.dto";
 import { Response } from "express";
+import { CustomisedExpressRequest } from "src/common/models/customised-express-request";
 
 @Controller("books")
 export class BookController {
@@ -29,7 +30,7 @@ export class BookController {
                 ]
             })
         ) coverFile: Express.Multer.File,
-        @Req() request,
+        @Req() request: CustomisedExpressRequest,
         @Body() dto: CreateBookDto,
         @Res() response: Response
     ): Promise<Response> {
@@ -83,7 +84,7 @@ export class BookController {
         @Param("bookId") bookId: string,
         @Body() dto: UpdateBookDto,
         @Res() response: Response,
-        @Req() request
+        @Req() request: CustomisedExpressRequest
     ) {
         const book: Book = await this.bookService.updateInformation(
             request.user.id,
@@ -114,7 +115,7 @@ export class BookController {
             })
         ) coverFile: Express.Multer.File,
         @Param("id") id: string,
-        @Request() request,
+        @Res() request: CustomisedExpressRequest,
         @Res() response: Response
     ): Promise<Response> {
         const book: Book = await this.bookService.updateCover(
@@ -146,7 +147,7 @@ export class BookController {
                 ]
             })
         ) files: Express.Multer.File[],
-        @Request() request,
+        @Res() request: CustomisedExpressRequest,
         @Res() response: Response
     ): Promise<Response> {
         try {
@@ -165,7 +166,7 @@ export class BookController {
     @Delete(":bookId")
     public async delete(
         @Param("bookId") bookId: string,
-        @Request() request,
+        @Res() request: CustomisedExpressRequest,
         @Res() response: Response
     ): Promise<Response> {
         try {

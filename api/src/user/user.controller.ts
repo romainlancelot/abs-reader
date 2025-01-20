@@ -1,10 +1,11 @@
-import { Body, Controller, Delete, Get, Patch, Request, Res, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Patch, Res, UseGuards } from "@nestjs/common";
 import { JwtGuard } from "src/auth/guard/jwt.guard";
 import { UserService } from "./user.service";
 import { User } from "@prisma/client";
 import { Response } from "express";
 import { ErrorHandlerService } from "src/common/utils/error-handler/error-handler.service";
 import { UpdateUserDto } from "./dto/update-user.dto";
+import { CustomisedExpressRequest } from "src/common/models/customised-express-request";
 
 @Controller("users")
 export class UserController {
@@ -16,7 +17,7 @@ export class UserController {
     @UseGuards(JwtGuard)
     @Get("me")
     public async readMe(
-        @Request() request,
+        @Res() request: CustomisedExpressRequest,
         @Res() response: Response
     ): Promise<Response> {
         try {
@@ -32,7 +33,7 @@ export class UserController {
     @UseGuards(JwtGuard)
     @Patch("me")
     public async updateMe(
-        @Request() request,
+        @Res() request: CustomisedExpressRequest,
         @Body() dto: UpdateUserDto,
         @Res() response: Response
     ): Promise<Response> {
@@ -50,7 +51,7 @@ export class UserController {
     @UseGuards(JwtGuard)
     @Delete("me")
     public async deleteMe(
-        @Request() request,
+        @Res() request: CustomisedExpressRequest,
         @Res() response: Response
     ): Promise<Response> {
         try {

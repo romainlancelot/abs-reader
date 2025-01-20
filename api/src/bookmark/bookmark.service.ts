@@ -11,6 +11,24 @@ export class BookmarkService {
         private readonly errorHandlerService: ErrorHandlerService
     ) { }
 
+    public async findUnique(
+        userId: string,
+        bookId: string
+    ): Promise<Bookmark> {
+        try {
+            return await this.prisma.bookmark.findUnique({
+                where: {
+                    userId_bookId: {
+                        userId,
+                        bookId
+                    }
+                }
+            });
+        } catch (error: unknown) {
+            throw this.errorHandlerService.handleError(error);
+        }
+    }
+
     public async upsert(
         userId: string,
         bookId: string,
@@ -25,7 +43,7 @@ export class BookmarkService {
                     }
                 }
             });
-    
+
             const bookmark = await this.prisma.bookmark.upsert({
                 where: {
                     userId_bookId: {
@@ -42,7 +60,7 @@ export class BookmarkService {
                     currentPageId: upsertBookmarkDto.currentPageId
                 }
             });
-    
+
             return { bookmark, isNew: !existingBookmark };
         } catch (error: unknown) {
             throw this.errorHandlerService.handleError(error);
