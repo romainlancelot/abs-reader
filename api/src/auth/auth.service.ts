@@ -39,7 +39,9 @@ export class AuthService {
                 }
             });
 
-            if (!user) throw new NotFoundException("User creation failed");
+            if (!user) {
+                return null;
+            }
 
             return user;
         } catch (error: unknown) {
@@ -56,8 +58,9 @@ export class AuthService {
                     email: dto.email
                 }
             });
-            if (!user || !await compare(dto.password, user.password))
-                throw new UnauthorizedException();
+            if (!user || !await compare(dto.password, user.password)) {
+                return null;
+            }
 
             return await this.jwtService.signAsync({
                 sub: user.id

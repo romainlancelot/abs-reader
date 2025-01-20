@@ -20,43 +20,37 @@ export class AwsS3Service {
         if (match) {
             return match[0].substring(1);
         }
-        throw new Error("Unsupported file type");
+        return null;
     }
 
-    public async uploadFile(
+    public async upload(
         file: Express.Multer.File
-    ): Promise<{ s3Key: string, fileExtension: string }> {
+    ): Promise<{ fileId: string, fileUrl: string }> {
         try {
-            const s3Key: string = v4();
+            const key: string = v4();
             const fileExtension: string = this.extractExtension(file.originalname.toLowerCase());
-            const fileName: string = `${s3Key}.${fileExtension}`;
+            const fileId: string = `${key}.${fileExtension}`;
+            const fileUrl: string = `https://${this.AWS_S3_BUCKET_NAME}.s3.${this.AWS_S3_REGION}.amazonaws.com/${fileId}`;
             const command: PutObjectCommand = new PutObjectCommand({
                 Bucket: this.AWS_S3_BUCKET_NAME,
-                Key: fileName,
+                Key: fileId,
                 Body: file.buffer
             });
-            await this.s3Client.send(command);
-            return { s3Key, fileExtension };
-        } catch (error: unknown) {
-            throw await this.errorHandlerService.handleError(error);
-        }
-    }
 
-    public async getObjectUrl(fileName: string): Promise<string> {
-        try {
-            return `https://${this.AWS_S3_BUCKET_NAME}.s3.${this.AWS_S3_REGION}.amazonaws.com/${fileName}`;
+            await this.s3Client.send(command);
+            return { fileId, fileUrl };
         } catch (error: unknown) {
             throw await this.errorHandlerService.handleError(error);
         }
     }
 
     public async deleteFile(
-        fileName: string
+        fileId: string
     ): Promise<void> {
         try {
             const command: DeleteObjectCommand = new DeleteObjectCommand({
                 Bucket: this.AWS_S3_BUCKET_NAME,
-                Key: fileName
+                Key: fileId
             });
             await this.s3Client.send(command);
         } catch (error: unknown) {

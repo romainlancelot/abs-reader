@@ -1,15 +1,19 @@
 import { IsNotEmpty, IsNumber, IsString, IsUUID } from "class-validator";
 
 export class CreatePageDto {
-    @IsNotEmpty()
     @IsUUID()
+    @IsNotEmpty()
     bookId: string;
 
     @IsNotEmpty()
     @IsNumber()
     order: number;
 
-    @IsNotEmpty()
     @IsString()
+    @IsNotEmpty()
     fileId: string;
+
+    @IsString()
+    @IsNotEmpty()
+    fileUrl: string;
 }

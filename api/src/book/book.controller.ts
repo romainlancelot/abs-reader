@@ -28,7 +28,7 @@ export class BookController {
                     new FileTypeValidator({ fileType: /.(jpeg|jpg|pdf|png)$/ })
                 ]
             })
-        ) bookCoverFile: Express.Multer.File,
+        ) coverFile: Express.Multer.File,
         @Req() request,
         @Body() dto: CreateBookDto,
         @Res() response: Response
@@ -37,9 +37,11 @@ export class BookController {
             const book: Book = await this.bookService.create(
                 request.user.id,
                 dto,
-                bookCoverFile
+                coverFile
             );
-            if (!book) throw new Error("Book creation failed");
+            if (!book) {
+                return null;
+            }
             return response.status(HttpStatus.CREATED).json(book);
         } catch (error: unknown) {
             throw await this.errorHandlerService.handleError(error);
@@ -53,8 +55,9 @@ export class BookController {
     ): Promise<Response> {
         const book: Book = await this.bookService.findUnique(bookId);
 
-        if (!book)
+        if (!book) {
             return response.status(HttpStatus.NOT_FOUND).json();
+        }
 
         return response.status(HttpStatus.OK).json(book);
     }
@@ -64,7 +67,7 @@ export class BookController {
         @Res() response
     ): Promise<Response> {
         const books: Book[] = await this.bookService.findAll();
-        if (!books || books.length === 0)
+        if (!books)
             return response
                 .status(HttpStatus.NOT_FOUND)
                 .json();
@@ -78,8 +81,30 @@ export class BookController {
     @Patch(":bookId/information")
     public async updateInformation(
         @Param("bookId") bookId: string,
+        @Body() dto: UpdateBookDto,
         @Res() response,
-        @Body() dto?: UpdateBookDto,
+        @Req() request
+    ) {
+        const book: Book = await this.bookService.updateInformation(
+            request.user.id,
+            bookId,
+            dto
+        );
+        if (!book) {
+            return response
+                .status(HttpStatus.NOT_FOUND)
+                .json();
+        }
+
+        return response
+            .status(HttpStatus.OK)
+            .json(book);
+    }
+
+    @UseGuards(JwtGuard)
+    @Patch(":id/cover")
+    @UseInterceptors(FileInterceptor("coverFile"))
+    public async updateCover(
         @UploadedFile(
             new ParseFilePipe({
                 validators: [
@@ -87,14 +112,25 @@ export class BookController {
                     new FileTypeValidator({ fileType: /.(jpeg|jpg|pdf|png)$/ })
                 ]
             })
-        ) coverFile?: Express.Multer.File
-    ) {
-        const book: Book = await this.bookService.updateInformation(bookId, dto, coverFile);
+        ) coverFile: Express.Multer.File,
+        @Param("id") id: string,
+        @Request() request,
+        @Res() response
+    ): Promise<Book> {
+        const book: Book = await this.bookService.updateCover(
+            request.user.id,
+            id,
+            coverFile
+        );
         if (!book) {
-            return response.status(HttpStatus.NOT_FOUND).json();
+            return response
+                .status(HttpStatus.NOT_FOUND)
+                .json();
         }
 
-        return response.status(HttpStatus.OK).json(book);
+        return response
+            .status(HttpStatus.OK)
+            .json(book);
     }
 
     @UseGuards(JwtGuard)
