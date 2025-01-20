@@ -1,9 +1,10 @@
-import { Controller, Body, Put, Req, Res, Param, HttpStatus, Get } from "@nestjs/common";
+import { Controller, Body, Put, Req, Res, Param, HttpStatus, Get, UseGuards } from "@nestjs/common";
 import { BookmarkService } from "./bookmark.service";
 import { UpsertBookmarkDto } from "./dto/upsert-bookmark.dto";
 import { Response } from "express";
 import { Bookmark } from "@prisma/client";
 import { CustomisedExpressRequest } from "src/common/models/customised-express-request";
+import { JwtGuard } from "src/auth/guard/jwt.guard";
 
 @Controller("bookmarks")
 export class BookmarkController {
@@ -11,6 +12,7 @@ export class BookmarkController {
         private readonly bookmarkService: BookmarkService
     ) { }
 
+    @UseGuards(JwtGuard)
     @Get("books/:bookId")
     public async findUnique(
         @Req() request: CustomisedExpressRequest,
@@ -31,6 +33,7 @@ export class BookmarkController {
             .json(bookmark);
     }
 
+    @UseGuards(JwtGuard)
     @Put("books/:bookId")
     public async create(
         @Req() request: CustomisedExpressRequest,

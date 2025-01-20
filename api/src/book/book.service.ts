@@ -84,7 +84,11 @@ export class BookService {
 
     public async findAll(): Promise<Book[]> {
         try {
-            return await this.prisma.book.findMany();
+            return await this.prisma.book.findMany({
+                orderBy: {
+                    createdAt: "desc"
+                }
+            });
         } catch (error: unknown) {
             throw this.errorHandlerService.handleError(error);
         }

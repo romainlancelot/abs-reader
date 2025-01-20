@@ -115,7 +115,7 @@ export class BookController {
             })
         ) coverFile: Express.Multer.File,
         @Param("id") id: string,
-        @Res() request: CustomisedExpressRequest,
+        @Req() request: CustomisedExpressRequest,
         @Res() response: Response
     ): Promise<Response> {
         const book: Book = await this.bookService.updateCover(
@@ -147,7 +147,7 @@ export class BookController {
                 ]
             })
         ) files: Express.Multer.File[],
-        @Res() request: CustomisedExpressRequest,
+        @Req() request: CustomisedExpressRequest,
         @Res() response: Response
     ): Promise<Response> {
         try {
@@ -166,7 +166,7 @@ export class BookController {
     @Delete(":bookId")
     public async delete(
         @Param("bookId") bookId: string,
-        @Res() request: CustomisedExpressRequest,
+        @Req() request: CustomisedExpressRequest,
         @Res() response: Response
     ): Promise<Response> {
         try {
