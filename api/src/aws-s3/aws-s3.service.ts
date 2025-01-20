@@ -44,7 +44,7 @@ export class AwsS3Service {
         }
     }
 
-    public async deleteFile(
+    public async delete(
         fileId: string
     ): Promise<void> {
         try {

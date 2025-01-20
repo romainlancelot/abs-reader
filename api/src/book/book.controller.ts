@@ -51,7 +51,7 @@ export class BookController {
     @Get(":bookId")
     public async findUnique(
         @Param("bookId") bookId: string,
-        @Res() response
+        @Res() response: Response
     ): Promise<Response> {
         const book: Book = await this.bookService.findUnique(bookId);
 
@@ -64,7 +64,7 @@ export class BookController {
 
     @Get()
     public async findMany(
-        @Res() response
+        @Res() response: Response
     ): Promise<Response> {
         const books: Book[] = await this.bookService.findAll();
         if (!books)
@@ -82,7 +82,7 @@ export class BookController {
     public async updateInformation(
         @Param("bookId") bookId: string,
         @Body() dto: UpdateBookDto,
-        @Res() response,
+        @Res() response: Response,
         @Req() request
     ) {
         const book: Book = await this.bookService.updateInformation(
@@ -115,7 +115,7 @@ export class BookController {
         ) coverFile: Express.Multer.File,
         @Param("id") id: string,
         @Request() request,
-        @Res() response
+        @Res() response: Response
     ): Promise<Book> {
         const book: Book = await this.bookService.updateCover(
             request.user.id,
@@ -147,7 +147,7 @@ export class BookController {
             })
         ) files: Express.Multer.File[],
         @Request() request,
-        @Res() response
+        @Res() response: Response
     ): Promise<Response> {
         try {
             const updatedBook: Book = await this.bookService.updateContent(
@@ -166,7 +166,7 @@ export class BookController {
     public async delete(
         @Param("bookId") bookId: string,
         @Request() request,
-        @Res() response
+        @Res() response: Response
     ): Promise<Response> {
         try {
             await this.bookService.delete(request.user.id, bookId);

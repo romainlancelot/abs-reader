@@ -1,12 +1,12 @@
-import { IsNotEmpty, IsNumber, IsString, IsUUID } from "class-validator";
+import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 
 export class CreatePageDto {
-    @IsUUID()
+    @IsString()
     @IsNotEmpty()
     bookId: string;
 
-    @IsNotEmpty()
     @IsNumber()
+    @IsNotEmpty()
     order: number;
 
     @IsString()

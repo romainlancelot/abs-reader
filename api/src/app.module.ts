@@ -8,9 +8,8 @@ import { ScheduleModule } from "@nestjs/schedule";
 import { BookModule } from "./book/book.module";
 import { AwsS3Module } from "./aws-s3/aws-s3.module";
 import { LikeModule } from "./like/like.module";
-import { ReadingProgressModule } from "./reading-progress/reading-progress.module";
-import { PageModule } from "./page/page.module";
 import { MulterModule } from "@nestjs/platform-express";
+import { BookmarkModule } from "./bookmark/bookmark.module";
 @Module({
     imports: [
         AuthModule,
@@ -22,14 +21,13 @@ import { MulterModule } from "@nestjs/platform-express";
         }),
         ScheduleModule.forRoot(),
         BookModule,
-        PageModule,
-        ReadingProgressModule,
         LikeModule,
         AwsS3Module,
         MulterModule.register({
             limits: { fileSize: 1000000 },
             dest: "./uploads"
-        })
+        }),
+        BookmarkModule
     ],
     controllers: [],
     providers: []

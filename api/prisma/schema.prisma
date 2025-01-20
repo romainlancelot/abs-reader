@@ -8,38 +8,38 @@ generator client {
 }
 
 model User {
-    id              String            @id @default(uuid())
-    email           String            @unique
+    id              String     @id @default(uuid())
+    email           String     @unique
     password        String
     name            String
-    tag             String            @unique
-    createdAt       DateTime          @default(now())
+    tag             String     @unique
+    createdAt       DateTime   @default(now())
     books           Book[]
     likes           Like[]
-    readingProgress ReadingProgress[]
+    readingProgress Bookmark[]
 }
 
 model Book {
-    id              String            @id @default(uuid())
+    id              String     @id @default(uuid())
     title           String
     authorId        String
     coverId         String
     coverUrl        String
-    createdAt       DateTime          @default(now())
-    author          User              @relation(fields: [authorId], references: [id], onDelete: Cascade)
+    createdAt       DateTime   @default(now())
+    author          User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
     pages           Page[]
     likes           Like[]
-    readingProgress ReadingProgress[]
+    readingProgress Bookmark[]
 }
 
 model Page {
-    id              String            @id @default(uuid())
+    id              String     @id @default(uuid())
     bookId          String
     order           Int
     fileId          String
     fileUrl         String
-    book            Book              @relation(fields: [bookId], references: [id], onDelete: Cascade)
-    ReadingProgress ReadingProgress[]
+    book            Book       @relation(fields: [bookId], references: [id], onDelete: Cascade)
+    ReadingProgress Bookmark[]
 }
 
 model Like {
@@ -51,12 +51,13 @@ model Like {
     book      Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
 }
 
-model ReadingProgress {
-    id            String @id @default(uuid())
+model Bookmark {
     userId        String
     bookId        String
     currentPageId String
     user          User   @relation(fields: [userId], references: [id], onDelete: Cascade)
     book          Book   @relation(fields: [bookId], references: [id], onDelete: Cascade)
     currentPage   Page   @relation(fields: [currentPageId], references: [id], onDelete: Cascade)
+
+    @@unique([userId, bookId])
 }

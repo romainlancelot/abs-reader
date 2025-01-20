@@ -1,11 +1,11 @@
-import { ForbiddenException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { CreateBookDto } from "./dto/create-book.dto";
 import { ErrorHandlerService } from "src/common/utils/error-handler/error-handler.service";
 import { PrismaService } from "src/prisma/prisma.service";
 import { Book, Page, User } from "@prisma/client";
 import { UpdateBookDto } from "./dto/update-book.dto";
 import { AwsS3Service } from "src/aws-s3/aws-s3.service";
-import { CreatePageDto } from "src/page/dto/create-page.dto";
+import { CreatePageDto } from "./dto/create-page.dto";
 
 @Injectable()
 export class BookService {
@@ -162,7 +162,7 @@ export class BookService {
             if (!updatedBook) {
                 return null;
             }
-            await this.awsS3Service.deleteFile(bookToUpdate.coverId);
+            await this.awsS3Service.delete(bookToUpdate.coverId);
 
             return updatedBook;
         } catch (error: unknown) {
@@ -218,36 +218,8 @@ export class BookService {
                         id: pageToDelete.id
                     }
                 });
-                await this.awsS3Service.deleteFile(pageToDelete.fileId);
+                await this.awsS3Service.delete(pageToDelete.fileId);
             }
-
-            // await Promise.all(
-            //     pagesToDelete.map(page =>
-            //         this.fileService.deleteFile(page.fileId)
-            //     )
-            // );
-
-            // await this.prisma.page.deleteMany({
-            //     where: {
-            //         bookId
-            //     }
-            // });
-
-            // await Promise.all(
-            //     newPages.map((newPage: Express.Multer.File, index: number) =>
-            //         this.fileService
-            //             .create(newPage)
-            //             .then(file =>
-            //                 this.prisma.page.create({
-            //                     data: {
-            //                         bookId,
-            //                         order: index + 1,
-            //                         fileId: file.name
-            //                     }
-            //                 })
-            //             )
-            //     )
-            // );
 
             return await this.prisma.book.findUnique({
                 where: {
@@ -300,7 +272,7 @@ export class BookService {
             });
 
             for (const fileToDelete of filesToDelete) {
-                await this.awsS3Service.deleteFile(fileToDelete);
+                await this.awsS3Service.delete(fileToDelete);
             }
         } catch (error: unknown) {
             throw this.errorHandlerService.handleError(error);

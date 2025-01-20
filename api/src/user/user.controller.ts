@@ -35,7 +35,7 @@ export class UserController {
     public async updateMe(
         @Request() request,
         @Body() dto: UpdateUserDto,
-        @Res() response
+        @Res() response: Response
     ): Promise<Response> {
         try {
             const user: Omit<User, "password"> = await this.userService.updateUser(
@@ -52,7 +52,7 @@ export class UserController {
     @Delete("me")
     public async deleteMe(
         @Request() request,
-        @Res() response
+        @Res() response: Response
     ): Promise<Response> {
         try {
             const user: Omit<User, "password"> = await this.userService.deleteUser(
