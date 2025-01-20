@@ -1,14 +1,13 @@
 import { Body, Controller, Delete, Get, Patch, Request, Res, UseGuards } from "@nestjs/common";
 import { JwtGuard } from "src/auth/guard/jwt.guard";
-import { UpdateUserDto } from "./user.dto";
 import { UserService } from "./user.service";
 import { User } from "@prisma/client";
 import { Response } from "express";
 import { ErrorHandlerService } from "src/common/utils/error-handler/error-handler.service";
+import { UpdateUserDto } from "./dto/update-user.dto";
 
 @Controller("users")
 export class UserController {
-
     public constructor(
         private readonly userService: UserService,
         private readonly errorHandlerService: ErrorHandlerService
@@ -63,5 +62,4 @@ export class UserController {
             throw await this.errorHandlerService.handleError(error);
         }
     }
-
 }

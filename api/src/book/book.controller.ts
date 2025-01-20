@@ -116,7 +116,7 @@ export class BookController {
         @Param("id") id: string,
         @Request() request,
         @Res() response: Response
-    ): Promise<Book> {
+    ): Promise<Response> {
         const book: Book = await this.bookService.updateCover(
             request.user.id,
             id,
