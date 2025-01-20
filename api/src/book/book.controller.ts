@@ -2,7 +2,6 @@ import { Controller, Post, Body, Patch, Param, UseGuards, UseInterceptors, Uploa
 import { BookService } from "./book.service";
 import { CreateBookDto } from "./dto/create-book.dto";
 import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
-import { AwsS3Service } from "src/aws-s3/aws-s3.service";
 import { JwtGuard } from "src/auth/guard/jwt.guard";
 import { Book } from "@prisma/client";
 import { ErrorHandlerService } from "src/common/utils/error-handler/error-handler.service";
@@ -14,13 +13,12 @@ import { CustomisedExpressRequest } from "src/common/models/customised-express-r
 export class BookController {
     public constructor(
         private readonly bookService: BookService,
-        private readonly awsS3Service: AwsS3Service,
         private readonly errorHandlerService: ErrorHandlerService
     ) { }
 
     @UseGuards(JwtGuard)
     @Post()
-    @UseInterceptors(FileInterceptor("file"))
+    @UseInterceptors(FileInterceptor("coverFile"))
     public async create(
         @UploadedFile(
             new ParseFilePipe({
@@ -85,7 +83,7 @@ export class BookController {
         @Body() dto: UpdateBookDto,
         @Res() response: Response,
         @Req() request: CustomisedExpressRequest
-    ) {
+    ): Promise<Response> {
         const book: Book = await this.bookService.updateInformation(
             request.user.id,
             bookId,
@@ -103,7 +101,7 @@ export class BookController {
     }
 
     @UseGuards(JwtGuard)
-    @Patch(":id/cover")
+    @Patch(":bookId/cover")
     @UseInterceptors(FileInterceptor("coverFile"))
     public async updateCover(
         @UploadedFile(
@@ -114,13 +112,13 @@ export class BookController {
                 ]
             })
         ) coverFile: Express.Multer.File,
-        @Param("id") id: string,
+        @Param("bookId") bookId: string,
         @Req() request: CustomisedExpressRequest,
         @Res() response: Response
     ): Promise<Response> {
         const book: Book = await this.bookService.updateCover(
             request.user.id,
-            id,
+            bookId,
             coverFile
         );
         if (!book) {
@@ -136,7 +134,7 @@ export class BookController {
 
     @UseGuards(JwtGuard)
     @Patch(":bookId/content")
-    @UseInterceptors(FilesInterceptor("files"))
+    @UseInterceptors(FilesInterceptor("newPagesFiles"))
     public async updateContent(
         @Param("bookId") bookId: string,
         @UploadedFiles(
@@ -146,7 +144,7 @@ export class BookController {
                     new FileTypeValidator({ fileType: /^(application\/pdf|image\/jpeg|image\/jpg|image\/png)$/ })
                 ]
             })
-        ) files: Express.Multer.File[],
+        ) newPagesFiles: Express.Multer.File[],
         @Req() request: CustomisedExpressRequest,
         @Res() response: Response
     ): Promise<Response> {
@@ -154,7 +152,7 @@ export class BookController {
             const updatedBook: Book = await this.bookService.updateContent(
                 request.user.id,
                 bookId,
-                files
+                newPagesFiles
             );
             return response.status(HttpStatus.OK).json(updatedBook);
         } catch (error: unknown) {
