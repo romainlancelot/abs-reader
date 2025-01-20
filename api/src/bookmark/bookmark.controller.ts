@@ -10,7 +10,7 @@ export class BookmarkController {
         private readonly bookmarkService: BookmarkService
     ) { }
 
-    @Put("book/:bookId")
+    @Put("books/:bookId")
     public async create(
         @Req() request,
         @Param("bookId") bookId: string,
