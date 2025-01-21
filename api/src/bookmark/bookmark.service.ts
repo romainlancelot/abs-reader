@@ -1,14 +1,12 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { UpsertBookmarkDto } from "./dto/upsert-bookmark.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import { Bookmark } from "@prisma/client";
-import { ErrorHandlerService } from "src/common/utils/error-handler/error-handler.service";
 
 @Injectable()
 export class BookmarkService {
     public constructor(
-        private readonly prisma: PrismaService,
-        private readonly errorHandlerService: ErrorHandlerService
+        private readonly prisma: PrismaService
     ) { }
 
     public async findUnique(
@@ -16,7 +14,7 @@ export class BookmarkService {
         bookId: string
     ): Promise<Bookmark> {
         try {
-            return await this.prisma.bookmark.findUnique({
+            const bookmark: Bookmark = await this.prisma.bookmark.findUnique({
                 where: {
                     userId_bookId: {
                         userId,
@@ -24,8 +22,13 @@ export class BookmarkService {
                     }
                 }
             });
+
+            if (!bookmark)
+                throw new NotFoundException("Bookmark not found.");
+
+            return bookmark;
         } catch (error: unknown) {
-            throw this.errorHandlerService.handleError(error);
+            throw error;
         }
     }
 
@@ -35,7 +38,7 @@ export class BookmarkService {
         upsertBookmarkDto: UpsertBookmarkDto
     ): Promise<{ bookmark: Bookmark; isNew: boolean }> {
         try {
-            const existingBookmark = await this.prisma.bookmark.findUnique({
+            const existingBookmark: Bookmark = await this.prisma.bookmark.findUnique({
                 where: {
                     userId_bookId: {
                         userId,
@@ -61,18 +64,21 @@ export class BookmarkService {
                 }
             });
 
+            if (!bookmark)
+                throw new InternalServerErrorException("Bookmark upsert failed.");
+
             return { bookmark, isNew: !existingBookmark };
         } catch (error: unknown) {
-            throw this.errorHandlerService.handleError(error);
+            throw error;
         }
     }
 
     public async delete(
         userId: string,
         bookId: string
-    ): Promise<void> {
+    ): Promise<Bookmark> {
         try {
-            await this.prisma.bookmark.delete({
+            const deletedBookmark: Bookmark = await this.prisma.bookmark.delete({
                 where: {
                     userId_bookId: {
                         userId,
@@ -80,8 +86,13 @@ export class BookmarkService {
                     }
                 }
             });
+
+            if (!deletedBookmark)
+                throw new InternalServerErrorException("Bookmark deletion failed.");
+
+            return deletedBookmark;
         } catch (error: unknown) {
-            throw this.errorHandlerService.handleError(error);
+            throw error;
         }
     }
 }

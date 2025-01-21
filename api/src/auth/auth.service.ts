@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, InternalServerErrorException } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { hash, compare } from "bcrypt";
 import { JwtService } from "@nestjs/jwt";
@@ -6,7 +6,6 @@ import { User } from "@prisma/client";
 import { ulid } from "ulid";
 import { SignUpAuthDto } from "./dto/sign-up-auth.dto";
 import { LogInAuthDto } from "./dto/log-in-auth.dto";
-import { ErrorHandlerService } from "src/common/utils/error-handler/error-handler.service";
 
 type UserCreateData = Pick<User, "email" | "password" | "name" | "tag">;
 
@@ -14,8 +13,7 @@ type UserCreateData = Pick<User, "email" | "password" | "name" | "tag">;
 export class AuthService {
     public constructor(
         private readonly prisma: PrismaService,
-        private readonly jwtService: JwtService,
-        private readonly errorHandlerService: ErrorHandlerService
+        private readonly jwtService: JwtService
     ) { }
 
     public async signUp(
@@ -39,13 +37,12 @@ export class AuthService {
                 }
             });
 
-            if (!user) {
-                return null;
-            }
+            if (!user)
+                throw new InternalServerErrorException("User creation failed.");
 
             return user;
         } catch (error: unknown) {
-            throw await this.errorHandlerService.handleError(error);
+            throw error;
         }
     }
 
@@ -58,15 +55,15 @@ export class AuthService {
                     email: dto.email
                 }
             });
-            if (!user || !await compare(dto.password, user.password)) {
-                return null;
-            }
+
+            if (!user || !await compare(dto.password, user.password))
+                throw new BadRequestException("Credentials are not valid.");
 
             return await this.jwtService.signAsync({
                 sub: user.id
             });
         } catch (error: unknown) {
-            throw await this.errorHandlerService.handleError(error);
+            throw error;
         }
     }
 }

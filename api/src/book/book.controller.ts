@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Patch, Param, UseGuards, UseInterceptors, UploadedFile, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, Res, HttpStatus, UploadedFiles, Delete, Get, Req } from "@nestjs/common";
+import { Controller, Post, Body, Patch, Param, UseGuards, UseInterceptors, UploadedFile, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, Res, HttpStatus, UploadedFiles, Delete, Get, Req, BadRequestException } from "@nestjs/common";
 import { BookService } from "./book.service";
 import { CreateBookDto } from "./dto/create-book.dto";
 import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
@@ -8,12 +8,14 @@ import { ErrorHandlerService } from "src/common/utils/error-handler/error-handle
 import { UpdateBookDto } from "./dto/update-book.dto";
 import { Response } from "express";
 import { CustomisedExpressRequest } from "src/common/models/customised-express-request";
+import { StringService } from "src/common/utils/string/string.service";
 
 @Controller("books")
 export class BookController {
     public constructor(
         private readonly bookService: BookService,
-        private readonly errorHandlerService: ErrorHandlerService
+        private readonly errorHandlerService: ErrorHandlerService,
+        private readonly stringService: StringService
     ) { }
 
     @UseGuards(JwtGuard)
@@ -33,17 +35,21 @@ export class BookController {
         @Res() response: Response
     ): Promise<Response> {
         try {
-            const book: Book = await this.bookService.create(
+            const createdBook: Book = await this.bookService.create(
                 request.user.id,
                 dto,
                 coverFile
             );
-            if (!book) {
-                return null;
-            }
-            return response.status(HttpStatus.CREATED).json(book);
+
+            return response
+                .status(HttpStatus.CREATED)
+                .json(createdBook);
         } catch (error: unknown) {
-            throw await this.errorHandlerService.handleError(error);
+            return this.errorHandlerService
+                .getErrorForControllerLayer(
+                    error,
+                    response
+                );
         }
     }
 
@@ -52,28 +58,62 @@ export class BookController {
         @Param("bookId") bookId: string,
         @Res() response: Response
     ): Promise<Response> {
-        const book: Book = await this.bookService.findUnique(bookId);
+        try {
+            if (!this.stringService.areAllUuids(bookId))
+                throw new BadRequestException("Book ID is invalid.");
 
-        if (!book) {
-            return response.status(HttpStatus.NOT_FOUND).json();
+            const book: Book = await this.bookService.findUnique(bookId);
+
+            return response
+                .status(HttpStatus.OK)
+                .json(book);
+        } catch (error: unknown) {
+            return this.errorHandlerService
+                .getErrorForControllerLayer(
+                    error,
+                    response
+                );
         }
-
-        return response.status(HttpStatus.OK).json(book);
     }
 
     @Get()
     public async findMany(
         @Res() response: Response
     ): Promise<Response> {
-        const books: Book[] = await this.bookService.findAll();
-        if (!books)
-            return response
-                .status(HttpStatus.NOT_FOUND)
-                .json();
+        try {
+            const books: Book[] = await this.bookService.findAll();
 
-        return response
-            .status(HttpStatus.OK)
-            .json(books);
+            return response
+                .status(HttpStatus.OK)
+                .json(books);
+        } catch (error: unknown) {
+            return this.errorHandlerService
+                .getErrorForControllerLayer(
+                    error,
+                    response
+                );
+        }
+    }
+
+    @UseGuards(JwtGuard)
+    @Get("mine")
+    public async findManyOfMine(
+        @Req() request: CustomisedExpressRequest,
+        @Res() response: Response
+    ): Promise<Response> {
+        try {
+            const books: Book[] = await this.bookService.findAllOf(request.user.id);
+
+            return response
+                .status(HttpStatus.OK)
+                .json(books);
+        } catch (error: unknown) {
+            return this.errorHandlerService
+                .getErrorForControllerLayer(
+                    error,
+                    response
+                );
+        }
     }
 
     @UseGuards(JwtGuard)
@@ -81,23 +121,29 @@ export class BookController {
     public async updateInformation(
         @Param("bookId") bookId: string,
         @Body() dto: UpdateBookDto,
-        @Res() response: Response,
-        @Req() request: CustomisedExpressRequest
+        @Req() request: CustomisedExpressRequest,
+        @Res() response: Response
     ): Promise<Response> {
-        const book: Book = await this.bookService.updateInformation(
-            request.user.id,
-            bookId,
-            dto
-        );
-        if (!book) {
-            return response
-                .status(HttpStatus.NOT_FOUND)
-                .json();
-        }
+        try {
+            if (!this.stringService.areAllUuids(bookId))
+                throw new BadRequestException("Book ID is invalid.");
 
-        return response
-            .status(HttpStatus.OK)
-            .json(book);
+            const book: Book = await this.bookService.updateInformation(
+                request.user.id,
+                bookId,
+                dto
+            );
+
+            return response
+                .status(HttpStatus.OK)
+                .json(book);
+        } catch (error: unknown) {
+            return this.errorHandlerService
+                .getErrorForControllerLayer(
+                    error,
+                    response
+                );
+        }
     }
 
     @UseGuards(JwtGuard)
@@ -116,20 +162,26 @@ export class BookController {
         @Req() request: CustomisedExpressRequest,
         @Res() response: Response
     ): Promise<Response> {
-        const book: Book = await this.bookService.updateCover(
-            request.user.id,
-            bookId,
-            coverFile
-        );
-        if (!book) {
-            return response
-                .status(HttpStatus.NOT_FOUND)
-                .json();
-        }
+        try {
+            if (!this.stringService.areAllUuids(bookId))
+                throw new BadRequestException("Book ID is invalid.");
 
-        return response
-            .status(HttpStatus.OK)
-            .json(book);
+            const book: Book = await this.bookService.updateCover(
+                request.user.id,
+                bookId,
+                coverFile
+            );
+
+            return response
+                .status(HttpStatus.OK)
+                .json(book);
+        } catch (error: unknown) {
+            return this.errorHandlerService
+                .getErrorForControllerLayer(
+                    error,
+                    response
+                );
+        }
     }
 
     @UseGuards(JwtGuard)
@@ -149,6 +201,9 @@ export class BookController {
         @Res() response: Response
     ): Promise<Response> {
         try {
+            if (!this.stringService.areAllUuids(bookId))
+                throw new BadRequestException("Book ID is invalid.");
+
             const updatedBook: Book = await this.bookService.updateContent(
                 request.user.id,
                 bookId,
@@ -156,7 +211,11 @@ export class BookController {
             );
             return response.status(HttpStatus.OK).json(updatedBook);
         } catch (error: unknown) {
-            throw await this.errorHandlerService.handleError(error);
+            return this.errorHandlerService
+                .getErrorForControllerLayer(
+                    error,
+                    response
+                );
         }
     }
 
@@ -168,10 +227,18 @@ export class BookController {
         @Res() response: Response
     ): Promise<Response> {
         try {
+            if (!this.stringService.areAllUuids(bookId))
+                throw new BadRequestException("Book ID is invalid.");
+
             await this.bookService.delete(request.user.id, bookId);
+
             return response.status(HttpStatus.OK).json();
         } catch (error: unknown) {
-            throw await this.errorHandlerService.handleError(error);
+            return this.errorHandlerService
+                .getErrorForControllerLayer(
+                    error,
+                    response
+                );
         }
     }
 }

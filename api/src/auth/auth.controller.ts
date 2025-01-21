@@ -25,7 +25,11 @@ export class AuthController {
                 .status(HttpStatus.CREATED)
                 .json();
         } catch (error: unknown) {
-            throw await this.errorHandlerService.handleError(error);
+            return this.errorHandlerService
+                .getErrorForControllerLayer(
+                    error,
+                    response
+                );
         }
     }
 
@@ -40,7 +44,11 @@ export class AuthController {
                 .status(HttpStatus.OK)
                 .json({ jwt });
         } catch (error: unknown) {
-            throw await this.errorHandlerService.handleError(error);
+            return this.errorHandlerService
+                .getErrorForControllerLayer(
+                    error,
+                    response
+                );
         }
     }
 }

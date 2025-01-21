@@ -2,7 +2,6 @@ import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { v4 } from "uuid";
-import { ErrorHandlerService } from "src/common/utils/error-handler/error-handler.service";
 
 @Injectable()
 export class AwsS3Service {
@@ -11,8 +10,7 @@ export class AwsS3Service {
     private readonly s3Client: S3Client = new S3Client({ region: this.AWS_S3_REGION });
 
     public constructor(
-        private readonly configService: ConfigService,
-        private readonly errorHandlerService: ErrorHandlerService
+        private readonly configService: ConfigService
     ) { }
 
     private extractExtension(filename: string): string {
@@ -40,7 +38,7 @@ export class AwsS3Service {
             await this.s3Client.send(command);
             return { fileId, fileUrl };
         } catch (error: unknown) {
-            throw await this.errorHandlerService.handleError(error);
+            throw error;
         }
     }
 
@@ -54,7 +52,7 @@ export class AwsS3Service {
             });
             await this.s3Client.send(command);
         } catch (error: unknown) {
-            throw await this.errorHandlerService.handleError(error);
+            throw error;
         }
     }
 }

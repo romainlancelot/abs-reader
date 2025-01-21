@@ -21,12 +21,17 @@ export class UserController {
         @Res() response: Response
     ): Promise<Response> {
         try {
-            const user: Omit<User, "password"> = await this.userService.getUser(
-                request.user.id
-            );
+            const user: Omit<User, "password"> =
+                await this.userService.getUser(
+                    request.user.id
+                );
             return response.status(200).json(user);
         } catch (error: unknown) {
-            throw await this.errorHandlerService.handleError(error);
+            return this.errorHandlerService
+                .getErrorForControllerLayer(
+                    error,
+                    response
+                );
         }
     }
 
@@ -38,13 +43,18 @@ export class UserController {
         @Res() response: Response
     ): Promise<Response> {
         try {
-            const user: Omit<User, "password"> = await this.userService.updateUser(
-                request.user.id,
-                dto
-            );
-            return response.status(200).json(user);
+            const updatedUser: Omit<User, "password"> =
+                await this.userService.updateUser(
+                    request.user.id,
+                    dto
+                );
+            return response.status(200).json(updatedUser);
         } catch (error: unknown) {
-            throw await this.errorHandlerService.handleError(error);
+            return this.errorHandlerService
+                .getErrorForControllerLayer(
+                    error,
+                    response
+                );
         }
     }
 
@@ -55,12 +65,17 @@ export class UserController {
         @Res() response: Response
     ): Promise<Response> {
         try {
-            const user: Omit<User, "password"> = await this.userService.deleteUser(
-                request.user.id
-            );
-            return response.status(200).json(user);
+            const deletedUser: Omit<User, "password"> =
+                await this.userService.deleteUser(
+                    request.user.id
+                );
+            return response.status(200).json(deletedUser);
         } catch (error: unknown) {
-            throw await this.errorHandlerService.handleError(error);
+            return this.errorHandlerService
+                .getErrorForControllerLayer(
+                    error,
+                    response
+                );
         }
     }
 }

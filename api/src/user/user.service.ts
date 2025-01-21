@@ -1,55 +1,67 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { User } from "@prisma/client";
 import { hash } from "bcrypt";
-import { ErrorHandlerService } from "src/common/utils/error-handler/error-handler.service";
 import { UpdateUserDto } from "./dto/update-user.dto";
 
 @Injectable()
 export class UserService {
     public constructor(
-        private readonly prisma: PrismaService,
-        private readonly errorHandlerService: ErrorHandlerService
+        private readonly prisma: PrismaService
     ) { }
 
     public async getUser(userId: string) {
-        const user = await this.prisma.user.findUnique({
-            where: { id: userId }
-        });
-        delete user.password;
-        return user;
+        try {
+            const user = await this.prisma.user.findUnique({
+                where: { id: userId }
+            });
+            delete user.password;
+            return user;
+        } catch (error: unknown) {
+            throw error;
+        }
     }
 
     public async updateUser(
         userId: string,
         dto: UpdateUserDto
     ): Promise<User> {
-        if (dto.password) {
-            dto.password = await hash(dto.password, 10);
-        }
-
-        const data = {
-            ...dto
-        };
-        let user: User = null;
-
         try {
-            user = await this.prisma.user.update({
+            if (dto.password)
+                dto.password = await hash(dto.password, 10);
+
+            const user: User = await this.prisma.user.update({
                 where: { id: userId },
-                data
+                data: { ...dto }
             });
+
+            if (!user)
+                throw new InternalServerErrorException("User update failed.");
+
+            delete user.password;
+
+            return user;
         } catch (error: unknown) {
-            throw await this.errorHandlerService.handleError(error);
+            throw error;
         }
-        delete user.password;
-        return user;
     }
 
-    public async deleteUser(userId: string): Promise<User> {
+    public async deleteUser(
+        userId: string
+    ): Promise<User> {
         try {
-            return this.prisma.user.delete({ where: { id: userId } });
+            const deletedUser: User = await this.prisma.user.delete({
+                where: {
+                    id: userId
+                }
+            });
+
+            if (!deletedUser)
+                throw new InternalServerErrorException("User deletion failed.");
+
+            return deletedUser;
         } catch (error: unknown) {
-            throw await this.errorHandlerService.handleError(error);
+            throw error;
         }
     }
 }

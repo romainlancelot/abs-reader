@@ -1,6 +1,5 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { CreateBookDto } from "./dto/create-book.dto";
-import { ErrorHandlerService } from "src/common/utils/error-handler/error-handler.service";
 import { PrismaService } from "src/prisma/prisma.service";
 import { Book, Page, User } from "@prisma/client";
 import { UpdateBookDto } from "./dto/update-book.dto";
@@ -11,7 +10,6 @@ import { CreatePageDto } from "./dto/create-page.dto";
 export class BookService {
     public constructor(
         private readonly prisma: PrismaService,
-        private readonly errorHandlerService: ErrorHandlerService,
         private readonly awsS3Service: AwsS3Service
     ) { }
 
@@ -26,14 +24,14 @@ export class BookService {
                     id: userId
                 }
             });
-            if (!user) {
-                return null;
-            }
+
+            if (!user)
+                throw new NotFoundException("The ID of the JWT is unknown.");
 
             const { fileId, fileUrl } = await this.awsS3Service.upload(bookCoverFile);
-            if (!fileId || !fileUrl) {
-                return null;
-            }
+
+            if (!fileId || !fileUrl)
+                throw new InternalServerErrorException("File creation failed.");
 
             const data = {
                 title: dto.title,
@@ -51,13 +49,12 @@ export class BookService {
                     }
                 }
             });
-            if (!book) {
-                return null;
-            }
+            if (!book)
+                throw new InternalServerErrorException("Book creation failed.");
 
             return book;
         } catch (error: unknown) {
-            throw this.errorHandlerService.handleError(error);
+            throw error;
         }
     }
 
@@ -65,7 +62,7 @@ export class BookService {
         bookId: string
     ): Promise<Book> {
         try {
-            return await this.prisma.book.findUnique({
+            const book: Book = await this.prisma.book.findUnique({
                 where: {
                     id: bookId
                 },
@@ -77,20 +74,47 @@ export class BookService {
                     }
                 }
             });
+
+            if (!book)
+                throw new NotFoundException("Book not found.");
+
+            return book;
         } catch (error: unknown) {
-            throw this.errorHandlerService.handleError(error);
+            throw error;
         }
     }
 
     public async findAll(): Promise<Book[]> {
         try {
+            const books: Book[] = await this.prisma.book.findMany({
+                orderBy: {
+                    createdAt: "desc"
+                }
+            });
+
+            if (!books)
+                throw new InternalServerErrorException();
+
+            return books;
+        } catch (error: unknown) {
+            throw error;
+        }
+    }
+
+    public async findAllOf(
+        userId: string
+    ): Promise<Book[]> {
+        try {
             return await this.prisma.book.findMany({
+                where: {
+                    authorId: userId
+                },
                 orderBy: {
                     createdAt: "desc"
                 }
             });
         } catch (error: unknown) {
-            throw this.errorHandlerService.handleError(error);
+            throw error;
         }
     }
 
@@ -105,14 +129,14 @@ export class BookService {
                     id: bookId
                 }
             });
-            if (!bookToUpdate) {
-                return null;
-            }
-            if (userId !== bookToUpdate.authorId) {
-                return null;
-            }
 
-            return await this.prisma.book.update({
+            if (!bookToUpdate)
+                throw new BadRequestException("The book does not exist.");
+
+            if (userId !== bookToUpdate.authorId)
+                throw new BadRequestException("The user updating the book is not the owner.");
+
+            const updatedBook: Book = await this.prisma.book.update({
                 where: {
                     id: bookId
                 },
@@ -125,8 +149,13 @@ export class BookService {
                     }
                 }
             });
+
+            if (!updatedBook)
+                throw new InternalServerErrorException("Book update failed.");
+
+            return updatedBook;
         } catch (error: unknown) {
-            throw this.errorHandlerService.handleError(error);
+            throw error;
         }
     }
 
@@ -141,18 +170,18 @@ export class BookService {
                     id: bookId
                 }
             });
-            if (!bookToUpdate) {
-                return null;
-            }
 
-            if (userId !== bookToUpdate.authorId) {
-                return null;
-            }
+            if (!bookToUpdate)
+                throw new BadRequestException("The book does not exist.");
+
+            if (userId !== bookToUpdate.authorId)
+                throw new BadRequestException("The user updating the book is not the owner.");
+
 
             const { fileId, fileUrl }: { fileId: string, fileUrl: string } = await this.awsS3Service.upload(coverFile);
-            if (!fileId || !fileUrl) {
-                return null;
-            }
+
+            if (!fileId || !fileUrl)
+                throw new InternalServerErrorException("File creation failed.");
 
             const updatedBook: Book = await this.prisma.book.update({
                 where: {
@@ -163,14 +192,15 @@ export class BookService {
                     coverUrl: fileUrl
                 }
             });
-            if (!updatedBook) {
-                return null;
-            }
+
+            if (!updatedBook)
+                throw new InternalServerErrorException("Book update failed.");
+
             await this.awsS3Service.delete(bookToUpdate.coverId);
 
             return updatedBook;
         } catch (error: unknown) {
-            throw this.errorHandlerService.handleError(error);
+            throw error;
         }
     }
 
@@ -185,13 +215,12 @@ export class BookService {
                     id: bookId
                 }
             });
-            if (!bookToUpdate) {
-                return null;
-            }
 
-            if (userId !== bookToUpdate.authorId) {
-                return null;
-            }
+            if (!bookToUpdate)
+                throw new BadRequestException("The book does not exist.");
+
+            if (userId !== bookToUpdate.authorId)
+                throw new BadRequestException("The user updating the book is not the owner.");
 
             const pagesToDelete: Page[] = await this.prisma.page.findMany({
                 where: {
@@ -201,9 +230,10 @@ export class BookService {
 
             for (const [index, newPageFile] of newPagesFiles.entries()) {
                 const { fileId, fileUrl }: { fileId: string, fileUrl: string } = await this.awsS3Service.upload(newPageFile);
-                if (!fileId || !fileUrl) {
-                    return null;
-                }
+
+                if (!fileId || !fileUrl)
+                    throw new InternalServerErrorException("File creation failed.");
+
                 const data: CreatePageDto = {
                     bookId,
                     order: index + 1,
@@ -211,9 +241,9 @@ export class BookService {
                     fileUrl
                 };
                 const page: Page = await this.prisma.page.create({ data });
-                if (!page) {
-                    return null;
-                }
+
+                if (!page)
+                    throw new InternalServerErrorException("Page creation failed.");
             }
 
             for (const pageToDelete of pagesToDelete) {
@@ -225,7 +255,7 @@ export class BookService {
                 await this.awsS3Service.delete(pageToDelete.fileId);
             }
 
-            return await this.prisma.book.findUnique({
+            const book: Book = await this.prisma.book.findUnique({
                 where: {
                     id: bookId
                 },
@@ -237,8 +267,13 @@ export class BookService {
                     }
                 }
             });
+
+            if (!book)
+                throw new NotFoundException("Updated book not found.");
+
+            return book;
         } catch (error: unknown) {
-            throw this.errorHandlerService.handleError(error);
+            throw error;
         }
     }
 
@@ -252,13 +287,12 @@ export class BookService {
                     id: bookId
                 }
             });
-            if (!bookToDelete) {
-                return null;
-            }
 
-            if (userId !== bookToDelete.authorId) {
-                return null;
-            }
+            if (!bookToDelete)
+                throw new NotFoundException("The book to delete is not found.");
+
+            if (userId !== bookToDelete.authorId)
+                throw new BadRequestException("The user updating the book is not the owner.");
 
             const pagesToDelete: Page[] = await this.prisma.page.findMany({
                 where: {
@@ -275,11 +309,10 @@ export class BookService {
                 }
             });
 
-            for (const fileToDelete of filesToDelete) {
+            for (const fileToDelete of filesToDelete)
                 await this.awsS3Service.delete(fileToDelete);
-            }
         } catch (error: unknown) {
-            throw this.errorHandlerService.handleError(error);
+            throw error;
         }
     }
 }
