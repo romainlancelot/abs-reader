@@ -53,6 +53,27 @@ export class BookController {
         }
     }
 
+    @UseGuards(JwtGuard)
+    @Get("mine")
+    public async findManyOfMine(
+        @Req() request: CustomisedExpressRequest,
+        @Res() response: Response
+    ): Promise<Response> {
+        try {
+            const books: Book[] = await this.bookService.findAllOf(request.user.id);
+
+            return response
+                .status(HttpStatus.OK)
+                .json(books);
+        } catch (error: unknown) {
+            return this.errorHandlerService
+                .getErrorForControllerLayer(
+                    error,
+                    response
+                );
+        }
+    }
+
     @Get(":bookId")
     public async findUnique(
         @Param("bookId") bookId: string,
@@ -82,27 +103,6 @@ export class BookController {
     ): Promise<Response> {
         try {
             const books: Book[] = await this.bookService.findAll();
-
-            return response
-                .status(HttpStatus.OK)
-                .json(books);
-        } catch (error: unknown) {
-            return this.errorHandlerService
-                .getErrorForControllerLayer(
-                    error,
-                    response
-                );
-        }
-    }
-
-    @UseGuards(JwtGuard)
-    @Get("mine")
-    public async findManyOfMine(
-        @Req() request: CustomisedExpressRequest,
-        @Res() response: Response
-    ): Promise<Response> {
-        try {
-            const books: Book[] = await this.bookService.findAllOf(request.user.id);
 
             return response
                 .status(HttpStatus.OK)

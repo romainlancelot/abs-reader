@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
+import { BadRequestException, ForbiddenException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { CreateBookDto } from "./dto/create-book.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import { Book, Page, User } from "@prisma/client";
@@ -134,7 +134,7 @@ export class BookService {
                 throw new BadRequestException("The book does not exist.");
 
             if (userId !== bookToUpdate.authorId)
-                throw new BadRequestException("The user updating the book is not the owner.");
+                throw new ForbiddenException("The user updating the book is not the owner.");
 
             const updatedBook: Book = await this.prisma.book.update({
                 where: {
@@ -175,7 +175,7 @@ export class BookService {
                 throw new BadRequestException("The book does not exist.");
 
             if (userId !== bookToUpdate.authorId)
-                throw new BadRequestException("The user updating the book is not the owner.");
+                throw new ForbiddenException("The user updating the book is not the owner.");
 
 
             const { fileId, fileUrl }: { fileId: string, fileUrl: string } = await this.awsS3Service.upload(coverFile);
@@ -220,7 +220,7 @@ export class BookService {
                 throw new BadRequestException("The book does not exist.");
 
             if (userId !== bookToUpdate.authorId)
-                throw new BadRequestException("The user updating the book is not the owner.");
+                throw new ForbiddenException("The user updating the book is not the owner.");
 
             const pagesToDelete: Page[] = await this.prisma.page.findMany({
                 where: {
@@ -292,7 +292,7 @@ export class BookService {
                 throw new NotFoundException("The book to delete is not found.");
 
             if (userId !== bookToDelete.authorId)
-                throw new BadRequestException("The user updating the book is not the owner.");
+                throw new ForbiddenException("The user updating the book is not the owner.");
 
             const pagesToDelete: Page[] = await this.prisma.page.findMany({
                 where: {
