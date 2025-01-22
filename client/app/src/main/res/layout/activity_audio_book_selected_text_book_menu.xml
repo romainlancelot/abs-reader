@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="20dp"
-    tools:context=".BookActivity">
+    tools:context=".ui.audio_book_selected_text_book_menu.AudioBookSelectedTextBookMenuActivity">
 
     <include
         android:id="@+id/header"

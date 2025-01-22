@@ -3,7 +3,7 @@ package com.absreader.repositories
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
-import com.absreader.HomeActivity
+import com.absreader.ui.audio_book_home.AudioBookHomeActivity
 import com.absreader.networks.RetrofitFactory
 import com.absreader.networks.dto.login.LoginDTO
 import com.absreader.networks.models.LoginParameters
@@ -15,28 +15,34 @@ import retrofit2.Response
 import retrofit2.Retrofit
 
 class LoginRepository {
-    fun login(context: Context, loginParameters: LoginParameters, server: String) {
+    fun login(
+        context: Context,
+        loginParameters: LoginParameters,
+        server: String
+    ) {
         val client: Retrofit = RetrofitFactory.getInstance(context, server)
-        val call: Call<LoginDTO> = client.create(AuthenticationService::class.java)
-            .login(loginParameters)
+        val call: Call<LoginDTO> =
+            client
+                .create(AuthenticationService::class.java)
+                .login(loginParameters)
         call.enqueue(object : Callback<LoginDTO> {
             override fun onResponse(call: Call<LoginDTO>, response: Response<LoginDTO>) {
                 if (response.isSuccessful) {
                     val loginDTO: LoginDTO? = response.body()
                     with(context.getSharedPreferences("absreader", MODE_PRIVATE).edit()) {
-                        putString("bearer", "Bearer ${loginDTO?.user?.token}")
-                        putString("server", server)
-                        apply()
+                        putString("bearer", "Bearer ${loginDTO?.user?.token}");
+                        putString("server", server);
+                        apply();
                     }
-                    val intent: Intent = Intent(context, HomeActivity::class.java)
-                    context.startActivity(intent)
-                    return
+                    val intent: Intent = Intent(context, AudioBookHomeActivity::class.java);
+                    context.startActivity(intent);
+                    return;
                 }
-                MaterialAlertDialog.alert(context, "Invalid credentials, please try again")
+                MaterialAlertDialog.alert(context, "Invalid credentials, please try again");
             }
 
             override fun onFailure(call: Call<LoginDTO>, t: Throwable) {
-                MaterialAlertDialog.alert(context, "Error with the server, try again")
+                MaterialAlertDialog.alert(context, "Error with the server, try again");
             }
         })
     }

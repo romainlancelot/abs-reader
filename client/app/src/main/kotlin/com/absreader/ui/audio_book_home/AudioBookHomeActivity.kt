@@ -1,4 +1,4 @@
-package com.absreader
+package com.absreader.ui.audio_book_home
 
 import android.os.Bundle
 import android.widget.TextView
@@ -6,6 +6,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.absreader.R
 import com.absreader.adapters.LibraryAdapter
 import com.absreader.adapters.ProgressAdapter
 import com.absreader.networks.dto.libraries.Library
@@ -14,14 +15,14 @@ import com.absreader.utils.HeaderManager
 import com.absreader.view_models.LibraryViewModel
 import com.absreader.view_models.ProgressViewModel
 
-class HomeActivity : AppCompatActivity() {
+class AudioBookHomeActivity : AppCompatActivity() {
     private val libraryViewModel: LibraryViewModel = LibraryViewModel()
     private val progressViewModel: ProgressViewModel = ProgressViewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_home)
+        setContentView(R.layout.activity_audio_book_home)
         HeaderManager(findViewById(R.id.header), false).setup(getString(R.string.home))
         val noLibraryText: TextView = findViewById(R.id.noLibraries)
         val noProgressText: TextView = findViewById(R.id.noProgress)
@@ -33,7 +34,7 @@ class HomeActivity : AppCompatActivity() {
                 noLibraryText.visibility = TextView.VISIBLE
             }
         }
-        this.libraryViewModel.getLibraries(this@HomeActivity)
+        this.libraryViewModel.getLibraries(this@AudioBookHomeActivity)
         val progressRecyclerView: RecyclerView = findViewById(R.id.progressRecyclerView)
         progressRecyclerView.layoutManager = GridLayoutManager(this, 2)
         this.progressViewModel.progress.observe(this) { progress: List<LibraryItem> ->
@@ -42,6 +43,6 @@ class HomeActivity : AppCompatActivity() {
                 noProgressText.visibility = TextView.VISIBLE
             }
         }
-        this.progressViewModel.getProgress(this@HomeActivity)
+        this.progressViewModel.getProgress(this@AudioBookHomeActivity)
     }
 }

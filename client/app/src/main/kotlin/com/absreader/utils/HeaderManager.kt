@@ -4,6 +4,7 @@ import android.content.Intent
 import android.view.View
 import android.widget.TextView
 import com.absreader.R
+import com.absreader.ui.audio_book_log_in.AudioBookLogInActivity
 
 class HeaderManager(private val view: View, private val returnVisible: Boolean = true) {
     private val title: TextView = view.findViewById(R.id.headerTitle)
@@ -19,7 +20,7 @@ class HeaderManager(private val view: View, private val returnVisible: Boolean =
         logoutButton.setOnClickListener {
             view.context.getSharedPreferences("absreader", android.content.Context.MODE_PRIVATE)
                 .edit().clear().apply()
-            val intent: Intent = Intent(view.context, com.absreader.LoginActivity::class.java)
+            val intent: Intent = Intent(view.context, AudioBookLogInActivity::class.java)
             view.context.startActivity(intent)
         }
     }
