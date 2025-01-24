@@ -44,7 +44,7 @@ export class BookController {
             return response
                 .status(HttpStatus.CREATED)
                 .json(createdBook);
-        } catch (error: unknown) {
+        } catch (error: any) {
             return this.errorHandlerService
                 .getErrorForControllerLayer(
                     error,
@@ -65,7 +65,7 @@ export class BookController {
             return response
                 .status(HttpStatus.OK)
                 .json(books);
-        } catch (error: unknown) {
+        } catch (error: any) {
             return this.errorHandlerService
                 .getErrorForControllerLayer(
                     error,
@@ -88,7 +88,7 @@ export class BookController {
             return response
                 .status(HttpStatus.OK)
                 .json(book);
-        } catch (error: unknown) {
+        } catch (error: any) {
             return this.errorHandlerService
                 .getErrorForControllerLayer(
                     error,
@@ -107,7 +107,7 @@ export class BookController {
             return response
                 .status(HttpStatus.OK)
                 .json(books);
-        } catch (error: unknown) {
+        } catch (error: any) {
             return this.errorHandlerService
                 .getErrorForControllerLayer(
                     error,
@@ -137,7 +137,7 @@ export class BookController {
             return response
                 .status(HttpStatus.OK)
                 .json(book);
-        } catch (error: unknown) {
+        } catch (error: any) {
             return this.errorHandlerService
                 .getErrorForControllerLayer(
                     error,
@@ -175,7 +175,7 @@ export class BookController {
             return response
                 .status(HttpStatus.OK)
                 .json(book);
-        } catch (error: unknown) {
+        } catch (error: any) {
             return this.errorHandlerService
                 .getErrorForControllerLayer(
                     error,
@@ -193,7 +193,7 @@ export class BookController {
             new ParseFilePipe({
                 validators: [
                     new MaxFileSizeValidator({ maxSize: 1000000 }),
-                    new FileTypeValidator({ fileType: /^(application\/pdf|image\/jpeg|image\/jpg|image\/png)$/ })
+                    new FileTypeValidator({ fileType: /^(application\/pdf|image\/jpeg|image\/jpg|image\/png|application\/epub\+zip)$/ })
                 ]
             })
         ) newPagesFiles: Express.Multer.File[],
@@ -209,8 +209,10 @@ export class BookController {
                 bookId,
                 newPagesFiles
             );
-            return response.status(HttpStatus.OK).json(updatedBook);
-        } catch (error: unknown) {
+            return response
+                .status(HttpStatus.OK)
+                .json(updatedBook);
+        } catch (error: any) {
             return this.errorHandlerService
                 .getErrorForControllerLayer(
                     error,
@@ -233,7 +235,7 @@ export class BookController {
             await this.bookService.delete(request.user.id, bookId);
 
             return response.status(HttpStatus.OK).json();
-        } catch (error: unknown) {
+        } catch (error: any) {
             return this.errorHandlerService
                 .getErrorForControllerLayer(
                     error,

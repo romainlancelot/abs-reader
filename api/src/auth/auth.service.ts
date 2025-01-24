@@ -41,7 +41,8 @@ export class AuthService {
                 throw new InternalServerErrorException("User creation failed.");
 
             return user;
-        } catch (error: unknown) {
+        } catch (error: any) {
+            console.error(error.message);
             throw error;
         }
     }
@@ -62,7 +63,8 @@ export class AuthService {
             return await this.jwtService.signAsync({
                 sub: user.id
             });
-        } catch (error: unknown) {
+        } catch (error: any) {
+            console.error(error.message);
             throw error;
         }
     }

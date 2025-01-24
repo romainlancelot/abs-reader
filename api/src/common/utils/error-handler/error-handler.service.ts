@@ -5,7 +5,7 @@ import { Response } from "express";
 @Injectable()
 export class ErrorHandlerService {
     public getErrorForControllerLayer(
-        error: unknown,
+        error: any,
         res: Response
     ): Response {
         const { statusCode, message } = this.mapErrorToHttpResponse(error);
@@ -18,7 +18,7 @@ export class ErrorHandlerService {
     }
 
     private mapErrorToHttpResponse(
-        error: unknown
+        error: any
     ): { statusCode: number, message: string } {
         if (error instanceof HttpException) {
             const statusCode = error.getStatus();

@@ -13,31 +13,23 @@ export class AwsS3Service {
         private readonly configService: ConfigService
     ) { }
 
-    private extractExtension(filename: string): string {
-        const match: RegExpMatchArray = filename.match(/\.(jpeg|jpg|pdf|png)$/i);
-        if (match) {
-            return match[0].substring(1);
-        }
-        return null;
-    }
-
     public async upload(
-        file: Express.Multer.File
+        pngFileBuffer: Buffer
     ): Promise<{ fileId: string, fileUrl: string }> {
         try {
             const key: string = v4();
-            const fileExtension: string = this.extractExtension(file.originalname.toLowerCase());
-            const fileId: string = `${key}.${fileExtension}`;
+            const fileId: string = `${key}.png`;
             const fileUrl: string = `https://${this.AWS_S3_BUCKET_NAME}.s3.${this.AWS_S3_REGION}.amazonaws.com/${fileId}`;
             const command: PutObjectCommand = new PutObjectCommand({
                 Bucket: this.AWS_S3_BUCKET_NAME,
                 Key: fileId,
-                Body: file.buffer
+                Body: pngFileBuffer,
+                ContentType: "image/png"
             });
-
             await this.s3Client.send(command);
             return { fileId, fileUrl };
-        } catch (error: unknown) {
+        } catch (error: any) {
+            console.error(error.message);
             throw error;
         }
     }
@@ -51,7 +43,8 @@ export class AwsS3Service {
                 Key: fileId
             });
             await this.s3Client.send(command);
-        } catch (error: unknown) {
+        } catch (error: any) {
+            console.error(error.message);
             throw error;
         }
     }

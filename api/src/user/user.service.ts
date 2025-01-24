@@ -17,7 +17,8 @@ export class UserService {
             });
             delete user.password;
             return user;
-        } catch (error: unknown) {
+        } catch (error: any) {
+            console.error(error.message);
             throw error;
         }
     }
@@ -41,7 +42,8 @@ export class UserService {
             delete user.password;
 
             return user;
-        } catch (error: unknown) {
+        } catch (error: any) {
+            console.error(error.message);
             throw error;
         }
     }
@@ -60,7 +62,8 @@ export class UserService {
                 throw new InternalServerErrorException("User deletion failed.");
 
             return deletedUser;
-        } catch (error: unknown) {
+        } catch (error: any) {
+            console.error(error.message);
             throw error;
         }
     }

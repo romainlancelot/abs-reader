@@ -9,7 +9,7 @@ export type DecodedToken = {
 
 export const GetAuthorization = createParamDecorator(
     function (
-        data: unknown,
+        data: any,
         executionContext: ExecutionContext
     ): DecodedToken {
         const request = executionContext.switchToHttp().getRequest();

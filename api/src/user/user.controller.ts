@@ -26,7 +26,7 @@ export class UserController {
                     request.user.id
                 );
             return response.status(200).json(user);
-        } catch (error: unknown) {
+        } catch (error: any) {
             return this.errorHandlerService
                 .getErrorForControllerLayer(
                     error,
@@ -49,7 +49,7 @@ export class UserController {
                     dto
                 );
             return response.status(200).json(updatedUser);
-        } catch (error: unknown) {
+        } catch (error: any) {
             return this.errorHandlerService
                 .getErrorForControllerLayer(
                     error,
@@ -70,7 +70,7 @@ export class UserController {
                     request.user.id
                 );
             return response.status(200).json(deletedUser);
-        } catch (error: unknown) {
+        } catch (error: any) {
             return this.errorHandlerService
                 .getErrorForControllerLayer(
                     error,

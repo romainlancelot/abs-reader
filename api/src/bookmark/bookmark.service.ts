@@ -27,7 +27,8 @@ export class BookmarkService {
                 throw new NotFoundException("Bookmark not found.");
 
             return bookmark;
-        } catch (error: unknown) {
+        } catch (error: any) {
+            console.error(error.message);
             throw error;
         }
     }
@@ -68,7 +69,8 @@ export class BookmarkService {
                 throw new InternalServerErrorException("Bookmark upsert failed.");
 
             return { bookmark, isNew: !existingBookmark };
-        } catch (error: unknown) {
+        } catch (error: any) {
+            console.error(error.message);
             throw error;
         }
     }
@@ -91,7 +93,8 @@ export class BookmarkService {
                 throw new InternalServerErrorException("Bookmark deletion failed.");
 
             return deletedBookmark;
-        } catch (error: unknown) {
+        } catch (error: any) {
+            console.error(error.message);
             throw error;
         }
     }

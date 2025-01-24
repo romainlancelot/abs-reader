@@ -24,7 +24,7 @@ export class AuthController {
             return response
                 .status(HttpStatus.CREATED)
                 .json();
-        } catch (error: unknown) {
+        } catch (error: any) {
             return this.errorHandlerService
                 .getErrorForControllerLayer(
                     error,
@@ -43,7 +43,7 @@ export class AuthController {
             return response
                 .status(HttpStatus.OK)
                 .json({ jwt });
-        } catch (error: unknown) {
+        } catch (error: any) {
             return this.errorHandlerService
                 .getErrorForControllerLayer(
                     error,

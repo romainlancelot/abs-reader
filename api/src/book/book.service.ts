@@ -5,12 +5,14 @@ import { Book, Page, User } from "@prisma/client";
 import { UpdateBookDto } from "./dto/update-book.dto";
 import { AwsS3Service } from "src/aws-s3/aws-s3.service";
 import { CreatePageDto } from "./dto/create-page.dto";
+import { CommonUtilsFileService } from "src/common/utils/common-utils-file/common-utils-file.service";
 
 @Injectable()
 export class BookService {
     public constructor(
         private readonly prisma: PrismaService,
-        private readonly awsS3Service: AwsS3Service
+        private readonly awsS3Service: AwsS3Service,
+        private readonly commonUtilsFileService: CommonUtilsFileService
     ) { }
 
     public async create(
@@ -28,7 +30,11 @@ export class BookService {
             if (!user)
                 throw new NotFoundException("The ID of the JWT is unknown.");
 
-            const { fileId, fileUrl } = await this.awsS3Service.upload(bookCoverFile);
+            const buffersToUpload: Buffer[] = [];
+
+            buffersToUpload.push(...await this.convertToPng(bookCoverFile));
+
+            const { fileId, fileUrl }: { fileId: string, fileUrl: string } = await this.awsS3Service.upload(buffersToUpload[0]);
 
             if (!fileId || !fileUrl)
                 throw new InternalServerErrorException("File creation failed.");
@@ -53,7 +59,8 @@ export class BookService {
                 throw new InternalServerErrorException("Book creation failed.");
 
             return book;
-        } catch (error: unknown) {
+        } catch (error: any) {
+            console.error(error.message);
             throw error;
         }
     }
@@ -79,7 +86,8 @@ export class BookService {
                 throw new NotFoundException("Book not found.");
 
             return book;
-        } catch (error: unknown) {
+        } catch (error: any) {
+            console.error(error.message);
             throw error;
         }
     }
@@ -96,7 +104,8 @@ export class BookService {
                 throw new InternalServerErrorException();
 
             return books;
-        } catch (error: unknown) {
+        } catch (error: any) {
+            console.error(error.message);
             throw error;
         }
     }
@@ -113,7 +122,8 @@ export class BookService {
                     createdAt: "desc"
                 }
             });
-        } catch (error: unknown) {
+        } catch (error: any) {
+            console.error(error.message);
             throw error;
         }
     }
@@ -154,7 +164,8 @@ export class BookService {
                 throw new InternalServerErrorException("Book update failed.");
 
             return updatedBook;
-        } catch (error: unknown) {
+        } catch (error: any) {
+            console.error(error.message);
             throw error;
         }
     }
@@ -177,8 +188,11 @@ export class BookService {
             if (userId !== bookToUpdate.authorId)
                 throw new ForbiddenException("The user updating the book is not the owner.");
 
+            const buffersToUpload: Buffer[] = [];
 
-            const { fileId, fileUrl }: { fileId: string, fileUrl: string } = await this.awsS3Service.upload(coverFile);
+            buffersToUpload.push(...await this.convertToPng(coverFile));
+
+            const { fileId, fileUrl }: { fileId: string, fileUrl: string } = await this.awsS3Service.upload(buffersToUpload[0]);
 
             if (!fileId || !fileUrl)
                 throw new InternalServerErrorException("File creation failed.");
@@ -199,7 +213,8 @@ export class BookService {
             await this.awsS3Service.delete(bookToUpdate.coverId);
 
             return updatedBook;
-        } catch (error: unknown) {
+        } catch (error: any) {
+            console.error(error.message);
             throw error;
         }
     }
@@ -228,8 +243,15 @@ export class BookService {
                 }
             });
 
-            for (const [index, newPageFile] of newPagesFiles.entries()) {
-                const { fileId, fileUrl }: { fileId: string, fileUrl: string } = await this.awsS3Service.upload(newPageFile);
+            const buffersToUpload: Buffer[] = [];
+
+            for (const newPageFile of newPagesFiles) {
+                buffersToUpload.push(...await this.convertToPng(newPageFile));
+            }
+
+            for (const [index, bufferToUpload] of buffersToUpload.entries()) {
+
+                const { fileId, fileUrl }: { fileId: string, fileUrl: string } = await this.awsS3Service.upload(bufferToUpload);
 
                 if (!fileId || !fileUrl)
                     throw new InternalServerErrorException("File creation failed.");
@@ -272,7 +294,33 @@ export class BookService {
                 throw new NotFoundException("Updated book not found.");
 
             return book;
-        } catch (error: unknown) {
+        } catch (error: any) {
+            console.error(error.message);
+            throw error;
+        }
+    }
+
+    private async convertToPng(
+        file: Express.Multer.File
+    ): Promise<Buffer[]> {
+        try {
+            if (!await this.commonUtilsFileService.isValidMimeType(file)) {
+                throw new BadRequestException("Invalid file type. Only pdf, jpeg, jpg, png, and epub are allowed.");
+            }
+
+            if (file.mimetype === "application/pdf") {
+                return [await this.commonUtilsFileService.convertPdfFiletoPngBuffer(file)];
+            } else if (file.mimetype === "application/epub+zip") {
+                return await this.commonUtilsFileService.convertEpubFileToPngBuffers(file);
+            } else if (file.mimetype === "image/jpeg") {
+                return [await this.commonUtilsFileService.convertJpegFileToPngBuffers(file)];
+            } else if (file.mimetype === "image/png") {
+                return [file.buffer];
+            } else {
+                throw new BadRequestException("Unsupported file type for conversion.");
+            }
+        } catch (error: any) {
+            console.error(error.message);
             throw error;
         }
     }
@@ -311,7 +359,8 @@ export class BookService {
 
             for (const fileToDelete of filesToDelete)
                 await this.awsS3Service.delete(fileToDelete);
-        } catch (error: unknown) {
+        } catch (error: any) {
+            console.error(error.message);
             throw error;
         }
     }
