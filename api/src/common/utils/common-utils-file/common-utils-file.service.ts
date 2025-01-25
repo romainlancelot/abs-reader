@@ -74,53 +74,112 @@ export class CommonUtilsFileService {
     public async convertEpubFileToPngBuffers(
         epubFile: Express.Multer.File
     ): Promise<Buffer[]> {
-        const buffers: Buffer[] = [];
+        try {
+            const buffers: Buffer[] = [];
 
-        const tempPath = `./${epubFile.originalname}`;
-        fs.writeFileSync(tempPath, epubFile.buffer);
+            const tempPath = `./${epubFile.originalname}`;
+            fs.writeFileSync(tempPath, epubFile.buffer);
 
-        const epub = new EPub(tempPath);
+            const epub = new EPub(tempPath);
 
-        await new Promise<void>((resolve, reject) => {
-            epub.on("end", resolve);
-            epub.on("error", reject);
-            epub.parse();
-        });
+            await new Promise<void>((resolve, reject) => {
+                epub.on("end", resolve);
+                epub.on("error", reject);
+                epub.parse();
+            });
 
-        const htmlFiles = Object.keys(epub.flow).map((key) => epub.flow[key].id);
+            const htmlFiles = Object.keys(epub.flow).map((key) => epub.flow[key].id);
 
-        const browser = await puppeteer.launch();
+            const browser = await puppeteer.launch();
 
-        for (const htmlFile of htmlFiles) {
-            const content = await new Promise<string>((resolve, reject) => {
-                epub.getChapter(htmlFile, (err, text) => {
-                    if (err) reject(err);
-                    else resolve(text);
+            for (const htmlFile of htmlFiles) {
+                const content = await new Promise<string>((resolve, reject) => {
+                    epub.getChapter(htmlFile, (err, text) => {
+                        if (err) reject(err);
+                        else resolve(text);
+                    });
                 });
-            });
 
-            const page = await browser.newPage();
+                const page = await browser.newPage();
 
-            await page.setContent(content, { waitUntil: "networkidle0" });
+                await page.setContent(content, { waitUntil: "networkidle0" });
 
-            await page.setViewport({ width: 800, height: 1000 });
+                await page.setViewport({ width: 800, height: 1000 });
 
-            const screenshotData = await page.screenshot({
-                type: "png",
-                fullPage: true
-            });
+                const screenshotData = await page.screenshot({
+                    type: "png",
+                    fullPage: true
+                });
 
-            const buffer = Buffer.from(screenshotData);
-            buffers.push(buffer);
+                const buffer = Buffer.from(screenshotData);
+                buffers.push(buffer);
 
-            await page.close();
+                await page.close();
+            }
+
+            await browser.close();
+
+            fs.unlinkSync(tempPath);
+
+            return await this.splitPngBuffersByHeight(buffers, 800);
+        } catch (error: any) {
+            throw error;
         }
+    }
 
-        await browser.close();
+    public async splitPngBuffersByHeight(
+        buffers: Buffer[],
+        splitHeight: number
+    ): Promise<Buffer[]> {
+        try {
+            if (splitHeight <= 0) {
+                throw new Error("splitHeight must be a positive number");
+            }
 
-        fs.unlinkSync(tempPath);
+            const splitBuffersArray = await Promise.all(
+                buffers.map(async (buffer, index) => {
+                    try {
+                        const image = sharp(buffer);
+                        const metadata = await image.metadata();
 
-        return buffers;
+                        if (!metadata.height || !metadata.width) {
+                            throw new Error(`Image at index ${index} is missing height or width metadata`);
+                        }
+
+                        const { height: totalHeight, width } = metadata;
+                        const numSplits = Math.ceil(totalHeight / splitHeight);
+                        const splits: Buffer[] = [];
+
+                        for (let i = 0; i < numSplits; i++) {
+                            const top = i * splitHeight;
+                            const currentSplitHeight = Math.min(splitHeight, totalHeight - top);
+
+                            try {
+                                const partBuffer = await sharp(buffer)
+                                    .extract({ left: 0, top, width, height: currentSplitHeight })
+                                    .png()
+                                    .toBuffer();
+
+                                splits.push(partBuffer);
+                            } catch (extractError) {
+                                console.error(`Error extracting split ${i} for Image ${index}:`, extractError);
+                            }
+                        }
+
+                        return splits;
+                    } catch (error) {
+                        console.error(`Error processing buffer at index ${index}:`, error);
+                        return [];
+                    }
+                })
+            );
+
+            const flatSplitBuffers = splitBuffersArray.flat();
+
+            return flatSplitBuffers;
+        } catch (error: any) {
+            throw error;
+        }
     }
 
     public async convertJpegFileToPngBuffers(
