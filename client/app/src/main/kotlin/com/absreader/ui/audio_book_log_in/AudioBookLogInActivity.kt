@@ -6,8 +6,8 @@ import android.widget.EditText
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.absreader.R
-import com.absreader.networks.models.LoginParameters
-import com.absreader.repositories.LoginRepository
+import com.absreader.data.model.auth.AudioBookAuthLogin
+import com.absreader.data.repository.AudioBookAuthRepository
 import com.absreader.utils.MaterialAlertDialog
 
 class AudioBookLogInActivity : AppCompatActivity() {
@@ -15,7 +15,7 @@ class AudioBookLogInActivity : AppCompatActivity() {
     lateinit var password: String
     lateinit var login: Button
     lateinit var server: String
-    private val repository: LoginRepository = LoginRepository()
+    private val repository: AudioBookAuthRepository = AudioBookAuthRepository()
 
     private fun gatherInputs() {
         username = findViewById<EditText>(R.id.username).text.toString()
@@ -31,8 +31,8 @@ class AudioBookLogInActivity : AppCompatActivity() {
         login.setOnClickListener {
             gatherInputs()
             try {
-                val loginParameters: LoginParameters = LoginParameters(username, password)
-                repository.login(this@AudioBookLogInActivity, loginParameters, server)
+                val audioBookAuthLogin: AudioBookAuthLogin = AudioBookAuthLogin(username, password)
+                repository.login(this@AudioBookLogInActivity, audioBookAuthLogin, server)
             } catch (e: IllegalArgumentException) {
                 MaterialAlertDialog.alert(
                     this@AudioBookLogInActivity, "Invalid server URL, please try again"

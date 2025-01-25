@@ -7,17 +7,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.absreader.R
-import com.absreader.adapters.LibraryAdapter
-import com.absreader.adapters.ProgressAdapter
-import com.absreader.networks.dto.libraries.Library
-import com.absreader.networks.dto.progress.LibraryItem
+import com.absreader.ui.audio_book_library.AudioBookLibraryAdapter
+import com.absreader.ui.audio_book_progress.AudioBookProgressAdapter
+import com.absreader.data.network.dto.audio_book_libraries.Library
+import com.absreader.data.network.dto.audio_book_progress.LibraryItem
 import com.absreader.utils.HeaderManager
-import com.absreader.view_models.LibraryViewModel
-import com.absreader.view_models.ProgressViewModel
+import com.absreader.ui.audio_book_library.AudioBookLibraryViewModel
+import com.absreader.ui.audio_book_progress.AudioBookProgressViewModel
 
 class AudioBookHomeActivity : AppCompatActivity() {
-    private val libraryViewModel: LibraryViewModel = LibraryViewModel()
-    private val progressViewModel: ProgressViewModel = ProgressViewModel()
+    private val audioBookLibraryViewModel: AudioBookLibraryViewModel = AudioBookLibraryViewModel()
+    private val audioBookProgressViewModel: AudioBookProgressViewModel = AudioBookProgressViewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,21 +28,21 @@ class AudioBookHomeActivity : AppCompatActivity() {
         val noProgressText: TextView = findViewById(R.id.noProgress)
         val libraryRecyclerView: RecyclerView = findViewById(R.id.libraryRecyclerView)
         libraryRecyclerView.layoutManager = GridLayoutManager(this, 1)
-        this.libraryViewModel.libraries.observe(this) { libraries: List<Library> ->
-            libraryRecyclerView.adapter = LibraryAdapter(libraries)
+        this.audioBookLibraryViewModel.libraries.observe(this) { libraries: List<Library> ->
+            libraryRecyclerView.adapter = AudioBookLibraryAdapter(libraries)
             if (libraries.isEmpty()) {
                 noLibraryText.visibility = TextView.VISIBLE
             }
         }
-        this.libraryViewModel.getLibraries(this@AudioBookHomeActivity)
+        this.audioBookLibraryViewModel.getLibraries(this@AudioBookHomeActivity)
         val progressRecyclerView: RecyclerView = findViewById(R.id.progressRecyclerView)
         progressRecyclerView.layoutManager = GridLayoutManager(this, 2)
-        this.progressViewModel.progress.observe(this) { progress: List<LibraryItem> ->
-            progressRecyclerView.adapter = ProgressAdapter(progress)
+        this.audioBookProgressViewModel.progress.observe(this) { progress: List<LibraryItem> ->
+            progressRecyclerView.adapter = AudioBookProgressAdapter(progress)
             if (progress.isEmpty()) {
                 noProgressText.visibility = TextView.VISIBLE
             }
         }
-        this.progressViewModel.getProgress(this@AudioBookHomeActivity)
+        this.audioBookProgressViewModel.getProgress(this@AudioBookHomeActivity)
     }
 }
