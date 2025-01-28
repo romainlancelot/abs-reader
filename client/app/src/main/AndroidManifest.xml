@@ -16,6 +16,15 @@
         android:theme="@style/Theme.ABSReader"
         tools:targetApi="31">
         <activity
+            android:name=".ui.hub.HubActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".ui.audio_book_selected_text_book_menu.AudioBookSelectedTextBookMenuActivity"
             android:exported="false" />
         <activity
@@ -29,13 +38,7 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="true" />
     </application>
 
 </manifest>
