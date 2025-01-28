@@ -11,6 +11,7 @@ import com.absreader.R
 import com.absreader.data.model.auth.AudioBookAuthLogin
 import com.absreader.data.repository.AudioBookAuthRepository
 import com.absreader.ui.audio_book_home.AudioBookHomeActivity
+import com.absreader.ui.hub.HubActivity
 import com.absreader.utils.MaterialAlertDialog
 
 class AudioBookLogInActivity : AppCompatActivity() {
@@ -46,6 +47,12 @@ class AudioBookLogInActivity : AppCompatActivity() {
                 )
                 return@setOnClickListener
             }
+        }
+
+        val backToHubButton: Button = findViewById(R.id.backToHubButton)
+        backToHubButton.setOnClickListener {
+            val intent = Intent(this, HubActivity::class.java)
+            startActivity(intent)
         }
     }
 
