@@ -1,5 +1,6 @@
 package com.absreader.data.network
 
+import android.app.Application
 import android.content.Context
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -12,92 +13,93 @@ object RetrofitClient {
     | Text book API Retrofit Client |
     \*-----------------------------*/
 
-    private const val TEXT_BOOK_API_BASE_URL = "http://localhost:3000";
+    private const val TEXT_BOOK_API_BASE_URL = "http://localhost:3000"
 
-    private fun createTextBookApiOkHttpClientWithAuth(context: Context): OkHttpClient {
+    private fun createTextBookApiOkHttpClientWithAuth(application: Application): OkHttpClient {
         return OkHttpClient
             .Builder()
             .addInterceptor { chain ->
                 val sharedPreferences =
-                    context.getSharedPreferences("auth", Context.MODE_PRIVATE);
+                    application.getSharedPreferences("auth", Context.MODE_PRIVATE)
 
                 val jwt =
-                    sharedPreferences.getString("text_book_api_jwt", null);
+                    sharedPreferences.getString("text_book_api_jwt", null)
 
-                val requestBuilder: Request.Builder = chain.request().newBuilder();
+                val requestBuilder: Request.Builder = chain.request().newBuilder()
 
                 if (!jwt.isNullOrEmpty())
-                    requestBuilder.addHeader("Authorization", "Bearer $jwt");
+                    requestBuilder.addHeader("Authorization", "Bearer $jwt")
 
 
-                chain.proceed(requestBuilder.build());
+                chain.proceed(requestBuilder.build())
             }
-            .build();
+            .build()
     }
 
-    fun getTextBookApiInstanceWithAuth(context: Context): Retrofit {
+    fun getTextBookApiInstanceWithAuth(application: Application): Retrofit {
         return Retrofit
             .Builder()
             .baseUrl(this.TEXT_BOOK_API_BASE_URL)
-            .client(createTextBookApiOkHttpClientWithAuth(context))
+            .client(createTextBookApiOkHttpClientWithAuth(application))
             .addConverterFactory(GsonConverterFactory.create())
-            .build();
+            .build()
     }
 
     fun getTextBookApiInstanceWithoutAuth(): Retrofit {
-        val okHttpClient = OkHttpClient.Builder().build();
+        val okHttpClient = OkHttpClient.Builder().build()
 
         return Retrofit
             .Builder()
             .baseUrl(this.TEXT_BOOK_API_BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
-            .build();
+            .build()
     }
 
     /*------------------------------*\
     | Audio book API Retrofit Client |
     \*------------------------------*/
 
-    private const val AUDIO_BOOK_API_BASE_URL = "";
+    private const val AUDIO_BOOK_API_BASE_URL = ""
 
-    private fun createAudioBookApiOkHttpClientWithAuth(context: Context): OkHttpClient {
+    private fun createAudioBookApiOkHttpClientWithAuth(application: Application): OkHttpClient {
         return OkHttpClient
             .Builder()
             .addInterceptor { chain ->
                 val sharedPreferences =
-                    context.getSharedPreferences("auth", Context.MODE_PRIVATE);
+                    application.getSharedPreferences("auth", Context.MODE_PRIVATE)
 
                 val jwt =
-                    sharedPreferences.getString("audio_book_api_jwt", null);
+                    sharedPreferences.getString("audio_book_api_jwt", null)
 
-                val requestBuilder: Request.Builder = chain.request().newBuilder();
+                val requestBuilder: Request.Builder = chain.request().newBuilder()
 
                 if (!jwt.isNullOrEmpty())
-                    requestBuilder.addHeader("Authorization", "Bearer $jwt");
+                    requestBuilder.addHeader("Authorization", "Bearer $jwt")
 
-                chain.proceed(requestBuilder.build());
+                chain.proceed(requestBuilder.build())
             }
-            .build();
+            .build()
     }
 
-    fun getAudioBookApiInstanceWithAuth(context: Context): Retrofit {
+    fun getAudioBookApiInstanceWithAuth(application: Application): Retrofit {
         return Retrofit
             .Builder()
             .baseUrl(this.AUDIO_BOOK_API_BASE_URL)
-            .client(createTextBookApiOkHttpClientWithAuth(context))
+            .client(createTextBookApiOkHttpClientWithAuth(application))
             .addConverterFactory(GsonConverterFactory.create())
-            .build();
+            .build()
     }
 
     fun getAudioBookApiInstanceWithoutAuth(): Retrofit {
-        val okHttpClient = OkHttpClient.Builder().build();
+        val okHttpClient = OkHttpClient.Builder().build()
 
         return Retrofit
             .Builder()
             .baseUrl(this.AUDIO_BOOK_API_BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
-            .build();
+            .build()
     }
+
 }
