@@ -7,19 +7,11 @@ import com.absreader.data.network.dto.auth.TextBookLogInResponse;
 import com.absreader.data.network.service.TextBookAuthApiService;
 import retrofit2.Response
 
-class TextBookAuthRepository(
-    application: Application
-) {
+class TextBookAuthRepository(application: Application) {
 
-    private val apiService = RetrofitClient
-        .getTextBookApiInstanceWithAuth(application)
-        .create(TextBookAuthApiService::class.java)
+    private val apiService = RetrofitClient.getTextBookApiInstanceWithoutAuth(application).create(TextBookAuthApiService::class.java)
 
-    suspend fun logIn(
-        email: String,
-        password: String
-    ): Response<TextBookLogInResponse> {
-        val request = TextBookLogInRequest(email, password)
+    suspend fun logIn(request: TextBookLogInRequest): Response<TextBookLogInResponse> {
         return apiService.logIn(request)
     }
 

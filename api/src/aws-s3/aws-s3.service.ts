@@ -29,7 +29,6 @@ export class AwsS3Service {
             await this.s3Client.send(command);
             return { fileId, fileUrl };
         } catch (error: any) {
-            console.error(error.message);
             throw error;
         }
     }
@@ -44,7 +43,6 @@ export class AwsS3Service {
             });
             await this.s3Client.send(command);
         } catch (error: any) {
-            console.error(error.message);
             throw error;
         }
     }

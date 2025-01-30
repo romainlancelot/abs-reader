@@ -12,6 +12,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 
 class AudioBookLibraryViewModel {
+
     val libraries: MutableLiveData<MutableList<Library>> = MutableLiveData()
 
     fun getLibraries(context: Context) {
@@ -30,9 +31,10 @@ class AudioBookLibraryViewModel {
                 }
             }
 
-            override fun onFailure(call: Call<LibrariesDTO>, t: Throwable) {
+            override fun onFailure(call: Call<LibrariesDTO>, t: Throwable): Unit {
                 libraries.value = mutableListOf()
             }
         })
     }
+
 }

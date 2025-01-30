@@ -1,4 +1,7 @@
 package com.absreader.ui.text_book_home
 
-class TextBookHomeActivity {
+import android.app.Activity
+
+class TextBookHomeActivity : Activity() {
+
 }

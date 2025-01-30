@@ -28,7 +28,6 @@ export class BookmarkService {
 
             return bookmark;
         } catch (error: any) {
-            console.error(error.message);
             throw error;
         }
     }
@@ -70,7 +69,6 @@ export class BookmarkService {
 
             return { bookmark, isNew: !existingBookmark };
         } catch (error: any) {
-            console.error(error.message);
             throw error;
         }
     }
@@ -94,7 +92,6 @@ export class BookmarkService {
 
             return deletedBookmark;
         } catch (error: any) {
-            console.error(error.message);
             throw error;
         }
     }

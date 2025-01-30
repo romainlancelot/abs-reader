@@ -66,7 +66,6 @@ export class CommonUtilsFileService {
 
             return pngPages[0].content;
         } catch (error: any) {
-            console.error(error.message);
             throw error;
         }
     }
@@ -198,7 +197,6 @@ export class CommonUtilsFileService {
 
             return pngBuffer;
         } catch (error: any) {
-            console.error(error.message);
             throw error;
         }
     }

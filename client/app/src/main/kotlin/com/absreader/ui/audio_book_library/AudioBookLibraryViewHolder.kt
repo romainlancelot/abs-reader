@@ -9,9 +9,10 @@ import com.absreader.data.network.dto.audio_book_libraries.Library
 import com.google.android.material.button.MaterialButton
 
 class AudioBookLibraryViewHolder(itemView: View) : ViewHolder(itemView) {
+
     private val libraryButton: MaterialButton = itemView.findViewById(R.id.libraryButton)
 
-    fun bind(library: Library) {
+    fun bind(library: Library): Unit {
         libraryButton.text = library.name
         libraryButton.setOnClickListener {
             val intent = Intent(itemView.context, AudioBookLibraryBookActivity::class.java)
@@ -20,4 +21,5 @@ class AudioBookLibraryViewHolder(itemView: View) : ViewHolder(itemView) {
             itemView.context.startActivity(intent)
         }
     }
+
 }

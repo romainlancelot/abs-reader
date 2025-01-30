@@ -12,9 +12,11 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/audiobookshelf_reader"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ABSReader"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
 
         <activity
@@ -44,6 +46,10 @@
 
         <activity
             android:name=".ui.text_book_log_in.TextBookLogInActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.text_book_home.TextBookHomeActivity"
             android:exported="false" />
 
     </application>

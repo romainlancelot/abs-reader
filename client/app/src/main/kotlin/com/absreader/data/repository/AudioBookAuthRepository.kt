@@ -15,23 +15,19 @@ import retrofit2.Response
 import retrofit2.Retrofit
 
 class AudioBookAuthRepository {
-    fun login(
-        context: Context,
-        audioBookAuthLogin: AudioBookAuthLogin,
-        server: String
-    ) {
+
+    fun login(context: Context, audioBookAuthLogin: AudioBookAuthLogin, server: String): Unit {
         val client: Retrofit = AudioBookRetrofitClient.getInstance(context, server)
-        val call: Call<LoginDTO> =
-            client
-                .create(AudioBookAuthService::class.java)
-                .login(audioBookAuthLogin)
+
+        val call: Call<LoginDTO> = client.create(AudioBookAuthService::class.java).login(audioBookAuthLogin)
+
         call.enqueue(object : Callback<LoginDTO> {
             override fun onResponse(call: Call<LoginDTO>, response: Response<LoginDTO>) {
                 if (response.isSuccessful) {
                     val loginDTO: LoginDTO? = response.body()
-                    with(context.getSharedPreferences("absreader", MODE_PRIVATE).edit()) {
-                        putString("bearer", "Bearer ${loginDTO?.user?.token}");
-                        putString("server", server);
+                    with(context.getSharedPreferences("auth", MODE_PRIVATE).edit()) {
+                        putString("audio_book_api_jwt", "Bearer ${loginDTO?.user?.token}");
+                        putString("audio_book_api_server_url", server);
                         apply();
                     }
                     val intent: Intent = Intent(context, AudioBookHomeActivity::class.java);
@@ -46,4 +42,5 @@ class AudioBookAuthRepository {
             }
         })
     }
+
 }

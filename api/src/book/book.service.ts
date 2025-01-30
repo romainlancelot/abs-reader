@@ -60,7 +60,6 @@ export class BookService {
 
             return book;
         } catch (error: any) {
-            console.error(error.message);
             throw error;
         }
     }
@@ -87,7 +86,6 @@ export class BookService {
 
             return book;
         } catch (error: any) {
-            console.error(error.message);
             throw error;
         }
     }
@@ -105,7 +103,6 @@ export class BookService {
 
             return books;
         } catch (error: any) {
-            console.error(error.message);
             throw error;
         }
     }
@@ -123,7 +120,6 @@ export class BookService {
                 }
             });
         } catch (error: any) {
-            console.error(error.message);
             throw error;
         }
     }
@@ -165,7 +161,6 @@ export class BookService {
 
             return updatedBook;
         } catch (error: any) {
-            console.error(error.message);
             throw error;
         }
     }
@@ -214,7 +209,6 @@ export class BookService {
 
             return updatedBook;
         } catch (error: any) {
-            console.error(error.message);
             throw error;
         }
     }
@@ -295,7 +289,6 @@ export class BookService {
 
             return book;
         } catch (error: any) {
-            console.error(error.message);
             throw error;
         }
     }
@@ -320,7 +313,6 @@ export class BookService {
                 throw new BadRequestException("Unsupported file type for conversion.");
             }
         } catch (error: any) {
-            console.error(error.message);
             throw error;
         }
     }
@@ -360,7 +352,6 @@ export class BookService {
             for (const fileToDelete of filesToDelete)
                 await this.awsS3Service.delete(fileToDelete);
         } catch (error: any) {
-            console.error(error.message);
             throw error;
         }
     }

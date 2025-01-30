@@ -18,7 +18,6 @@ export class UserService {
             delete user.password;
             return user;
         } catch (error: any) {
-            console.error(error.message);
             throw error;
         }
     }
@@ -43,7 +42,6 @@ export class UserService {
 
             return user;
         } catch (error: any) {
-            console.error(error.message);
             throw error;
         }
     }
@@ -63,7 +61,6 @@ export class UserService {
 
             return deletedUser;
         } catch (error: any) {
-            console.error(error.message);
             throw error;
         }
     }

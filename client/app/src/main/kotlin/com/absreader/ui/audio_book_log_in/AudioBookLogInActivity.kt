@@ -15,19 +15,20 @@ import com.absreader.ui.hub.HubActivity
 import com.absreader.utils.MaterialAlertDialog
 
 class AudioBookLogInActivity : AppCompatActivity() {
+
     lateinit var username: String
     lateinit var password: String
     lateinit var login: Button
     lateinit var server: String
     private val repository: AudioBookAuthRepository = AudioBookAuthRepository()
 
-    private fun gatherInputs() {
+    private fun gatherInputs(): Unit {
         username = findViewById<EditText>(R.id.username).text.toString()
         password = findViewById<EditText>(R.id.password).text.toString()
         server = findViewById<EditText>(R.id.server).text.toString()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?): Unit {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         if (isLoggedIn()) {
@@ -42,9 +43,7 @@ class AudioBookLogInActivity : AppCompatActivity() {
                 val audioBookAuthLogin: AudioBookAuthLogin = AudioBookAuthLogin(username, password)
                 repository.login(this@AudioBookLogInActivity, audioBookAuthLogin, server)
             } catch (e: IllegalArgumentException) {
-                MaterialAlertDialog.alert(
-                    this@AudioBookLogInActivity, "Invalid server URL, please try again"
-                )
+                MaterialAlertDialog.alert(this@AudioBookLogInActivity, "Invalid server URL, please try again")
                 return@setOnClickListener
             }
         }
@@ -56,14 +55,15 @@ class AudioBookLogInActivity : AppCompatActivity() {
         }
     }
 
-    fun isLoggedIn(): Boolean {
-        val sharedPreferences: SharedPreferences = getSharedPreferences("absreader", MODE_PRIVATE)
-        val bearer: String = sharedPreferences.getString("bearer", "").toString()
+    private fun isLoggedIn(): Boolean {
+        val sharedPreferences: SharedPreferences = getSharedPreferences("auth", MODE_PRIVATE)
+        val bearer: String = sharedPreferences.getString("audio_book_api_jwt", "").toString()
         return bearer.isNotEmpty()
     }
 
-    fun goToAudioBookHomeActivity() {
+    private fun goToAudioBookHomeActivity(): Unit {
         val intent: Intent = Intent(this, AudioBookHomeActivity::class.java)
         startActivity(intent)
     }
+
 }

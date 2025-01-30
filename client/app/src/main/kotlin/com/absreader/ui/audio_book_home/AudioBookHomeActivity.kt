@@ -19,9 +19,9 @@ import com.absreader.ui.audio_book_progress.AudioBookProgressViewModel
 import com.absreader.ui.hub.HubActivity
 
 class AudioBookHomeActivity : AppCompatActivity() {
+
     private val audioBookLibraryViewModel: AudioBookLibraryViewModel = AudioBookLibraryViewModel()
-    private val audioBookProgressViewModel: AudioBookProgressViewModel =
-        AudioBookProgressViewModel()
+    private val audioBookProgressViewModel: AudioBookProgressViewModel = AudioBookProgressViewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,4 +54,5 @@ class AudioBookHomeActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
+
 }

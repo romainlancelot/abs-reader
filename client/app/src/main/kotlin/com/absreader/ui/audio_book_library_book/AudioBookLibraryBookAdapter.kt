@@ -9,8 +9,7 @@ import com.absreader.data.network.dto.audio_book_library_items.Result
 
 class AudioBookLibraryBookAdapter(private val books: List<Result>) : Adapter<AudioBookLibraryBookViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AudioBookLibraryBookViewHolder {
-        val view: View = LayoutInflater.from(parent.context)
-            .inflate(R.layout.library_book, parent, false)
+        val view: View = LayoutInflater.from(parent.context).inflate(R.layout.library_book, parent, false)
         return AudioBookLibraryBookViewHolder(view)
     }
 
@@ -21,6 +20,5 @@ class AudioBookLibraryBookAdapter(private val books: List<Result>) : Adapter<Aud
     override fun getItemCount(): Int {
         return books.size
     }
-
 
 }

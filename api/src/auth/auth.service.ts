@@ -42,7 +42,6 @@ export class AuthService {
 
             return user;
         } catch (error: any) {
-            console.error(error.message);
             throw error;
         }
     }
@@ -64,7 +63,6 @@ export class AuthService {
                 sub: user.id
             });
         } catch (error: any) {
-            console.error(error.message);
             throw error;
         }
     }
