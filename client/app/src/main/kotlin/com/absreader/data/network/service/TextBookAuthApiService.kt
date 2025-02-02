@@ -9,8 +9,10 @@ import retrofit2.http.POST
 
 public interface TextBookAuthApiService {
 
-    @POST("/auth/log-in") public suspend fun logIn(@Body request: TextBookLogInRequest): Response<TextBookLogInResponse>
+    @POST("/auth/log-in")
+    public suspend fun logIn(@Body request: TextBookLogInRequest): Response<TextBookLogInResponse>
 
-    @POST("/auth/sign-up") public suspend fun signUp(@Body request: TextBookSignUpRequest): Response<Unit>
+    @POST("/auth/sign-up")
+    public suspend fun signUp(@Body request: TextBookSignUpRequest): Response<Unit>
 
 }

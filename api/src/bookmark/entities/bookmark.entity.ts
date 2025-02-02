@@ -1,1 +1,1 @@
-export class Bookmark {}
+export class Bookmark { }

@@ -1,7 +1,7 @@
 import { BadRequestException, ForbiddenException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { CreateBookDto } from "./dto/create-book.dto";
 import { PrismaService } from "src/prisma/prisma.service";
-import { Book, Page, User } from "@prisma/client";
+import { Book, Page, User, Bookmark } from "@prisma/client";
 import { UpdateBookDto } from "./dto/update-book.dto";
 import { AwsS3Service } from "src/aws-s3/aws-s3.service";
 import { CreatePageDto } from "./dto/create-page.dto";
@@ -9,6 +9,7 @@ import { CommonUtilsFileService } from "src/common/utils/common-utils-file/commo
 
 @Injectable()
 export class BookService {
+
     public constructor(
         private readonly prisma: PrismaService,
         private readonly awsS3Service: AwsS3Service,
@@ -73,6 +74,13 @@ export class BookService {
                     id: bookId
                 },
                 include: {
+                    author: {
+                        select: {
+                            id: true,
+                            name: true,
+                            tag: true
+                        }
+                    },
                     pages: {
                         orderBy: {
                             order: "asc"
@@ -101,6 +109,19 @@ export class BookService {
             if (!books)
                 throw new InternalServerErrorException();
 
+            for (const book of books) {
+                const user: User = await this.prisma.user.findUnique({
+                    where: {
+                        id: book.authorId
+                    }
+                });
+
+                if (!user)
+                    throw new NotFoundException("Author not found.");
+
+                book.authorId = user.name;
+            }
+
             return books;
         } catch (error: any) {
             throw error;
@@ -111,7 +132,7 @@ export class BookService {
         userId: string
     ): Promise<Book[]> {
         try {
-            return await this.prisma.book.findMany({
+            const books: Book[] = await this.prisma.book.findMany({
                 where: {
                     authorId: userId
                 },
@@ -119,6 +140,59 @@ export class BookService {
                     createdAt: "desc"
                 }
             });
+
+            for (const book of books) {
+                const user: User = await this.prisma.user.findUnique({
+                    where: {
+                        id: book.authorId
+                    }
+                });
+
+                if (!user)
+                    throw new NotFoundException("Author not found.");
+
+                book.authorId = user.name;
+            }
+
+            return books;
+        } catch (error: any) {
+            throw error;
+        }
+    }
+
+    public async findBookmarkedBooks(
+        userId: string
+    ): Promise<Book[]> {
+        try {
+            const bookmarks: Bookmark[] = await this.prisma.bookmark.findMany({
+                where: {
+                    userId
+                }
+            });
+            const books: Book[] = [];
+            for (const bookmark of bookmarks) {
+                const book: Book = await this.prisma.book.findUnique({
+                    where: {
+                        id: bookmark.bookId
+                    }
+                });
+                if (book) {
+                    const user: User = await this.prisma.user.findUnique({
+                        where: {
+                            id: book.authorId
+                        }
+                    });
+
+                    if (!user)
+                        throw new NotFoundException("Author not found.");
+
+                    book.authorId = user.name;
+
+                    books.push(book);
+                }
+                throw new NotFoundException("Book not found.");
+            }
+            return books;
         } catch (error: any) {
             throw error;
         }

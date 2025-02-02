@@ -9,10 +9,13 @@ import retrofit2.Response
 
 class TextBookAuthRepository(application: Application) {
 
-    private val apiService = RetrofitClient.getTextBookApiInstanceWithoutAuth(application).create(TextBookAuthApiService::class.java)
+    private val apiServiceWithoutAuth =
+        RetrofitClient
+            .getTextBookApiInstanceWithoutAuth(application)
+            .create(TextBookAuthApiService::class.java)
 
     suspend fun logIn(request: TextBookLogInRequest): Response<TextBookLogInResponse> {
-        return apiService.logIn(request)
+        return apiServiceWithoutAuth.logIn(request)
     }
 
 }

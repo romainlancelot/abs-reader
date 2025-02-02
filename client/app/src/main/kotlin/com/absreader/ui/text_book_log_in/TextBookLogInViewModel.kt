@@ -13,7 +13,10 @@ import com.absreader.data.repository.TextBookAuthRepository
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
-class TextBookLogInViewModel(application: Application, private val repository: TextBookAuthRepository) : AndroidViewModel(application) {
+class TextBookLogInViewModel(
+    application: Application,
+    private val repository: TextBookAuthRepository
+) : AndroidViewModel(application) {
 
     private val _hasLogInSucceeded = MutableLiveData<Boolean>()
     val hasLogInSucceeded: LiveData<Boolean> = _hasLogInSucceeded
@@ -42,5 +45,4 @@ class TextBookLogInViewModel(application: Application, private val repository: T
             }
         }
     }
-
 }

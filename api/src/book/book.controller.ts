@@ -12,6 +12,7 @@ import { StringService } from "src/common/utils/string/string.service";
 
 @Controller("books")
 export class BookController {
+
     public constructor(
         private readonly bookService: BookService,
         private readonly errorHandlerService: ErrorHandlerService,
@@ -61,7 +62,6 @@ export class BookController {
     ): Promise<Response> {
         try {
             const books: Book[] = await this.bookService.findAllOf(request.user.id);
-
             return response
                 .status(HttpStatus.OK)
                 .json(books);
@@ -71,6 +71,26 @@ export class BookController {
                     error,
                     response
                 );
+        }
+    }
+
+    @UseGuards(JwtGuard)
+    @Get("bookmarks")
+    public async findBookmarkedBooks(
+        @Req() request: CustomisedExpressRequest,
+        @Res() response: Response
+    ): Promise<Response> {
+        try {
+            const books: Book[] = await this.bookService.findBookmarkedBooks(request.user.id);
+
+            return response
+                .status(HttpStatus.OK)
+                .json(books);
+        } catch (error: any) {
+            return this.errorHandlerService.getErrorForControllerLayer(
+                error,
+                response
+            );
         }
     }
 
