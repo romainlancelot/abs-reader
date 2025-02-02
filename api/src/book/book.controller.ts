@@ -44,7 +44,7 @@ export class BookController {
 
             return response
                 .status(HttpStatus.CREATED)
-                .json(createdBook);
+                .json({ createdBook });
         } catch (error: any) {
             return this.errorHandlerService
                 .getErrorForControllerLayer(
@@ -85,7 +85,7 @@ export class BookController {
 
             return response
                 .status(HttpStatus.OK)
-                .json(books);
+                .json({ books });
         } catch (error: any) {
             return this.errorHandlerService.getErrorForControllerLayer(
                 error,
@@ -107,7 +107,7 @@ export class BookController {
 
             return response
                 .status(HttpStatus.OK)
-                .json(book);
+                .json({ book });
         } catch (error: any) {
             return this.errorHandlerService
                 .getErrorForControllerLayer(
@@ -126,7 +126,7 @@ export class BookController {
 
             return response
                 .status(HttpStatus.OK)
-                .json(books);
+                .json({ books });
         } catch (error: any) {
             return this.errorHandlerService
                 .getErrorForControllerLayer(
@@ -156,7 +156,7 @@ export class BookController {
 
             return response
                 .status(HttpStatus.OK)
-                .json(book);
+                .json({ book });
         } catch (error: any) {
             return this.errorHandlerService
                 .getErrorForControllerLayer(
@@ -194,7 +194,7 @@ export class BookController {
 
             return response
                 .status(HttpStatus.OK)
-                .json(book);
+                .json({ book });
         } catch (error: any) {
             return this.errorHandlerService
                 .getErrorForControllerLayer(
@@ -231,7 +231,7 @@ export class BookController {
             );
             return response
                 .status(HttpStatus.OK)
-                .json(updatedBook);
+                .json({ updatedBook });
         } catch (error: any) {
             return this.errorHandlerService
                 .getErrorForControllerLayer(
