@@ -66,8 +66,9 @@ export class BookService {
     }
 
     public async findUnique(
-        bookId: string
-    ): Promise<Book> {
+        bookId: string,
+        userId: string
+    ): Promise<{ book: Book, isTheReaderTheAuthor: boolean }> {
         try {
             const book: Book = await this.prisma.book.findUnique({
                 where: {
@@ -92,7 +93,9 @@ export class BookService {
             if (!book)
                 throw new NotFoundException("Book not found.");
 
-            return book;
+            const isTheReaderTheAuthor: boolean = book.authorId === userId;
+
+            return { book, isTheReaderTheAuthor };
         } catch (error: any) {
             throw error;
         }

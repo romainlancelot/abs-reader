@@ -52,6 +52,10 @@
             android:name=".ui.text_book_home.TextBookHomeActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".ui.text_book_book_details.TextBookBookDetailsActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

@@ -64,7 +64,7 @@ export class BookController {
             const books: Book[] = await this.bookService.findAllOf(request.user.id);
             return response
                 .status(HttpStatus.OK)
-                .json(books);
+                .json({ books });
         } catch (error: any) {
             return this.errorHandlerService
                 .getErrorForControllerLayer(
@@ -94,26 +94,22 @@ export class BookController {
         }
     }
 
+    @UseGuards(JwtGuard)
     @Get(":bookId")
     public async findUnique(
         @Param("bookId") bookId: string,
+        @Req() request: CustomisedExpressRequest,
         @Res() response: Response
     ): Promise<Response> {
         try {
             if (!this.stringService.areAllUuids(bookId))
                 throw new BadRequestException("Book ID is invalid.");
 
-            const book: Book = await this.bookService.findUnique(bookId);
+            const { book, isTheReaderTheAuthor } = await this.bookService.findUnique(bookId, request.user.id);
 
-            return response
-                .status(HttpStatus.OK)
-                .json({ book });
+            return response.status(HttpStatus.OK).json({ book, isTheReaderTheAuthor });
         } catch (error: any) {
-            return this.errorHandlerService
-                .getErrorForControllerLayer(
-                    error,
-                    response
-                );
+            return this.errorHandlerService.getErrorForControllerLayer(error, response);
         }
     }
 

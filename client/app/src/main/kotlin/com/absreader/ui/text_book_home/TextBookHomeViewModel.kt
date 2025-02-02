@@ -49,7 +49,7 @@ class TextBookHomeViewModel(
         }
     }
 
-    suspend fun fetchBooks(): Unit {
+    private suspend fun fetchBooks(): Unit {
         val response: Response<FindManyBooksResponse> = repository.findMany()
         _areBooksLoading.value = response.isSuccessful
         if (response.isSuccessful) {
@@ -59,7 +59,7 @@ class TextBookHomeViewModel(
         }
     }
 
-    suspend fun fetchMyBooks(): Unit {
+    private suspend fun fetchMyBooks(): Unit {
         val response: Response<FindManyBooksOfMineResponse> = repository.findManyOfMine()
         _areMyBooksLoading.value = response.isSuccessful
         if (response.isSuccessful) {
@@ -69,7 +69,7 @@ class TextBookHomeViewModel(
         }
     }
 
-    suspend fun fetchBookmarkedBooks(): Unit {
+    private suspend fun fetchBookmarkedBooks(): Unit {
         val response: Response<FindManyBookmarkedBooksResponse> = repository.findManyBookmarked()
         _areBookmarkedBooksLoading.value = response.isSuccessful
         if (response.isSuccessful) {

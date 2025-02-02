@@ -34,9 +34,9 @@ class TextBookHomeActivity : AppCompatActivity() {
         val recyclerViewMyBooks: RecyclerView = findViewById(R.id.recyclerViewMyBooks)
         val recyclerViewMyReadings: RecyclerView = findViewById(R.id.recyclerViewMyReadings)
 
-        recyclerViewAllBooks.layoutManager = LinearLayoutManager(this)
-        recyclerViewMyBooks.layoutManager = LinearLayoutManager(this)
-        recyclerViewMyReadings.layoutManager = LinearLayoutManager(this)
+        recyclerViewAllBooks.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        recyclerViewMyBooks.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        recyclerViewMyReadings.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
         viewModel.books.observe(this) { books ->
             recyclerViewAllBooks.adapter = TextBookHomeBookAdapter(books)

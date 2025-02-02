@@ -6,6 +6,7 @@ import com.absreader.data.network.dto.text_book.book.CreateBookResponse
 import com.absreader.data.network.dto.text_book.book.FindManyBookmarkedBooksResponse
 import com.absreader.data.network.dto.text_book.book.FindManyBooksOfMineResponse
 import com.absreader.data.network.dto.text_book.book.FindManyBooksResponse
+import com.absreader.data.network.dto.text_book.book.FindUniqueBookResponse
 import com.absreader.data.network.service.TextBookBookApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -59,6 +60,10 @@ class TextBookBookRepository(application: Application) {
             e.printStackTrace()
             throw e
         }
+    }
+
+    suspend fun findUnique(bookId: String): Response<FindUniqueBookResponse> {
+        return this.apiServiceWithAuth.findUnique(bookId)
     }
 
     suspend fun findMany(): Response<FindManyBooksResponse> {

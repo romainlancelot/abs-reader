@@ -18,6 +18,7 @@ import retrofit2.http.Multipart
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Part
+import retrofit2.http.Path
 
 interface TextBookBookApiService {
     /**
@@ -34,7 +35,9 @@ interface TextBookBookApiService {
      * Find a unique book.
      */
     @GET("/books/{id}")
-    public suspend fun findUnique(): Response<FindUniqueBookResponse>
+    public suspend fun findUnique(
+        @Path("id") id: String
+    ): Response<FindUniqueBookResponse>
 
     /**
      * Find many books.

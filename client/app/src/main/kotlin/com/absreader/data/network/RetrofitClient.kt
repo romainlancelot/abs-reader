@@ -17,7 +17,8 @@ object RetrofitClient {
 
     private fun createTextBookApiOkHttpClientWithAuth(application: Application): OkHttpClient {
         return OkHttpClient.Builder().addInterceptor { chain ->
-            val sharedPreferences = application.getSharedPreferences("auth", Context.MODE_PRIVATE)
+            val sharedPreferences =
+                application.getSharedPreferences("auth", Context.MODE_PRIVATE)
 
             val jwt = sharedPreferences.getString("text_book_api_jwt", null)
 
@@ -30,7 +31,12 @@ object RetrofitClient {
     }
 
     fun getTextBookApiInstanceWithAuth(application: Application): Retrofit {
-        return Retrofit.Builder().baseUrl(this.TEXT_BOOK_API_BASE_URL).client(createTextBookApiOkHttpClientWithAuth(application)).addConverterFactory(GsonConverterFactory.create()).build()
+        return Retrofit
+            .Builder()
+            .baseUrl(this.TEXT_BOOK_API_BASE_URL)
+            .client(createTextBookApiOkHttpClientWithAuth(application))
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
     }
 
     fun getTextBookApiInstanceWithoutAuth(application: Application): Retrofit {
