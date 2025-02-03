@@ -1,43 +1,57 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
-import { UpsertBookmarkDto } from "./dto/upsert-bookmark.dto";
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
+import { UpsertBookmarkRequestDto } from "./dto/upsert-bookmark-request.dto";
 import { PrismaService } from "src/prisma/prisma.service";
-import { Bookmark } from "@prisma/client";
+import { Bookmark, Page } from "@prisma/client";
+import { BookWithPages } from "src/book/entities/book.entity";
 
 @Injectable()
 export class BookmarkService {
+
     public constructor(
         private readonly prisma: PrismaService
     ) { }
 
-    public async findUnique(
+    public async upsert(
         userId: string,
-        bookId: string
-    ): Promise<Bookmark> {
+        bookId: string,
+        upsertBookmarkRequestDto: UpsertBookmarkRequestDto
+    ): Promise<{ bookmark: Bookmark, pageOrder: number, isNew: boolean }> {
         try {
-            const bookmark: Bookmark = await this.prisma.bookmark.findUnique({
+            const pageToBookmark: Page = await this.prisma.page.findUnique({
                 where: {
-                    userId_bookId: {
-                        userId,
-                        bookId
+                    id: upsertBookmarkRequestDto.currentPageId
+                }
+            });
+
+            if (!pageToBookmark)
+                throw new NotFoundException("The page to bookmark is not found.");
+
+            const book: BookWithPages = await this.prisma.book.findUnique({
+                where: {
+                    id: bookId
+                },
+                include: {
+                    author: {
+                        select: {
+                            id: true,
+                            name: true,
+                            tag: true
+                        }
+                    },
+                    pages: {
+                        orderBy: {
+                            order: "asc"
+                        }
                     }
                 }
             });
 
-            if (!bookmark)
-                throw new NotFoundException("Bookmark not found.");
+            if (!book)
+                throw new NotFoundException("The book to bookmark is not found.");
 
-            return bookmark;
-        } catch (error: any) {
-            throw error;
-        }
-    }
+            if (!book.pages.some((page: Page) => page.id === pageToBookmark.id))
+                throw new BadRequestException("The page does not belong to the book.");
 
-    public async upsert(
-        userId: string,
-        bookId: string,
-        upsertBookmarkDto: UpsertBookmarkDto
-    ): Promise<{ bookmark: Bookmark; isNew: boolean }> {
-        try {
             const existingBookmark: Bookmark = await this.prisma.bookmark.findUnique({
                 where: {
                     userId_bookId: {
@@ -55,30 +69,34 @@ export class BookmarkService {
                     }
                 },
                 update: {
-                    currentPageId: upsertBookmarkDto.currentPageId
+                    currentPageId: upsertBookmarkRequestDto.currentPageId
                 },
                 create: {
                     userId,
                     bookId,
-                    currentPageId: upsertBookmarkDto.currentPageId
+                    currentPageId: upsertBookmarkRequestDto.currentPageId
                 }
             });
 
             if (!bookmark)
                 throw new InternalServerErrorException("Bookmark upsert failed.");
 
-            return { bookmark, isNew: !existingBookmark };
+            return {
+                bookmark,
+                pageOrder: pageToBookmark.order,
+                isNew: !existingBookmark
+            };
         } catch (error: any) {
             throw error;
         }
     }
 
-    public async delete(
+    public async findUnique(
         userId: string,
         bookId: string
-    ): Promise<Bookmark> {
+    ): Promise<{ bookmark: Bookmark, pageOrder: number }> {
         try {
-            const deletedBookmark: Bookmark = await this.prisma.bookmark.delete({
+            const bookmark: Bookmark = await this.prisma.bookmark.findUnique({
                 where: {
                     userId_bookId: {
                         userId,
@@ -87,10 +105,22 @@ export class BookmarkService {
                 }
             });
 
-            if (!deletedBookmark)
-                throw new InternalServerErrorException("Bookmark deletion failed.");
+            if (!bookmark)
+                throw new NotFoundException("Bookmark not found.");
 
-            return deletedBookmark;
+            const page: Page = await this.prisma.page.findFirst({
+                where: {
+                    id: bookmark.currentPageId
+                }
+            });
+
+            if (!page)
+                throw new NotFoundException("Page associated with bookmark not found.");
+
+            return {
+                bookmark,
+                pageOrder: page.order
+            };
         } catch (error: any) {
             throw error;
         }

@@ -1,6 +1,6 @@
 import { IsString, IsNotEmpty } from "class-validator";
 
-export class UpsertBookmarkDto {
+export class UpsertBookmarkRequestDto {
     @IsString()
     @IsNotEmpty()
     currentPageId: string;
