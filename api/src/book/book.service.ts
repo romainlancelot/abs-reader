@@ -179,6 +179,10 @@ export class BookService {
                         id: bookmark.bookId
                     }
                 });
+
+                if (!book)
+                    throw new NotFoundException("Book not found.");
+
                 if (book) {
                     const user: User = await this.prisma.user.findUnique({
                         where: {
@@ -193,7 +197,6 @@ export class BookService {
 
                     books.push(book);
                 }
-                throw new NotFoundException("Book not found.");
             }
             return books;
         } catch (error: any) {

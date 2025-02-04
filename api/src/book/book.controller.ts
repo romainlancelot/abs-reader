@@ -42,15 +42,10 @@ export class BookController {
                 coverFile
             );
 
-            return response
-                .status(HttpStatus.CREATED)
-                .json({ createdBook });
+            return response.status(HttpStatus.CREATED).json({ createdBook });
         } catch (error: any) {
             return this.errorHandlerService
-                .getErrorForControllerLayer(
-                    error,
-                    response
-                );
+                .getErrorForControllerLayer(error, response);
         }
     }
 
@@ -62,15 +57,9 @@ export class BookController {
     ): Promise<Response> {
         try {
             const books: Book[] = await this.bookService.findAllOf(request.user.id);
-            return response
-                .status(HttpStatus.OK)
-                .json({ books });
+            return response.status(HttpStatus.OK).json({ books });
         } catch (error: any) {
-            return this.errorHandlerService
-                .getErrorForControllerLayer(
-                    error,
-                    response
-                );
+            return this.errorHandlerService.getErrorForControllerLayer(error, response);
         }
     }
 
@@ -83,14 +72,9 @@ export class BookController {
         try {
             const books: Book[] = await this.bookService.findBookmarkedBooks(request.user.id);
 
-            return response
-                .status(HttpStatus.OK)
-                .json({ books });
+            return response.status(HttpStatus.OK).json({ books });
         } catch (error: any) {
-            return this.errorHandlerService.getErrorForControllerLayer(
-                error,
-                response
-            );
+            return this.errorHandlerService.getErrorForControllerLayer(error, response);
         }
     }
 
@@ -124,11 +108,7 @@ export class BookController {
                 .status(HttpStatus.OK)
                 .json({ books });
         } catch (error: any) {
-            return this.errorHandlerService
-                .getErrorForControllerLayer(
-                    error,
-                    response
-                );
+            return this.errorHandlerService.getErrorForControllerLayer(error, response);
         }
     }
 
@@ -150,15 +130,9 @@ export class BookController {
                 dto
             );
 
-            return response
-                .status(HttpStatus.OK)
-                .json({ book });
+            return response.status(HttpStatus.OK).json({ book });
         } catch (error: any) {
-            return this.errorHandlerService
-                .getErrorForControllerLayer(
-                    error,
-                    response
-                );
+            return this.errorHandlerService.getErrorForControllerLayer(error, response);
         }
     }
 

@@ -7,6 +7,7 @@ import com.absreader.data.model.text_book.BookDetails
 import com.absreader.data.model.text_book.Page
 import com.absreader.data.network.dto.text_book.book.FindUniqueBookResponse
 import com.absreader.data.network.dto.text_book.bookmark.FindUniqueBookmarkResponse
+import com.absreader.data.network.dto.text_book.bookmark.UpsertBookmarkResponse
 import com.absreader.data.repository.TextBookBookRepository
 import com.absreader.data.repository.TextBookBookmarkRepository
 import kotlinx.coroutines.launch
@@ -34,7 +35,7 @@ class TextBookReadingViewModel(
         viewModelScope.launch {
             val response: Response<FindUniqueBookmarkResponse> = bookmarkRepository.findUnique(bookId)
             if (response.isSuccessful && response.body() != null) {
-                currentPageNumber = response.body()!!.pageOrder.toInt()
+                currentPageNumber = response.body()!!.pageOrder.toInt() - 1
             }
             updateCurrentPage()
         }
@@ -77,7 +78,7 @@ class TextBookReadingViewModel(
 
     private fun updateBookmark(bookId: String, currentPageId: String) {
         viewModelScope.launch {
-            val response = bookmarkRepository.upsertBookmark(bookId, currentPageId)
+            val response: Response<UpsertBookmarkResponse> = bookmarkRepository.upsertBookmark(bookId, currentPageId)
             if (!response.isSuccessful) {
                 _errorMessage.value = "Update of the bookmark failed."
             }
