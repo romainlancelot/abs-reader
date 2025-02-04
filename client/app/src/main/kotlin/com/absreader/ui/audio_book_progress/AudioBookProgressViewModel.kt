@@ -17,18 +17,22 @@ class AudioBookProgressViewModel {
 
     fun getProgress(context: Context) {
         val client: Retrofit = AudioBookRetrofitClient.getInstance(context)
-        val call: Call<ProgressDTO> = client.create(AudioBookUserService::class.java).getItemsInProgress()
+        val call: Call<ProgressDTO> =
+            client.create(AudioBookUserService::class.java).getItemsInProgress()
 
         call.enqueue(object : Callback<ProgressDTO> {
-            override fun onResponse(call: Call<ProgressDTO>, response: Response<ProgressDTO>): Unit {
+            override fun onResponse(
+                call: Call<ProgressDTO>,
+                response: Response<ProgressDTO>
+            ): Unit {
                 if (response.isSuccessful) {
                     val progressDTO: ProgressDTO? = response.body()
-
                     for (libraryItem: LibraryItem in progressDTO?.libraryItems ?: mutableListOf()) {
                         if (libraryItem.media.coverPath == null) {
                             continue
                         }
-                        libraryItem.media.coverPath = client.baseUrl().toString() + "/api/items/${libraryItem.id}/cover"
+                        libraryItem.media.coverPath =
+                            client.baseUrl().toString() + "/api/items/${libraryItem.id}/cover"
                     }
                     progress.value = progressDTO?.libraryItems?.toMutableList()
                 }

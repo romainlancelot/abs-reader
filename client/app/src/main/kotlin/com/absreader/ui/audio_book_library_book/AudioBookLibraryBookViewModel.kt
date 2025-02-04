@@ -25,14 +25,18 @@ class AudioBookLibraryBookViewModel {
             ) {
                 if (response.isSuccessful) {
                     val libraryItemsDTO: LibraryItemsDTO? = response.body()
+                    val audioBooks: MutableList<Result> = mutableListOf()
                     for (libraryItem: Result in libraryItemsDTO?.results ?: mutableListOf()) {
-                        if (libraryItem.media.coverPath == null) {
+                        if (libraryItem.media.numAudioFiles == 0) {
                             continue
                         }
-                        libraryItem.media.coverPath =
-                            client.baseUrl().toString() + "/api/items/${libraryItem.id}/cover"
+                        if (libraryItem.media.coverPath != null) {
+                            libraryItem.media.coverPath =
+                                client.baseUrl().toString() + "/api/items/${libraryItem.id}/cover"
+                        }
+                        audioBooks.add(libraryItem)
                     }
-                    books.value = libraryItemsDTO?.results
+                    books.value = audioBooks
                 }
             }
 
