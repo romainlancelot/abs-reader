@@ -26,7 +26,7 @@ export class BookController {
         @UploadedFile(
             new ParseFilePipe({
                 validators: [
-                    new MaxFileSizeValidator({ maxSize: 1000000 }),
+                    new MaxFileSizeValidator({ maxSize: 999999 }),
                     new FileTypeValidator({ fileType: /.(jpeg|jpg|pdf|png)$/ })
                 ]
             })
@@ -169,7 +169,7 @@ export class BookController {
         @UploadedFile(
             new ParseFilePipe({
                 validators: [
-                    new MaxFileSizeValidator({ maxSize: 1000000 }),
+                    new MaxFileSizeValidator({ maxSize: 999999 }),
                     new FileTypeValidator({ fileType: /.(jpeg|jpg|pdf|png)$/ })
                 ]
             })
@@ -208,7 +208,7 @@ export class BookController {
         @UploadedFiles(
             new ParseFilePipe({
                 validators: [
-                    new MaxFileSizeValidator({ maxSize: 1000000 }),
+                    new MaxFileSizeValidator({ maxSize: 999999 }),
                     new FileTypeValidator({ fileType: /^(application\/pdf|image\/jpeg|image\/jpg|image\/png|application\/epub\+zip)$/ })
                 ]
             })

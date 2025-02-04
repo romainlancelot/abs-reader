@@ -1,5 +1,6 @@
 package com.absreader.ui.text_book_book_details
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -9,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.absreader.R
 import com.absreader.data.repository.TextBookBookRepository
+import com.absreader.ui.text_book_reading.TextBookReadingActivity
 import com.absreader.utils.NavigationUtils
 import com.squareup.picasso.Picasso
 
@@ -61,6 +63,10 @@ class TextBookBookDetailsActivity() : AppCompatActivity() {
         }
 
         buttonRead.setOnClickListener {
+            val intent = Intent(this, TextBookReadingActivity::class.java)
+            intent.putExtra("BOOK_ID", bookId)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
         }
 
         buttonGoToHomeView.setOnClickListener {

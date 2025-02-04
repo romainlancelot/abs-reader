@@ -8,6 +8,7 @@ import { extname } from "path";
 
 @Injectable()
 export class CommonUtilsFileService {
+
     public getMimeType(
         fileExtension: string
     ): string {

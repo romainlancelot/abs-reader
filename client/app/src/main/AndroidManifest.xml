@@ -56,6 +56,10 @@
             android:name=".ui.text_book_book_details.TextBookBookDetailsActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".ui.text_book_reading.TextBookReadingActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

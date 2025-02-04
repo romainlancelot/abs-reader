@@ -6,5 +6,6 @@ data class BookDetails(
     val authorName: String,
     val createdYear: String,
     val coverUrl: String,
+    val pages: List<Page>? = null,
     val isTheReaderTheAuthor: Boolean
 )

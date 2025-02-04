@@ -22,4 +22,5 @@
     <string name="read_books">Read books</string>
     <string name="listen_to_books">Listen to books</string>
     <string name="back_to_hub">Back to Hub</string>
+    <string name="page_image">Image of the page</string>
 </resources>

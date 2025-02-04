@@ -17,15 +17,15 @@ class TextBookBookDetailsViewModel(
     private val repository: TextBookBookRepository
 ) : ViewModel() {
 
-    private val _bookDetails = MutableLiveData<BookDetails>()
-    val bookDetails: LiveData<BookDetails> get() = _bookDetails
+    private val _bookDetails: MutableLiveData<BookDetails> = MutableLiveData<BookDetails>()
+    val bookDetails: LiveData<BookDetails> get() = this._bookDetails
 
     fun fetchBookDetails(bookId: String) {
         viewModelScope.launch {
             val response: Response<FindUniqueBookResponse> = repository.findUnique(bookId)
             if (response.isSuccessful) {
-                response.body()?.let { bookResponse ->
-                    val book: Book = bookResponse.book
+                response.body()?.let { bodyResponse ->
+                    val book: Book = bodyResponse.book
                     val year: String = if (book.createdAt.length >= 4) book.createdAt.substring(0, 4) else ""
                     val details: BookDetails = BookDetails(
                         id = book.id,
@@ -33,7 +33,7 @@ class TextBookBookDetailsViewModel(
                         authorName = book.author?.name ?: "Unknown",
                         createdYear = year,
                         coverUrl = book.coverUrl,
-                        isTheReaderTheAuthor = bookResponse.isTheReaderTheAuthor
+                        isTheReaderTheAuthor = bodyResponse.isTheReaderTheAuthor,
                     )
                     _bookDetails.value = details
                 }
