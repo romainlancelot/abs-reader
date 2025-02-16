@@ -29,6 +29,10 @@
         </activity>
 
         <activity
+            android:name=".ui.audio_book_player.AudioBookPlayerActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".ui.audio_book_selected_text_book_menu.AudioBookSelectedTextBookMenuActivity"
             android:exported="false" />
 
