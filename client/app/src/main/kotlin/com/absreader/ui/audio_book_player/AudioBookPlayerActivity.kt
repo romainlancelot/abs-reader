@@ -15,6 +15,7 @@ import com.absreader.utils.HeaderManager
 
 class AudioBookPlayerActivity: AppCompatActivity() {
     private lateinit var playerView: PlayerView
+    private lateinit var player: ExoPlayer
     private val viewModel: AudioBookPlayerViewModel = AudioBookPlayerViewModel()
 
     @OptIn(UnstableApi::class)
@@ -35,20 +36,25 @@ class AudioBookPlayerActivity: AppCompatActivity() {
         )
         viewModel.audioFiles.observe(this) { audioFiles ->
             if (audioFiles.isNotEmpty()) {
-                val player = ExoPlayer.Builder(this).build()
+                player = ExoPlayer.Builder(this).build()
                 playerView.player = player
-                val mp3Urls = audioFiles.map { audioFile ->
+                val m3u8Url = audioFiles.map { audioFile ->
                     "https://abs.romsko.fr${audioFile.contentUrl}"
                 }
                 val mediaSource = HlsMediaSource.Factory(dataSourceFactory).createMediaSource(
-                    MediaItem.fromUri(mp3Urls[0])
+                    MediaItem.fromUri(m3u8Url[0])
                 )
                 player.setMediaSource(mediaSource)
                 player.prepare()
-
+                player.play()
             } else {
                 Toast.makeText(this, "No audio files found", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        player.release()
     }
 }
