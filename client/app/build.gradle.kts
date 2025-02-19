@@ -53,7 +53,7 @@ dependencies {
     implementation(libs.librum)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.media3.ui)
-    implementation("androidx.media3:media3-exoplayer-hls:1.4.1")
+    implementation(libs.androidx.media3.exoplayer.hls)
     implementation(libs.androidx.media3.exoplayer)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
