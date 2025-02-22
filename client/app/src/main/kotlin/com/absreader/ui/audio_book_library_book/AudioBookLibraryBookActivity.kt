@@ -32,5 +32,14 @@ class AudioBookLibraryBookActivity : AppCompatActivity() {
         }
         this.viewModel.getBooks(this@AudioBookLibraryBookActivity, libraryId)
 
+        refreshApp()
+    }
+
+    private fun refreshApp() {
+        val swipeRefreshLayout: androidx.swiperefreshlayout.widget.SwipeRefreshLayout = findViewById(R.id.swipeRefreshLayout)
+        swipeRefreshLayout.setOnRefreshListener {
+            this.viewModel.getBooks(this@AudioBookLibraryBookActivity, intent.getStringExtra("libraryId").toString())
+            swipeRefreshLayout.isRefreshing = false
+        }
     }
 }
