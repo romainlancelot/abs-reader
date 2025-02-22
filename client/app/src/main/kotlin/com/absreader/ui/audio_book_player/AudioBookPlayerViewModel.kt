@@ -8,7 +8,7 @@ import com.absreader.data.network.AudioBookRetrofitClient
 import com.absreader.data.network.dto.audio_book_item_play.AudioTrack
 import com.absreader.data.network.dto.audio_book_item_play.DeviceInfoParameters
 import com.absreader.data.network.dto.audio_book_item_play.ItemPlayDTO
-import com.absreader.data.network.service.AudioBookItemPlayService
+import com.absreader.data.network.service.AudioBookItemService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -28,7 +28,7 @@ class AudioBookPlayerViewModel : ViewModel() {
             model = android.os.Build.MODEL,
             sdkVersion = android.os.Build.VERSION.SDK_INT
         )
-        val call: Call<ItemPlayDTO> = client.create(AudioBookItemPlayService::class.java).getItem(itemId, deviceInfo)
+        val call: Call<ItemPlayDTO> = client.create(AudioBookItemService::class.java).getItem(itemId, deviceInfo)
         call.enqueue(object : Callback<ItemPlayDTO> {
             override fun onResponse(call: Call<ItemPlayDTO>, response: Response<ItemPlayDTO>) {
                 if (response.isSuccessful) {

@@ -10,12 +10,14 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.absreader.R
 import com.absreader.ui.audio_book_player.AudioBookPlayerActivity
+import com.absreader.ui.audio_book_player.AudioBookPlayerViewModel
 import com.absreader.utils.HeaderManager
 import com.squareup.picasso.Picasso
 
 class AudioBookSelectedTextBookMenuActivity : AppCompatActivity() {
-
     private lateinit var readNowButton: Button
+    private lateinit var deleteButton: Button
+    private val viewModel: AudioBookSelectedTextBookMenuViewModel = AudioBookSelectedTextBookMenuViewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,9 +38,16 @@ class AudioBookSelectedTextBookMenuActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.author).text = author
         findViewById<TextView>(R.id.description).text = description
 
+        val itemId = intent.getStringExtra("itemId")
+
+        deleteButton = findViewById(R.id.delete)
+        deleteButton.setOnClickListener {
+            viewModel.deleteBook(this, itemId!!)
+            finish()
+        }
+
         readNowButton = findViewById(R.id.readNow)
         readNowButton.setOnClickListener {
-            val itemId = intent.getStringExtra("itemId")
             val intent = Intent(this, AudioBookPlayerActivity::class.java)
             intent.putExtra("bookName", title)
             intent.putExtra("itemId", itemId)
