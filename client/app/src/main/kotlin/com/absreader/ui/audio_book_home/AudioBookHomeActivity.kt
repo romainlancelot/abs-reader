@@ -3,9 +3,9 @@ package com.absreader.ui.audio_book_home
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.absreader.R
@@ -16,17 +16,19 @@ import com.absreader.data.network.dto.audio_book_progress.LibraryItem
 import com.absreader.utils.HeaderManager
 import com.absreader.ui.audio_book_library.AudioBookLibraryViewModel
 import com.absreader.ui.audio_book_progress.AudioBookProgressViewModel
+import com.absreader.ui.base.BaseActivity
 import com.absreader.ui.hub.HubActivity
 
-class AudioBookHomeActivity : AppCompatActivity() {
+class AudioBookHomeActivity : BaseActivity() {
 
     private val audioBookLibraryViewModel: AudioBookLibraryViewModel = AudioBookLibraryViewModel()
     private val audioBookProgressViewModel: AudioBookProgressViewModel = AudioBookProgressViewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val container = findViewById<FrameLayout>(R.id.container)
+        layoutInflater.inflate(R.layout.activity_audio_book_home, container, true)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_audio_book_home)
         HeaderManager(findViewById(R.id.header), false).setup(getString(R.string.home))
         val noLibraryText: TextView = findViewById(R.id.noLibraries)
         val noProgressText: TextView = findViewById(R.id.noProgress)

@@ -1,9 +1,9 @@
 package com.absreader.ui.audio_book_player
 
 import android.os.Bundle
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.annotation.OptIn
-import androidx.appcompat.app.AppCompatActivity
 import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DefaultHttpDataSource
@@ -11,9 +11,10 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.hls.HlsMediaSource
 import androidx.media3.ui.PlayerView
 import com.absreader.R
+import com.absreader.ui.base.BaseActivity
 import com.absreader.utils.HeaderManager
 
-class AudioBookPlayerActivity: AppCompatActivity() {
+class AudioBookPlayerActivity: BaseActivity() {
     private lateinit var playerView: PlayerView
     private lateinit var player: ExoPlayer
     private val viewModel: AudioBookPlayerViewModel = AudioBookPlayerViewModel()
@@ -21,7 +22,8 @@ class AudioBookPlayerActivity: AppCompatActivity() {
     @OptIn(UnstableApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_audio_book_player)
+        val container = findViewById<FrameLayout>(R.id.container)
+        layoutInflater.inflate(R.layout.activity_audio_book_player, container, true)
 
         HeaderManager(findViewById(R.id.header)).setup(
             intent.getStringExtra("bookName").toString()
