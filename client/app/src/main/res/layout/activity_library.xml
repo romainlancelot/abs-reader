@@ -24,11 +24,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <SearchView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/search"
+        android:queryHint="@string/search_audio_books"
+        android:iconifiedByDefault="false"
+        android:focusable="false"
+        android:background="@drawable/search_background"
+        app:layout_constraintTop_toBottomOf="@+id/header" />
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/swipeRefreshLayout"
-        app:layout_constraintTop_toBottomOf="@+id/header">
+        app:layout_constraintTop_toBottomOf="@+id/search">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"

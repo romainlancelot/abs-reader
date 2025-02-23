@@ -1,6 +1,7 @@
 package com.absreader.ui.audio_book_library_book
 
 import android.os.Bundle
+import android.widget.SearchView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -12,6 +13,8 @@ import com.absreader.utils.HeaderManager
 
 class AudioBookLibraryBookActivity : AppCompatActivity() {
     private val viewModel: AudioBookLibraryBookViewModel = AudioBookLibraryBookViewModel()
+    private lateinit var searchView: SearchView
+    private lateinit var adapter: AudioBookLibraryBookAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,13 +28,26 @@ class AudioBookLibraryBookActivity : AppCompatActivity() {
         val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = GridLayoutManager(this, 2)
         this.viewModel.books.observe(this) { libraryItems: List<Result> ->
-            recyclerView.adapter = AudioBookLibraryBookAdapter(libraryItems)
+            adapter = AudioBookLibraryBookAdapter(libraryItems)
+            recyclerView.adapter = adapter
             if (libraryItems.isEmpty()) {
                 noBooksTextView.visibility = TextView.VISIBLE
             }
         }
         this.viewModel.getBooks(this@AudioBookLibraryBookActivity, libraryId)
 
+        searchView = findViewById(R.id.search)
+        searchView.clearFocus()
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                adapter.filter(newText ?: "")
+                return true
+            }
+        })
         refreshApp()
     }
 
