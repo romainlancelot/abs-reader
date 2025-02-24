@@ -14,7 +14,6 @@ import com.absreader.ui.text_book_book_details.TextBookBookDetailsActivity
 import com.squareup.picasso.Picasso
 
 class TextBookReadingActivity : AppCompatActivity() {
-
     private lateinit var viewModel: TextBookReadingViewModel
     private lateinit var bookId: String
 

@@ -23,5 +23,5 @@
     <string name="listen_to_books">Listen to books</string>
     <string name="back_to_hub">Back to Hub</string>
     <string name="page_image">Image of the page</string>
-    <string name="search_audio_books">Search audio books</string>
+    <string name="loading">Loading</string>
 </resources>
