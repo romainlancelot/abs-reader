@@ -22,11 +22,6 @@ class TextBookBookDetailsActivity() : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_text_book_book_details)
 
-        if (!NavigationUtils.hasTextBookApiJwt(this)) {
-            NavigationUtils.redirectToTextBookLogInView(this)
-            return
-        }
-
         val repository = TextBookBookRepository(application)
         val factory = TextBookBookDetailsViewModelFactory(application, repository)
         viewModel =

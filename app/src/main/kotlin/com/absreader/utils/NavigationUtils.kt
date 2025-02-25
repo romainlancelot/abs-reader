@@ -6,7 +6,6 @@ import android.content.SharedPreferences
 import com.absreader.ui.audio_book_home.AudioBookHomeActivity
 import com.absreader.ui.audio_book_log_in.AudioBookLogInActivity
 import com.absreader.ui.text_book_home.TextBookHomeActivity
-import com.absreader.ui.text_book_log_in.TextBookLogInActivity
 
 class NavigationUtils {
 
@@ -35,12 +34,6 @@ class NavigationUtils {
             return jwt != null
         }
 
-        fun redirectToTextBookLogInView(context: Context) {
-            val intent = Intent(context, TextBookLogInActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            context.startActivity(intent)
-        }
-
         fun redirectToTextBookHomeView(context: Context) {
             val intent = Intent(context, TextBookHomeActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -59,7 +52,6 @@ class NavigationUtils {
 
         fun logOutFromTextBook(context: Context) {
             deleteTextBookApiJwt(context)
-            redirectToTextBookLogInView(context)
         }
 
         /*-------------------------*\

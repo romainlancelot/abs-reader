@@ -18,11 +18,6 @@ class TextBookHomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_text_book_home)
 
-        if (!NavigationUtils.hasTextBookApiJwt(this)) {
-            NavigationUtils.redirectToTextBookLogInView(this)
-            return
-        }
-
         val repository = TextBookBookRepository(application)
         val factory = TextBookHomeViewModelFactory(application, repository)
         viewModel =

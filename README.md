@@ -20,8 +20,9 @@ L'application permettra de se connecter à un serveur Audiobookshelf, de navigue
 
 ## Emails des étudiants
 
-| Nom             | Email               |
-| --------------- | ------------------- |
-| Lancelot Romain | rlancelot@myges.fr  |
-| Dufresne Jordan | jdufresne3@myges.fr |
-| Huynh Thomas    | thuynh@myges.fr     |
+| Nom              | Email                 |
+|------------------|-----------------------|
+| Lancelot Romain  | rlancelot@myges.fr    |
+| Dufresne Jordan  | jdufresne3@myges.fr   |
+| Huynh Thomas     | thuynh@myges.fr       |
+| Oelschlager Karl | koelschlager@myges.fr |

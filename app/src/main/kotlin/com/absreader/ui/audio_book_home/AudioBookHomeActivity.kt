@@ -17,7 +17,6 @@ import com.absreader.utils.HeaderManager
 import com.absreader.ui.audio_book_library.AudioBookLibraryViewModel
 import com.absreader.ui.audio_book_progress.AudioBookProgressViewModel
 import com.absreader.ui.base.BaseActivity
-import com.absreader.ui.hub.HubActivity
 
 class AudioBookHomeActivity : BaseActivity() {
 
@@ -50,11 +49,6 @@ class AudioBookHomeActivity : BaseActivity() {
             }
         }
         this.audioBookProgressViewModel.getProgress(this@AudioBookHomeActivity)
-        val backToHubButton: Button = findViewById(R.id.backToHubButton)
-        backToHubButton.setOnClickListener {
-            val intent = Intent(this, HubActivity::class.java)
-            startActivity(intent)
-        }
     }
 
 }

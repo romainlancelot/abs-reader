@@ -27,9 +27,6 @@ class AudioBookLibraryBookViewModel {
                     val libraryItemsDTO: LibraryItemsDTO? = response.body()
                     val audioBooks: MutableList<Result> = mutableListOf()
                     for (libraryItem: Result in libraryItemsDTO?.results ?: mutableListOf()) {
-                        if (libraryItem.media.numAudioFiles == 0) {
-                            continue
-                        }
                         if (libraryItem.media.coverPath != null) {
                             libraryItem.media.coverPath =
                                 client.baseUrl().toString() + "/api/items/${libraryItem.id}/cover"
