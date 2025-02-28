@@ -8,8 +8,7 @@
     android:padding="20dp"
     tools:context=".ui.audio_book_home.AudioBookHomeActivity">
 
-    <include
-        android:id="@+id/header"
+    <include android:id="@+id/header"
         layout="@layout/header" />
 
     <TextView

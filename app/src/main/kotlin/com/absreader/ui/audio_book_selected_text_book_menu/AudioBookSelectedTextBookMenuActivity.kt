@@ -1,28 +1,27 @@
 package com.absreader.ui.audio_book_selected_text_book_menu
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
-import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
 import com.absreader.R
-import com.absreader.ui.audio_book_player.AudioBookPlayerActivity
-import com.absreader.ui.base.BaseActivity
 import com.absreader.utils.HeaderManager
+import com.folioreader.FolioReader
 import com.squareup.picasso.Picasso
+import java.io.File
 
-class AudioBookSelectedTextBookMenuActivity : BaseActivity() {
+class AudioBookSelectedTextBookMenuActivity : AppCompatActivity() {
     private lateinit var readNowButton: Button
     private lateinit var deleteButton: Button
-    private val viewModel: AudioBookSelectedTextBookMenuViewModel = AudioBookSelectedTextBookMenuViewModel()
+    private val viewModel: AudioBookSelectedTextBookMenuViewModel =
+        AudioBookSelectedTextBookMenuViewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val container = findViewById<FrameLayout>(R.id.container)
-        layoutInflater.inflate(R.layout.activity_audio_book_selected_text_book_menu, container, true)
         enableEdgeToEdge()
+        setContentView(R.layout.activity_audio_book_selected_text_book_menu)
         HeaderManager(findViewById(R.id.header)).setup(getString(R.string.details))
         val coverPath: String? = intent.getStringExtra("coverPath")
         val title: String = intent.getStringExtra("title").toString()
@@ -48,10 +47,21 @@ class AudioBookSelectedTextBookMenuActivity : BaseActivity() {
 
         readNowButton = findViewById(R.id.readNow)
         readNowButton.setOnClickListener {
-            val intent = Intent(this, AudioBookPlayerActivity::class.java)
-            intent.putExtra("bookName", title)
-            intent.putExtra("itemId", itemId)
-            startActivity(intent)
+//            val intent = Intent(this, AudioBookPlayerActivity::class.java)
+//            intent.putExtra("bookName", title)
+//            intent.putExtra("itemId", itemId)
+//            startActivity(intent)
+            val fileUrl =
+                "/books/Elizabeth Gaskell/The life of Charlotter Bronte/elizabeth_gaskell-the_life_of_charlotte_bronte.epub"
+            viewModel.downloadBook(this, fileUrl)
+            val name = fileUrl.substring(fileUrl.lastIndexOf("/") + 1)
+            val path = File(this.filesDir, name).absolutePath
+            val reader: FolioReader = FolioReader.get()
+            viewModel.book.observe(this) { book ->
+                if (book) {
+                    reader.openBook(path)
+                }
+            }
         }
     }
 }

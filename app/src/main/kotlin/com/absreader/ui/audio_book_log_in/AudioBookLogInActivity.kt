@@ -14,7 +14,6 @@ import com.absreader.ui.audio_book_home.AudioBookHomeActivity
 import com.absreader.utils.MaterialAlertDialog
 
 class AudioBookLogInActivity : AppCompatActivity() {
-
     lateinit var username: String
     lateinit var password: String
     lateinit var login: Button

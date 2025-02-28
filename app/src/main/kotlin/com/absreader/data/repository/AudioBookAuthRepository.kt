@@ -18,9 +18,7 @@ class AudioBookAuthRepository {
 
     fun login(context: Context, audioBookAuthLogin: AudioBookAuthLogin, server: String): Unit {
         val client: Retrofit = AudioBookRetrofitClient.getInstance(context, server)
-
         val call: Call<LoginDTO> = client.create(AudioBookAuthService::class.java).login(audioBookAuthLogin)
-
         call.enqueue(object : Callback<LoginDTO> {
             override fun onResponse(call: Call<LoginDTO>, response: Response<LoginDTO>) {
                 if (response.isSuccessful) {

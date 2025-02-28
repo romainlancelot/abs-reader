@@ -2,8 +2,8 @@ package com.absreader.data.network.dto.audio_book_library_items
 
 data class Metadata(
     val asin: String,
-    val authorName: String,
-    val description: String,
+    val authorName: String?,
+    val description: String?,
     val explicit: Boolean,
     val genres: List<String>,
     val isbn: Any,

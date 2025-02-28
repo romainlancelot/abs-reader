@@ -3,7 +3,9 @@ package com.absreader.ui.audio_book_player
 import android.os.Bundle
 import android.widget.FrameLayout
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.annotation.OptIn
+import androidx.appcompat.app.AppCompatActivity
 import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DefaultHttpDataSource
@@ -11,10 +13,9 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.hls.HlsMediaSource
 import androidx.media3.ui.PlayerView
 import com.absreader.R
-import com.absreader.ui.base.BaseActivity
 import com.absreader.utils.HeaderManager
 
-class AudioBookPlayerActivity: BaseActivity() {
+class AudioBookPlayerActivity: AppCompatActivity() {
     private lateinit var playerView: PlayerView
     private lateinit var player: ExoPlayer
     private val viewModel: AudioBookPlayerViewModel = AudioBookPlayerViewModel()
@@ -22,15 +23,12 @@ class AudioBookPlayerActivity: BaseActivity() {
     @OptIn(UnstableApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val container = findViewById<FrameLayout>(R.id.container)
-        layoutInflater.inflate(R.layout.activity_audio_book_player, container, true)
-
+        enableEdgeToEdge()
+        setContentView(R.layout.activity_audio_book_player)
         HeaderManager(findViewById(R.id.header)).setup(
             intent.getStringExtra("bookName").toString()
         )
-
         playerView = findViewById(R.id.player_view)
-
         val bookId = intent.getStringExtra("itemId").toString()
         viewModel.fetchBook(this, bookId)
         val dataSourceFactory = DefaultHttpDataSource.Factory().setDefaultRequestProperties(

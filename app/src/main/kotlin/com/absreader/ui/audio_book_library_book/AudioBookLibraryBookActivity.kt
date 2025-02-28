@@ -5,23 +5,22 @@ import android.widget.FrameLayout
 import android.widget.SearchView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.absreader.R
 import com.absreader.data.network.dto.audio_book_library_items.Result
-import com.absreader.ui.base.BaseActivity
 import com.absreader.utils.HeaderManager
 
-class AudioBookLibraryBookActivity : BaseActivity() {
+class AudioBookLibraryBookActivity : AppCompatActivity() {
     private val viewModel: AudioBookLibraryBookViewModel = AudioBookLibraryBookViewModel()
     private lateinit var searchView: SearchView
     private lateinit var adapter: AudioBookLibraryBookAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val container = findViewById<FrameLayout>(R.id.container)
-        layoutInflater.inflate(R.layout.activity_library, container, true)
         enableEdgeToEdge()
+        setContentView(R.layout.activity_library)
         HeaderManager(findViewById(R.id.header)).setup(
             intent.getStringExtra("libraryName").toString()
         )
@@ -37,7 +36,6 @@ class AudioBookLibraryBookActivity : BaseActivity() {
             }
         }
         this.viewModel.getBooks(this@AudioBookLibraryBookActivity, libraryId)
-
         searchView = findViewById(R.id.search)
         searchView.clearFocus()
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
