@@ -34,8 +34,13 @@ class BookViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 viewModel.book.observe(it1) { book ->
                     if (book && libraryFile.fileType == "audio") {
                         val intent = Intent(itemView.context, AudioBookPlayerActivity::class.java)
-                        intent.putExtra("bookName", libraryFile.metadata.relPath)
+                        val activity = itemView.context as? AudioBookSelectedTextBookMenuActivity
+                        val coverPath = activity?.intent?.getStringExtra("coverPath")
+                        val title = activity?.intent?.getStringExtra("title")
+                        intent.putExtra("bookName", title ?: libraryFile.metadata.relPath)
+                        intent.putExtra("coverPath", coverPath)
                         intent.putExtra("itemId", itemId)
+                        intent.putExtra("absPath", file.absolutePath)
                         itemView.context.startActivity(intent)
                     } else {
                         val reader: FolioReader = FolioReader.get()
@@ -45,7 +50,8 @@ class BookViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 if (file.exists()) {
                     viewModel.book.value = true
                 } else {
-                    Toast.makeText(itemView.context, "Downloading epub book", Toast.LENGTH_SHORT)
+                    val text: String = if (libraryFile.fileType == "audio") "Downloading audio book" else "Downloading epub book"
+                    Toast.makeText(itemView.context, text, Toast.LENGTH_SHORT)
                         .show()
                     viewModel.downloadBook(itemView.context, libraryFile.metadata.path)
                 }
