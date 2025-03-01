@@ -19,9 +19,10 @@ class AudioBookSelectedTextBookMenuViewModel : ViewModel() {
     val book: MutableLiveData<Boolean> = MutableLiveData()
     val bookData: MutableLiveData<LibraryItemDTO> = MutableLiveData()
 
-    fun deleteBook(context: Context, itemId: String) {
+    fun deleteBook(context: Context, itemId: String, ino: String) {
         val client: Retrofit = AudioBookRetrofitClient.getInstance(context)
-        val call: Call<Void> = client.create(AudioBookItemService::class.java).deleteItem(itemId)
+        val call: Call<Void> =
+            client.create(AudioBookItemService::class.java).deleteItem(itemId, ino)
         call.enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: retrofit2.Response<Void>) {
                 if (response.isSuccessful) {
@@ -74,7 +75,6 @@ class AudioBookSelectedTextBookMenuViewModel : ViewModel() {
         val client: Retrofit = AudioBookRetrofitClient.getInstance(context)
         val call: Call<LibraryItemDTO> =
             client.create(AudioBookItemService::class.java).getItem(itemId)
-        println("getItem")
         call.enqueue(object : Callback<LibraryItemDTO> {
             override fun onResponse(
                 call: Call<LibraryItemDTO>,
@@ -86,7 +86,6 @@ class AudioBookSelectedTextBookMenuViewModel : ViewModel() {
             }
 
             override fun onFailure(p0: Call<LibraryItemDTO>, p1: Throwable) {
-                println(p1.message)
                 Toast.makeText(
                     context,
                     "Failed to get book data",

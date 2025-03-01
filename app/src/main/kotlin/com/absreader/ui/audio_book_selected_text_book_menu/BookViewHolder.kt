@@ -17,7 +17,7 @@ class BookViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val readButton: Button = itemView.findViewById(R.id.readButton)
     private val deleteButton: Button = itemView.findViewById(R.id.deleteButton)
 
-    fun bind(libraryFile: LibraryFile) {
+    fun bind(libraryFile: LibraryFile, itemId: String) {
         bookName.text = libraryFile.metadata.relPath.take(20) + "..."
         val viewModel: AudioBookSelectedTextBookMenuViewModel =
             AudioBookSelectedTextBookMenuViewModel()
@@ -37,6 +37,10 @@ class BookViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 }
                 viewModel.downloadBook(itemView.context, libraryFile.metadata.path)
             }
+        }
+        deleteButton.setOnClickListener {
+            viewModel.deleteBook(itemView.context, itemId, libraryFile.ino)
+            (itemView.context as AudioBookSelectedTextBookMenuActivity).refreshApp()
         }
     }
 }

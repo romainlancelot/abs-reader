@@ -7,7 +7,9 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.absreader.R
 import com.absreader.data.network.dto.library_items_data.LibraryFile
 
-class BookAdapter(private var books: List<LibraryFile>) : Adapter<BookViewHolder>() {
+class BookAdapter(
+    private var books: List<LibraryFile>, private var itemId: String
+) : Adapter<BookViewHolder>() {
     private var filteredBooks: List<LibraryFile> = books
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookViewHolder {
@@ -17,7 +19,7 @@ class BookAdapter(private var books: List<LibraryFile>) : Adapter<BookViewHolder
     }
 
     override fun onBindViewHolder(holder: BookViewHolder, position: Int) {
-        holder.bind(filteredBooks[position])
+        holder.bind(filteredBooks[position], itemId)
     }
 
     override fun getItemCount(): Int {

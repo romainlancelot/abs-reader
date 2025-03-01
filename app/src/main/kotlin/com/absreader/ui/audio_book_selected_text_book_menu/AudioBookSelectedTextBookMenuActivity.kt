@@ -32,8 +32,17 @@ class AudioBookSelectedTextBookMenuActivity : AppCompatActivity() {
         val recyclerView: RecyclerView = findViewById(R.id.bookRecyclerView)
         recyclerView.layoutManager = GridLayoutManager(this, 1)
         this.viewModel.bookData.observe(this) { libraryItemDTO ->
-            recyclerView.adapter = BookAdapter(libraryItemDTO.libraryFiles)
+            recyclerView.adapter = itemId?.let { BookAdapter(libraryItemDTO.libraryFiles, it) }
         }
-        this.viewModel.getItem(this@AudioBookSelectedTextBookMenuActivity, itemId!!)
+        itemId?.let { this.viewModel.getItem(this, it) }
+    }
+
+    fun refreshApp() {
+        val swipeRefreshLayout: androidx.swiperefreshlayout.widget.SwipeRefreshLayout =
+            findViewById(R.id.swipeRefreshLayout)
+        swipeRefreshLayout.setOnRefreshListener {
+            this.viewModel.getItem(this, intent.getStringExtra("itemId").toString())
+            swipeRefreshLayout.isRefreshing = false
+        }
     }
 }

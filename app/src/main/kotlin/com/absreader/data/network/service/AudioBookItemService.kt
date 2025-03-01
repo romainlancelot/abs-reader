@@ -15,8 +15,8 @@ interface AudioBookItemService {
     @GET("/api/items/{itemId}?expanded=1")
     fun getItem(@Path("itemId") itemId: String): Call<LibraryItemDTO>
 
-    @DELETE("/api/items/{itemId}")
-    fun deleteItem(@Path("itemId") itemId: String): Call<Void>
+    @DELETE("/api/items/{itemId}/file/{ino}")
+    fun deleteItem(@Path("itemId") itemId: String, @Path("ino") ino: String): Call<Void>
 
     @GET("files/{fileName}")
     fun downloadFile(@Path("fileName") fileName: String): Call<ResponseBody>
