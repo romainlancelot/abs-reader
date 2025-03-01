@@ -1,5 +1,8 @@
 package com.absreader.ui.audio_book_player
 
+import android.Manifest
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -67,6 +70,14 @@ class AudioBookPlayerActivity: AppCompatActivity() {
 
         val absPath: String = intent.getStringExtra("absPath").toString()
         loadAudio(absPath)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 100)
+        }
+        val serviceIntent = Intent(this, AudioBookPlayerService::class.java).apply {
+            putExtra("bookName", bookName)
+        }
+        startService(serviceIntent)
     }
 
     private fun initializeViews() {
@@ -180,5 +191,6 @@ class AudioBookPlayerActivity: AppCompatActivity() {
         handler.removeCallbacks(updateSeekBar)
         player.release()
         super.onDestroy()
+        stopService(Intent(this, AudioBookPlayerService::class.java))
     }
 }

@@ -7,6 +7,9 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:allowBackup="true"
@@ -47,18 +50,6 @@
             android:exported="false" />
 
         <activity
-            android:name=".ui.text_book_home.TextBookHomeActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".ui.text_book_book_details.TextBookBookDetailsActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".ui.text_book_reading.TextBookReadingActivity"
-            android:exported="false" />
-
-        <activity
             android:name="com.folioreader.ui.activity.SearchActivity"
             android:exported="true">
             <intent-filter>
@@ -66,6 +57,11 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".ui.audio_book_player.AudioBookPlayerService"
+            android:foregroundServiceType="mediaPlayback"
+            android:exported="false"/>
 
     </application>
 
