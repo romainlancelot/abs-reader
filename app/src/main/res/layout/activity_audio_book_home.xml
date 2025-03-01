@@ -1,77 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="20dp"
     tools:context=".ui.audio_book_home.AudioBookHomeActivity">
 
-    <include android:id="@+id/header"
-        layout="@layout/header" />
-
-    <TextView
-        android:id="@+id/libraryText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/libraries"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@+id/header"
-        tools:ignore="MissingConstraints" />
-
-    <TextView
-        android:id="@+id/noLibraries"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:paddingBottom="20dp"
-        android:text="@string/no_libraries"
-        android:visibility="invisible"
-        app:layout_constraintTop_toBottomOf="@+id/libraryText"
-        tools:layout_editor_absoluteX="30dp" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/libraryRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
+    <include
+        android:id="@+id/header"
+        layout="@layout/header"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/libraryText" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    <TextView
-        android:id="@+id/continueText"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text="@string/continue_reading"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@+id/libraryRecyclerView"
-        tools:ignore="MissingConstraints" />
-
-    <TextView
-        android:id="@+id/noProgress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:paddingBottom="20dp"
-        android:text="@string/no_continue"
-        android:visibility="invisible"
-        app:layout_constraintTop_toBottomOf="@+id/continueText"
-        tools:layout_editor_absoluteX="30dp" />
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@id/header"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/progressRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/continueText" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/libraryText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/libraries"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                tools:ignore="MissingConstraints" />
+
+            <TextView
+                android:id="@+id/noLibraries"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:paddingBottom="20dp"
+                android:text="@string/no_libraries"
+                android:visibility="invisible"
+                app:layout_constraintTop_toBottomOf="@+id/libraryText" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/libraryRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:nestedScrollingEnabled="false"
+                app:layout_constraintTop_toBottomOf="@id/libraryText" />
+
+            <TextView
+                android:id="@+id/continueText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:text="@string/continue_reading"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@+id/libraryRecyclerView" />
+
+            <TextView
+                android:id="@+id/noProgress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:paddingBottom="20dp"
+                android:text="@string/no_continue"
+                android:visibility="invisible"
+                app:layout_constraintTop_toBottomOf="@+id/continueText" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/progressRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:nestedScrollingEnabled="false"
+                app:layout_constraintTop_toBottomOf="@id/continueText" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
