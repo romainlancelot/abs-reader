@@ -4,6 +4,7 @@ import android.content.Intent
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.absreader.R
@@ -18,24 +19,36 @@ class BookViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val deleteButton: Button = itemView.findViewById(R.id.deleteButton)
 
     fun bind(libraryFile: LibraryFile, itemId: String) {
+        val computeBookName: String = libraryFile.metadata.relPath.take(40) + "..."
         bookName.text = libraryFile.metadata.relPath.take(20) + "..."
+        val file: File = File(itemView.context.filesDir, libraryFile.metadata.filename)
+        if (file.exists()) {
+            bookName.text = "\uD83D\uDCBE " + computeBookName
+        } else {
+            bookName.text = "❌ " + computeBookName
+        }
         val viewModel: AudioBookSelectedTextBookMenuViewModel =
             AudioBookSelectedTextBookMenuViewModel()
         readButton.setOnClickListener {
-            val path = File(itemView.context.filesDir, libraryFile.metadata.filename).absolutePath
             itemView.findViewTreeLifecycleOwner()?.let { it1 ->
                 viewModel.book.observe(it1) { book ->
-                    if (book && libraryFile.fileType == "epub") {
-                        val reader: FolioReader = FolioReader.get()
-                        reader.openBook(path)
-                    } else if (book && libraryFile.fileType == "audio") {
+                    if (book && libraryFile.fileType == "audio") {
                         val intent = Intent(itemView.context, AudioBookPlayerActivity::class.java)
                         intent.putExtra("bookName", libraryFile.metadata.relPath)
                         intent.putExtra("itemId", itemId)
                         itemView.context.startActivity(intent)
+                    } else {
+                        val reader: FolioReader = FolioReader.get()
+                        reader.openBook(file.absolutePath)
                     }
                 }
-                viewModel.downloadBook(itemView.context, libraryFile.metadata.path)
+                if (file.exists()) {
+                    viewModel.book.value = true
+                } else {
+                    Toast.makeText(itemView.context, "Downloading epub book", Toast.LENGTH_SHORT)
+                        .show()
+                    viewModel.downloadBook(itemView.context, libraryFile.metadata.path)
+                }
             }
         }
         deleteButton.setOnClickListener {
