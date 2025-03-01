@@ -5,7 +5,7 @@ import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.absreader.data.network.AudioBookRetrofitClient
-import com.absreader.data.network.dto.audio_book_item_play.ItemPlayDTO
+import com.absreader.data.network.dto.library_items_data.LibraryItemDTO
 import com.absreader.data.network.service.AudioBookItemService
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -17,6 +17,7 @@ import java.io.FileOutputStream
 
 class AudioBookSelectedTextBookMenuViewModel : ViewModel() {
     val book: MutableLiveData<Boolean> = MutableLiveData()
+    val bookData: MutableLiveData<LibraryItemDTO> = MutableLiveData()
 
     fun deleteBook(context: Context, itemId: String) {
         val client: Retrofit = AudioBookRetrofitClient.getInstance(context)
@@ -69,8 +70,29 @@ class AudioBookSelectedTextBookMenuViewModel : ViewModel() {
         })
     }
 
-}
+    fun getItem(context: Context, itemId: String) {
+        val client: Retrofit = AudioBookRetrofitClient.getInstance(context)
+        val call: Call<LibraryItemDTO> =
+            client.create(AudioBookItemService::class.java).getItem(itemId)
+        println("getItem")
+        call.enqueue(object : Callback<LibraryItemDTO> {
+            override fun onResponse(
+                call: Call<LibraryItemDTO>,
+                response: Response<LibraryItemDTO>
+            ) {
+                if (response.isSuccessful) {
+                    bookData.value = response.body()
+                }
+            }
 
-private fun <T> Call<T>.enqueue(callback: Callback<ItemPlayDTO>) {
-
+            override fun onFailure(p0: Call<LibraryItemDTO>, p1: Throwable) {
+                println(p1.message)
+                Toast.makeText(
+                    context,
+                    "Failed to get book data",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        })
+    }
 }

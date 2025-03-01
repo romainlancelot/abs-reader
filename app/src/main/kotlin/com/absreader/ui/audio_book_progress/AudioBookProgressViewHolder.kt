@@ -5,9 +5,9 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.absreader.ui.audio_book_selected_text_book_menu.AudioBookSelectedTextBookMenuActivity
 import com.absreader.R
 import com.absreader.data.network.dto.audio_book_progress.LibraryItem
+import com.absreader.ui.audio_book_selected_text_book_menu.AudioBookSelectedTextBookMenuActivity
 import com.google.android.material.card.MaterialCardView
 import com.squareup.picasso.Picasso
 
@@ -32,16 +32,7 @@ class AudioBookProgressViewHolder(itemView: View) : ViewHolder(itemView) {
                 Intent(itemView.context, AudioBookSelectedTextBookMenuActivity::class.java)
             intent.putExtra("coverPath", libraryBook.media.coverPath)
             intent.putExtra("title", "\uD83D\uDCD6 " + libraryBook.media.metadata.title)
-            if (libraryBook.media.metadata.authorName == null) {
-                intent.putExtra("author", "No author available.")
-            } else {
-                intent.putExtra("author", libraryBook.media.metadata.authorName)
-            }
-            if (libraryBook.media.metadata.description == null) {
-                intent.putExtra("description", "📝 No description available.")
-            } else {
-                intent.putExtra("description", "📝 " + libraryBook.media.metadata.description)
-            }
+            intent.putExtra("itemId", libraryBook.id)
             itemView.context.startActivity(intent)
         }
     }
