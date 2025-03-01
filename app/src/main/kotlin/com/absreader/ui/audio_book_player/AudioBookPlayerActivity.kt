@@ -51,7 +51,7 @@ class AudioBookPlayerActivity: AppCompatActivity() {
         setContentView(R.layout.activity_audio_book_player)
 
         val bookName = intent.getStringExtra("bookName").toString()
-        HeaderManager(findViewById(R.id.header)).setup(bookName)
+        HeaderManager(findViewById(R.id.header)).setup("\uD83C\uDFA7 Player")
 
         initializeViews()
         setupPlayer()
