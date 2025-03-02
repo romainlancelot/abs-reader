@@ -1,4 +1,5 @@
 <resources>
+    <string name="name">ABS Reader</string>
     <string name="audiobookshelf_reader">Audiobookshelf Reader 📚</string>
     <string name="app_name_hint">The only reader you need 🤩</string>
     <string name="server_url">Server URL</string>
