@@ -50,7 +50,8 @@ class BookViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 if (file.exists()) {
                     viewModel.book.value = true
                 } else {
-                    val text: String = if (libraryFile.fileType == "audio") "Downloading audio book" else "Downloading epub book"
+                    val text: String =
+                        if (libraryFile.fileType == "audio") "Downloading audio book" else "Downloading epub book"
                     Toast.makeText(itemView.context, text, Toast.LENGTH_SHORT)
                         .show()
                     viewModel.downloadBook(itemView.context, libraryFile.metadata.path)
@@ -59,6 +60,8 @@ class BookViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         }
         deleteButton.setOnClickListener {
             viewModel.deleteBook(itemView.context, itemId, libraryFile.ino)
+            val activity = itemView.context as? AudioBookSelectedTextBookMenuActivity
+            activity?.recreate()
         }
     }
 }

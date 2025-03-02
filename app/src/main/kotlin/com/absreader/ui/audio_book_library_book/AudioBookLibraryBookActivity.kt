@@ -2,9 +2,6 @@ package com.absreader.ui.audio_book_library_book
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
-import android.widget.Button
-import android.widget.FrameLayout
 import android.widget.SearchView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -41,7 +38,6 @@ class AudioBookLibraryBookActivity : AppCompatActivity() {
             }
             startActivity(intent)
         }
-
         this.viewModel.books.observe(this) { libraryItems: List<Result> ->
             adapter = AudioBookLibraryBookAdapter(libraryItems)
             recyclerView.adapter = adapter
@@ -65,10 +61,23 @@ class AudioBookLibraryBookActivity : AppCompatActivity() {
         refreshApp()
     }
 
+    override fun onResume() {
+        super.onResume()
+        this.viewModel.getBooks(
+            this@AudioBookLibraryBookActivity,
+            intent.getStringExtra("libraryId").toString()
+        )
+    }
+
+
     private fun refreshApp() {
-        val swipeRefreshLayout: androidx.swiperefreshlayout.widget.SwipeRefreshLayout = findViewById(R.id.swipeRefreshLayout)
+        val swipeRefreshLayout: androidx.swiperefreshlayout.widget.SwipeRefreshLayout =
+            findViewById(R.id.swipeRefreshLayout)
         swipeRefreshLayout.setOnRefreshListener {
-            this.viewModel.getBooks(this@AudioBookLibraryBookActivity, intent.getStringExtra("libraryId").toString())
+            this.viewModel.getBooks(
+                this@AudioBookLibraryBookActivity,
+                intent.getStringExtra("libraryId").toString()
+            )
             swipeRefreshLayout.isRefreshing = false
         }
     }

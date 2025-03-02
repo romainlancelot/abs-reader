@@ -1,9 +1,7 @@
 package com.absreader.ui.audio_book_home
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
-import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -12,17 +10,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.absreader.R
-import com.absreader.ui.audio_book_library.AudioBookLibraryAdapter
-import com.absreader.ui.audio_book_progress.AudioBookProgressAdapter
 import com.absreader.data.network.dto.audio_book_libraries.Library
 import com.absreader.data.network.dto.audio_book_progress.LibraryItem
-import com.absreader.utils.HeaderManager
+import com.absreader.ui.audio_book_library.AudioBookLibraryAdapter
 import com.absreader.ui.audio_book_library.AudioBookLibraryViewModel
+import com.absreader.ui.audio_book_progress.AudioBookProgressAdapter
 import com.absreader.ui.audio_book_progress.AudioBookProgressViewModel
+import com.absreader.utils.HeaderManager
 
 class AudioBookHomeActivity : AppCompatActivity() {
     private val audioBookLibraryViewModel: AudioBookLibraryViewModel = AudioBookLibraryViewModel()
-    private val audioBookProgressViewModel: AudioBookProgressViewModel = AudioBookProgressViewModel()
+    private val audioBookProgressViewModel: AudioBookProgressViewModel =
+        AudioBookProgressViewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,17 +55,35 @@ class AudioBookHomeActivity : AppCompatActivity() {
                 .setMessage(getString(R.string.delete_files_warning))
                 .setPositiveButton(getString(R.string.yes)) { _, _ ->
                     clearAllDownloadedBooks()
-                    Toast.makeText(this, getString(R.string.files_deleted), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.files_deleted), Toast.LENGTH_SHORT)
+                        .show()
                 }
                 .setNegativeButton(getString(R.string.cancel), null)
                 .show()
         }
+        refreshApp()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        this.audioBookLibraryViewModel.getLibraries(this@AudioBookHomeActivity)
+        this.audioBookProgressViewModel.getProgress(this@AudioBookHomeActivity)
     }
 
     private fun clearAllDownloadedBooks() {
         val filesDir = filesDir
         filesDir.listFiles()?.forEach { file ->
             file.delete()
+        }
+    }
+
+    private fun refreshApp() {
+        val swipeRefreshLayout: androidx.swiperefreshlayout.widget.SwipeRefreshLayout =
+            findViewById(R.id.swipeRefreshLayout)
+        swipeRefreshLayout.setOnRefreshListener {
+            this.audioBookLibraryViewModel.getLibraries(this@AudioBookHomeActivity)
+            this.audioBookProgressViewModel.getProgress(this@AudioBookHomeActivity)
+            swipeRefreshLayout.isRefreshing = false
         }
     }
 

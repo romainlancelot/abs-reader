@@ -27,14 +27,45 @@ class AudioBookSelectedTextBookMenuViewModel : ViewModel() {
         call.enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: retrofit2.Response<Void>) {
                 if (response.isSuccessful) {
-                    Toast.makeText(context, context.getString(R.string.book_deleted), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.book_deleted),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 } else {
-                    Toast.makeText(context, context.getString(R.string.failed_to_delete_book), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.failed_to_delete_book),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
-                Toast.makeText(context, context.getString(R.string.failed_to_delete_book), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.failed_to_delete_book),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        })
+    }
+
+    fun deleteSerie(context: Context, itemId: String) {
+        val client: Retrofit = AudioBookRetrofitClient.getInstance(context)
+        val call: Call<Void> =
+            client.create(AudioBookItemService::class.java).deleteSerie(itemId)
+        call.enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+                    Toast.makeText(context, "Serie deleted", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(context, "Failed to delete serie", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                Toast.makeText(context, "Failed to delete serie", Toast.LENGTH_SHORT).show()
             }
         })
     }
@@ -62,12 +93,20 @@ class AudioBookSelectedTextBookMenuViewModel : ViewModel() {
                         book.value = true
                     }
                 } else {
-                    Toast.makeText(context, context.getString(R.string.failed_to_download_book), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.failed_to_download_book),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                Toast.makeText(context, context.getString(R.string.failed_to_get_book_data), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.failed_to_get_book_data),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         })
     }

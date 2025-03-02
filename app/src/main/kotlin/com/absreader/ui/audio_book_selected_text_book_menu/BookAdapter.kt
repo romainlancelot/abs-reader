@@ -8,7 +8,8 @@ import com.absreader.R
 import com.absreader.data.network.dto.library_items_data.LibraryFile
 
 class BookAdapter(
-    private var books: List<LibraryFile>, private var itemId: String
+    private var books: List<LibraryFile>,
+    private var itemId: String
 ) : Adapter<BookViewHolder>() {
     private var filteredBooks: List<LibraryFile> = books
 

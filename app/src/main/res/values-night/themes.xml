@@ -3,6 +3,5 @@
     <style name="Base.Theme.ABSReader" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <item name="colorPrimary">@color/blue</item>
-        <item name="materialButtonStyle">@color/white</item>
     </style>
 </resources>
