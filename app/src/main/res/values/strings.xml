@@ -25,5 +25,16 @@
     <string name="page_image">Image of the page</string>
     <string name="loading">Loading</string>
     <string name="search_audio_books">Search audio books</string>
-    <string name="books">📚 Livres disponibles</string>
+    <string name="books">📚 Books available</string>
+    <string name="playing">Playing…</string>
+    <string name="audio_book_playback">AudioBook Playback</string>
+    <string name="audio_book_playing">AudioBook Playing</string>
+    <string name="unknown_book">Unknown Book</string>
+    <string name="invalid_server_url">Invalid server URL, please try again</string>
+    <string name="book_deleted">Book deleted</string>
+    <string name="failed_to_delete_book">Failed to delete book</string>
+    <string name="failed_to_download_book">Failed to download book</string>
+    <string name="failed_to_get_book_data">Failed to get book data</string>
+    <string name="error_title">Error</string>
+    <string name="ok_button">OK</string>
 </resources>

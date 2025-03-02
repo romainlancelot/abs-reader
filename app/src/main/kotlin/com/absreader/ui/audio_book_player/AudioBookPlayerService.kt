@@ -19,14 +19,14 @@ class AudioBookPlayerService : Service() {
 
         player = ExoPlayer.Builder(this).build()
 
-        showNotification("Lecture en cours...")
+        showNotification(getString(R.string.playing))
     }
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 CHANNEL_ID,
-                "Lecture AudioBook",
+                getString(R.string.audio_book_playback),
                 NotificationManager.IMPORTANCE_LOW
             )
             val notificationManager = getSystemService(NotificationManager::class.java)
@@ -46,7 +46,7 @@ class AudioBookPlayerService : Service() {
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.text_book)
             .setContentIntent(openAppPendingIntent)
-            .setContentTitle("AudioBook en lecture")
+            .setContentTitle(getString(R.string.audio_book_playing))
             .setContentText(bookTitle)
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setOngoing(true)
@@ -56,12 +56,13 @@ class AudioBookPlayerService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        val bookTitle = intent?.getStringExtra("bookName") ?: "Livre inconnu"
+        val bookTitle = intent?.getStringExtra("bookName") ?: getString(R.string.unknown_book)
         showNotification(bookTitle)
         return START_STICKY
     }
 
     override fun onDestroy() {
+        player.stop()
         player.release()
         stopForeground(STOP_FOREGROUND_REMOVE)
         super.onDestroy()

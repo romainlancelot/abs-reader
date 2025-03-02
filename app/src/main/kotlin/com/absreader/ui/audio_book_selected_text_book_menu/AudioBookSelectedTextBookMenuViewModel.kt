@@ -4,6 +4,7 @@ import android.content.Context
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.absreader.R
 import com.absreader.data.network.AudioBookRetrofitClient
 import com.absreader.data.network.dto.library_items_data.LibraryItemDTO
 import com.absreader.data.network.service.AudioBookItemService
@@ -26,14 +27,14 @@ class AudioBookSelectedTextBookMenuViewModel : ViewModel() {
         call.enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: retrofit2.Response<Void>) {
                 if (response.isSuccessful) {
-                    Toast.makeText(context, "Book deleted", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.book_deleted), Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(context, "Failed to delete book", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.failed_to_delete_book), Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
-                Toast.makeText(context, "Failed to delete book", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, context.getString(R.string.failed_to_delete_book), Toast.LENGTH_SHORT).show()
             }
         })
     }
@@ -61,12 +62,12 @@ class AudioBookSelectedTextBookMenuViewModel : ViewModel() {
                         book.value = true
                     }
                 } else {
-                    Toast.makeText(context, "Failed to download book", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.failed_to_download_book), Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                Toast.makeText(context, "Failed to download book", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, context.getString(R.string.failed_to_get_book_data), Toast.LENGTH_SHORT).show()
             }
         })
     }

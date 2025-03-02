@@ -41,7 +41,7 @@ class AudioBookLogInActivity : AppCompatActivity() {
                 val audioBookAuthLogin: AudioBookAuthLogin = AudioBookAuthLogin(username, password)
                 repository.login(this@AudioBookLogInActivity, audioBookAuthLogin, server)
             } catch (e: IllegalArgumentException) {
-                MaterialAlertDialog.alert(this@AudioBookLogInActivity, "Invalid server URL, please try again")
+                MaterialAlertDialog.alert(this@AudioBookLogInActivity, getString(R.string.invalid_server_url))
                 return@setOnClickListener
             }
         }
@@ -57,5 +57,4 @@ class AudioBookLogInActivity : AppCompatActivity() {
         val intent: Intent = Intent(this, AudioBookHomeActivity::class.java)
         startActivity(intent)
     }
-
 }
