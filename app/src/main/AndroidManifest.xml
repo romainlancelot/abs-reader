@@ -50,6 +50,10 @@
             android:exported="false" />
 
         <activity
+            android:name=".ui.audio_book_upload.AudioBookUploadActivity"
+            android:exported="false" />
+
+        <activity
             android:name="com.folioreader.ui.activity.SearchActivity"
             android:exported="true">
             <intent-filter>

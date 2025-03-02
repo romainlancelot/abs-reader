@@ -13,6 +13,17 @@
         android:id="@+id/header"
         layout="@layout/header" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/uploadButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:contentDescription="@string/upload_book"
+        android:src="@drawable/ic_upload"
+        app:backgroundTint="@color/purple"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <TextView
         android:id="@+id/noBooks"
         android:layout_width="match_parent"

@@ -44,4 +44,12 @@
     <string name="yes">Yes</string>
     <string name="cancel">Cancel</string>
     <string name="files_deleted">All files have been deleted</string>
+    <string name="upload_book">Upload book</string>
+    <string name="upload_book_title">Title (required)</string>
+    <string name="upload_book_author">Author (optional)</string>
+    <string name="upload_book_series">Series (optional)</string>
+    <string name="upload_book_folder">Folder</string>
+    <string name="upload_book_select_file">Select File</string>
+    <string name="upload_book_no_file_selected">No file selected</string>
+    <string name="upload_book_submit">Upload Book</string>
 </resources>

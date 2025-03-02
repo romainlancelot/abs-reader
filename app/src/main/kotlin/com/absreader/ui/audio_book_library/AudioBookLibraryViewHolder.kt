@@ -17,6 +17,7 @@ class AudioBookLibraryViewHolder(itemView: View) : ViewHolder(itemView) {
             val intent = Intent(itemView.context, AudioBookLibraryBookActivity::class.java)
             intent.putExtra("libraryId", library.id)
             intent.putExtra("libraryName", "\uD83D\uDCDA ${library.name}")
+            intent.putExtra("libraryFolders", library.folders.toString())
             itemView.context.startActivity(intent)
         }
     }
