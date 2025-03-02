@@ -59,7 +59,6 @@ class BookViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         }
         deleteButton.setOnClickListener {
             viewModel.deleteBook(itemView.context, itemId, libraryFile.ino)
-            (itemView.context as AudioBookSelectedTextBookMenuActivity).refreshApp()
         }
     }
 }

@@ -40,11 +40,11 @@ class AudioBookUploadActivity : AppCompatActivity() {
                 val mimeType = contentResolver.getType(it)
                 if (mimeType?.contains("audio/mpeg") == true || mimeType?.contains("application/epub+zip") == true) {
                     selectedFileUri = it
-                    val fileName = getFileName(it) ?: "Selected file"
+                    val fileName = getFileName(it) ?: this.getString(R.string.selected_file)
                     selectedFileText.text = fileName
                     uploadButton.isEnabled = true
                 } else {
-                    Toast.makeText(this, "Only .mp3 and .epub files are supported", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, this.getString(R.string.unsupported_file), Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -53,7 +53,7 @@ class AudioBookUploadActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_audio_book_upload)
-        HeaderManager(findViewById(R.id.header)).setup("Upload Book")
+        HeaderManager(findViewById(R.id.header)).setup(this.getString(R.string.upload_book))
 
         titleInput = findViewById(R.id.titleInput)
         authorInput = findViewById(R.id.authorInput)
@@ -89,7 +89,7 @@ class AudioBookUploadActivity : AppCompatActivity() {
 
                 AudioBookUploadViewModel.UploadStatus.SUCCESS -> {
                     progressBar.visibility = View.INVISIBLE
-                    Toast.makeText(this, "Book uploaded successfully", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, this.getString(R.string.upload_successfully), Toast.LENGTH_LONG).show()
                     finish()
                 }
 
@@ -97,7 +97,7 @@ class AudioBookUploadActivity : AppCompatActivity() {
                     progressBar.visibility = View.INVISIBLE
                     uploadButton.isEnabled = true
                     selectFileButton.isEnabled = true
-                    Toast.makeText(this, "Failed to upload book", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, this.getString(R.string.upload_failed), Toast.LENGTH_LONG).show()
                 }
 
                 else -> {}
@@ -111,12 +111,12 @@ class AudioBookUploadActivity : AppCompatActivity() {
 
     private fun validateInputs(): Boolean {
         if (titleInput.text.isNullOrBlank()) {
-            titleInput.error = "Title is required"
+            titleInput.error = this.getString(R.string.title_required)
             return false
         }
 
         if (selectedFileUri == null) {
-            Toast.makeText(this, "Please select a file", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, this.getString(R.string.selected_file), Toast.LENGTH_SHORT).show()
             return false
         }
 
