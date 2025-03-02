@@ -59,13 +59,14 @@ dependencies {
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.media3.ui)
     implementation(libs.androidx.media3.exoplayer)
-    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+    implementation(libs.androidx.swiperefreshlayout)
+    implementation(libs.okhttp)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation("com.github.FolioReader:FolioReader-Android:0.5.4") {
         exclude(group = "com.android.support")
     }
-    implementation("com.github.kittinunf.fuel:fuel:2.3.1")
-    implementation("com.github.kittinunf.fuel:fuel-android:2.3.1")
+    implementation(libs.fuel)
+    implementation(libs.fuel.android)
 }
