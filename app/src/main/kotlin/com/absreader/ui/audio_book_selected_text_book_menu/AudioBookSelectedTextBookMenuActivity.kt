@@ -49,6 +49,7 @@ class AudioBookSelectedTextBookMenuActivity : AppCompatActivity() {
                 finish()
             }
         }
+        refreshApp()
     }
 
     fun refreshApp() {
