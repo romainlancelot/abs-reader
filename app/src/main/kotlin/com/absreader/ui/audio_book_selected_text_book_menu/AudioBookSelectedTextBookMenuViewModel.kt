@@ -89,7 +89,7 @@ class AudioBookSelectedTextBookMenuViewModel : ViewModel() {
             override fun onFailure(p0: Call<LibraryItemDTO>, p1: Throwable) {
                 Toast.makeText(
                     context,
-                    "Failed to get book data",
+                    context.getString(R.string.failed_to_get_book_data),
                     Toast.LENGTH_SHORT
                 ).show()
             }

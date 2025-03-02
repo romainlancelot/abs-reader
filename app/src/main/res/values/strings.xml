@@ -38,4 +38,10 @@
     <string name="failed_to_get_book_data">Failed to get book data</string>
     <string name="error_title">Error</string>
     <string name="ok_button">OK</string>
+    <string name="delete_cache"> Delete cache </string>
+    <string name="confirm_deletion">Confirm deletion</string>
+    <string name="delete_files_warning">Do you really want to delete all downloaded files? This action is irreversible.</string>
+    <string name="yes">Yes</string>
+    <string name="cancel">Cancel</string>
+    <string name="files_deleted">All files have been deleted</string>
 </resources>

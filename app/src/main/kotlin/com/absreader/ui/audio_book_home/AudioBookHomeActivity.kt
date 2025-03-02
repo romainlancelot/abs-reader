@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -47,6 +49,25 @@ class AudioBookHomeActivity : AppCompatActivity() {
             }
         }
         this.audioBookProgressViewModel.getProgress(this@AudioBookHomeActivity)
+        val clearCacheButton: Button = findViewById(R.id.clear_cache_button)
+        clearCacheButton.setOnClickListener {
+            AlertDialog.Builder(this)
+                .setTitle(getString(R.string.confirm_deletion))
+                .setMessage(getString(R.string.delete_files_warning))
+                .setPositiveButton(getString(R.string.yes)) { _, _ ->
+                    clearAllDownloadedBooks()
+                    Toast.makeText(this, getString(R.string.files_deleted), Toast.LENGTH_SHORT).show()
+                }
+                .setNegativeButton(getString(R.string.cancel), null)
+                .show()
+        }
+    }
+
+    private fun clearAllDownloadedBooks() {
+        val filesDir = filesDir
+        filesDir.listFiles()?.forEach { file ->
+            file.delete()
+        }
     }
 
 }
